@@ -3,14 +3,17 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\PrePersist;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[ORM\HasLifecycleCallbacks]
+#[UniqueEntity(fields: ['email'], message: 'Cette adresse email est déjà asscoiée à un compte')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -49,7 +52,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeInterface $registeredAt = null;
 
     #[ORM\Column]
-    private ?bool $premium = null;
+    private ?bool $premium = false;
 
     public function getId(): ?int
     {
@@ -174,9 +177,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->screenname;
     }
 
-    public function setScreenname(?string $screenname): self
+    #[PrePersist]
+    public function setScreenname(): self
     {
-        $this->screenname = $screenname;
+        $this->screenname = strtolower($this->firstname);
+        $this->screenname .= ' ';
+        $this->screenname .= strtoupper(substr($this->lastname, 0, 1)) . '.';
 
         return $this;
     }
@@ -186,9 +192,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->registeredAt;
     }
 
-    public function setRegisteredAt(\DateTimeInterface $registeredAt): self
+    #[PrePersist]
+    public function setRegisteredAt(): self
     {
-        $this->registeredAt = $registeredAt;
+        $this->registeredAt = new DateTime();
 
         return $this;
     }

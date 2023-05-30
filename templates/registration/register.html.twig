@@ -32,18 +32,12 @@
                     <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
                 {% endfor %}
 
-                {# <form class="mx-1 mx-md-4"> #}
                 {{ form_start(registrationForm, {'attr': {'class': 'mx-1 mx-md-4'}}) }}
                 <!-- Firstname -->
                   <div class="d-flex flex-row align-items-center">
                     <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
                       {{ form_widget(registrationForm.firstname) }}
-                      {# {{ form_label(registrationForm.firstname) }} #}
-                      {# {% for errorItem in registrationForm.firstname.vars.errors %}
-                            <div class="text-danger">{{ errorItem.message }}</div>
-                        {% endfor %}
-                        <p class="firstname-error"></p> #}
                     </div>
                   </div>
                     {% for errorItem in registrationForm.firstname.vars.errors %}
@@ -56,11 +50,6 @@
                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                         <div class="form-outline flex-fill mb-0">
                             {{ form_widget(registrationForm.lastname) }}
-                            {# {{ form_label(registrationForm.lastname) }} #}
-                            {# {% for errorItem in registrationForm.lastname.vars.errors %}
-                                <div class="text-danger">{{ errorItem.message }}</div>
-                            {% endfor %}
-                            <p class="lastname-error"></p> #}
                         </div>
                     </div>
                     {% for errorItem in registrationForm.lastname.vars.errors %}
@@ -73,11 +62,6 @@
                     <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
                         {{ form_widget(registrationForm.email) }}
-                        {# {{ form_label(registrationForm.email) }} #}
-                        {# {% for errorItem in registrationForm.email.vars.errors %}
-                            <div class="text-danger">{{ errorItem.message }}</div>
-                        {% endfor %}
-                        <p class="email-error"></p> #}
                     </div>
                   </div>
                     {% for errorItem in registrationForm.email.vars.errors %}
@@ -91,11 +75,6 @@
                         <i class="fa-solid fa-cake-candles fa-lg me-3 fa-fw"></i>
                         <div class="form-outline flex-fill mb-0">
                             {{ form_widget(registrationForm.birthday) }}
-                            {# {{ form_label(registrationForm.birthday) }} #}
-                            {# {% for errorItem in registrationForm.birthday.vars.errors %}
-                                <div class="text-danger">{{ errorItem.message }}</div>
-                            {% endfor %}
-                            <p class="birthday-error"></p> #}
                         </div>
                     </div>
                     {% for errorItem in registrationForm.birthday.vars.errors %}
@@ -108,32 +87,22 @@
                         <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                         <div class="form-outline flex-fill mb-0">
                             {{ form_widget(registrationForm.password.first) }}
-                            {# {{ form_label(registrationForm.password.first) }} #}
-                            {# {% for errorItem in registrationForm.password.first.vars.errors %}
-                                <div class="text-danger">{{ errorItem.message }}</div>
-                            {% endfor %}
-                            <p class="password-first-error"></p> #}
                         </div>
                     </div>
                     {% for errorItem in registrationForm.password.first.vars.errors %}
                         <div class="text-danger">{{ errorItem.message }}</div>
                     {% endfor %}
-                    <p class="password-first-error mb-4"></p>
+                    <p class="password-error mb-4"></p>
                     <div class="d-flex flex-row align-items-center">
                         <i class="fas fa-key fa-lg me-3 fa-fw"></i>
                         <div class="form-outline flex-fill mb-0">
                             {{ form_widget(registrationForm.password.second) }}
-                            {# {{ form_label(registrationForm.password.second) }} #}
-                            {# {% for errorItem in registrationForm.password.second.vars.errors %}
-                                <div class="text-danger">{{ errorItem.message }}</div>
-                            {% endfor %}
-                            <p class="password-second-error"></p> #}
                         </div>
                     </div>
                     {% for errorItem in registrationForm.password.second.vars.errors %}
                         <div class="text-danger">{{ errorItem.message }}</div>
                     {% endfor %}
-                    <p class="password-second-error mb-4"></p>
+                    <p class="confirm-password-error mb-4"></p>
                 <!-- End password -->
                 <!-- AgreeTerms -->
                   <div class="form-check d-flex justify-content-center mb-3">
@@ -141,10 +110,6 @@
                     <label class="form-check-label" for="form2Example3">
                       J'accepte les <a href="#!">conditions d'utilisation</a>
                     </label>
-                    {# {% for errorItem in registrationForm.agreeTerms.vars.errors %}
-                        <div class="text-danger">{{ errorItem.message }}</div>
-                    {% endfor %}
-                    <p class="agreeTerms-error"></p> #}
                   </div>
                     {% for errorItem in registrationForm.agreeTerms.vars.errors %}
                         <div class="text-danger">{{ errorItem.message }}</div>
@@ -152,10 +117,9 @@
                     <p class="agreeTerms-error mb-4"></p>
                 <!-- End agreeTerms -->
                   <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-dark btn-lg">S'inscrire</button>
+                    <button type="submit" class="btn btn-dark btn-lg" value="submit">S'inscrire</button>
                   </div>
 
-                {# </form> #}
                 {{ form_end(registrationForm) }}
 
               </div>
@@ -172,4 +136,9 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {{ encore_entry_script_tags('register') }}
 {% endblock %}
