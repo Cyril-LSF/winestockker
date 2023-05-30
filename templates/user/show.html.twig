@@ -1,0 +1,210 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User{% endblock %}
+
+{# {% block body %}
+    <h1>User</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ user.id }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{ user.password }}</td>
+            </tr>
+            <tr>
+                <th>IsVerified</th>
+                <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Birthday</th>
+                <td>{{ user.birthday ? user.birthday|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Firstname</th>
+                <td>{{ user.firstname }}</td>
+            </tr>
+            <tr>
+                <th>Lastname</th>
+                <td>{{ user.lastname }}</td>
+            </tr>
+            <tr>
+                <th>Screenname</th>
+                <td>{{ user.screenname }}</td>
+            </tr>
+            <tr>
+                <th>RegisteredAt</th>
+                <td>{{ user.registeredAt ? user.registeredAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Premium</th>
+                <td>{{ user.premium ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_user_index') }}">back to list</a>
+
+    <a href="{{ path('user_edit', {'id': user.id}) }}">edit</a>
+
+    {{ include('user/_delete_form.html.twig') }}
+{% endblock %} #}
+
+{% block body %}
+<section class="min-vh-100" style="background-color: #f2e8cf;">
+  <div class="container py-5">
+
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="card mb-4">
+          <div class="card-body text-center">
+            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+              class="rounded-circle img-fluid" style="width: 150px;">
+            <h5 class="my-3">{{ user.screenname }}</h5>
+            {% if user.isPremium %}
+                <div class="d-flex flex-column justify-content-center mb-2">
+                <p class="text-muted mb-1"><i class="fa-solid fa-unlock-keyhole me-3"></i>Version pro</p>
+                    <a href="#" class="btn btn-outline-warning"><i class="fa-solid fa-crown fa-xl me-3"></i>Gérer mon abonnement</a>
+                </div>
+            {% else %}
+                <div class="d-flex flex-column justify-content-center mb-2">
+                    <p class="text-muted mb-1"><i class="fa-solid fa-lock me-3"></i>Version gratuite</p>
+                    <a href="#" class="btn btn-warning"><i class="fa-solid fa-crown fa-xl me-3"></i>Passer à la vitesse supérieur</a>
+                </div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="mt-4 mb-4 mb-lg-0 d-flex flex-column">
+            <a href="{{ path('user_edit', {'id': user.id}) }}" class="btn btn-dark mb-3"><i class="fa-solid fa-pen-to-square me-3"></i>Modifier mon profil</a>
+            <a href="{{ path('user_edit_password', {'id': user.id}) }}" class="btn btn-secondary mb-3"><i class="fa-solid fa-key me-3"></i>Modifier mon mot de passe</a>
+            {{ include('user/_delete_form.html.twig') }}
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-3 d-flex align-items-center">
+                <i class="fa-solid fa-user me-3"></i>
+                <p class="mb-0">Nom</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">{{ user.lastname | upper }}</p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3 d-flex align-items-center">
+              <i class="fa-regular fa-user me-3"></i>
+                <p class="mb-0">Prénom</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">{{ user.firstname }}</p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3 d-flex align-items-center">
+              <i class="fa-solid fa-envelope me-3"></i>
+                <p class="mb-0">Email</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">{{ user.email }}</p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3 d-flex align-items-center">
+              <i class="fa-solid fa-crown me-3"></i>
+                <p class="mb-0">Premium</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">jusqu'au 31/12/2050</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card mb-4 mb-md-0">
+              <div class="card-body">
+                <p class="mb-4"><span class="text-primary font-italic me-1">assigment</span> Project Status
+                </p>
+                <p class="mb-1" style="font-size: .77rem;">Web Design</p>
+                <div class="progress rounded" style="height: 5px;">
+                  <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="80"
+                    aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <p class="mt-4 mb-1" style="font-size: .77rem;">Website Markup</p>
+                <div class="progress rounded" style="height: 5px;">
+                  <div class="progress-bar" role="progressbar" style="width: 72%" aria-valuenow="72"
+                    aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <p class="mt-4 mb-1" style="font-size: .77rem;">One Page</p>
+                <div class="progress rounded" style="height: 5px;">
+                  <div class="progress-bar" role="progressbar" style="width: 89%" aria-valuenow="89"
+                    aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <p class="mt-4 mb-1" style="font-size: .77rem;">Mobile Template</p>
+                <div class="progress rounded" style="height: 5px;">
+                  <div class="progress-bar" role="progressbar" style="width: 55%" aria-valuenow="55"
+                    aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <p class="mt-4 mb-1" style="font-size: .77rem;">Backend API</p>
+                <div class="progress rounded mb-2" style="height: 5px;">
+                  <div class="progress-bar" role="progressbar" style="width: 66%" aria-valuenow="66"
+                    aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card mb-4 mb-md-0">
+              <div class="card-body">
+                <p class="mb-4"><span class="text-primary font-italic me-1">assigment</span> Project Status
+                </p>
+                <p class="mb-1" style="font-size: .77rem;">Web Design</p>
+                <div class="progress rounded" style="height: 5px;">
+                  <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="80"
+                    aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <p class="mt-4 mb-1" style="font-size: .77rem;">Website Markup</p>
+                <div class="progress rounded" style="height: 5px;">
+                  <div class="progress-bar" role="progressbar" style="width: 72%" aria-valuenow="72"
+                    aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <p class="mt-4 mb-1" style="font-size: .77rem;">One Page</p>
+                <div class="progress rounded" style="height: 5px;">
+                  <div class="progress-bar" role="progressbar" style="width: 89%" aria-valuenow="89"
+                    aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <p class="mt-4 mb-1" style="font-size: .77rem;">Mobile Template</p>
+                <div class="progress rounded" style="height: 5px;">
+                  <div class="progress-bar" role="progressbar" style="width: 55%" aria-valuenow="55"
+                    aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <p class="mt-4 mb-1" style="font-size: .77rem;">Backend API</p>
+                <div class="progress rounded mb-2" style="height: 5px;">
+                  <div class="progress-bar" role="progressbar" style="width: 66%" aria-valuenow="66"
+                    aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

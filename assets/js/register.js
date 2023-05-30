@@ -46,11 +46,13 @@ window.addEventListener('load', function(e) {
             setErrorField('.email-error', 'email');
         }
 
-        if (inputs['registration_form[birthday]'].value !== '') {
-            let now = new Date().getFullYear();
-            let birthday = new Date(inputs['registration_form[birthday]'].value).getFullYear();
-            if (now - birthday < 18) {
-                setErrorField('.birthday-error', 'birthday');
+        if (inputs['registration_form[birthday]']) {
+            if (inputs['registration_form[birthday]'].value !== '') {
+                let now = new Date().getFullYear();
+                let birthday = new Date(inputs['registration_form[birthday]'].value).getFullYear();
+                if (now - birthday < 18) {
+                    setErrorField('.birthday-error', 'birthday');
+                }
             }
         }
         

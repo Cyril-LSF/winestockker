@@ -15,8 +15,26 @@
         {% endblock %}
     </head>
     
-    <body>
+    <body style="background-color: #f2e8cf;">
         {{ include('components/header.html.twig') }}
+        <div class="notification mt-2">
+			{% for label, messages in app.flashes %}
+				{% for message in messages %}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show text-center" role="alert">
+						{{ message }}
+						<button type="button" id="notification" class="btn-close"></button>
+					</div>
+				{% endfor %}
+			{% endfor %}
+		</div>
         {% block body %}{% endblock %}
+        <script>
+            if (document.getElementById('notification') !== null) {
+                let btn = document.getElementById('notification');
+                btn.addEventListener('click', function() {
+                    btn.parentNode.remove();
+                })
+            }
+        </script>
     </body>
 </html>

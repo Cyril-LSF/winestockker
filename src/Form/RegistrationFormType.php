@@ -2,23 +2,25 @@
 
 namespace App\Form;
 
-use App\Entity\User;
 use DateTime;
+use App\Entity\User;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
-use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class RegistrationFormType extends AbstractType
@@ -80,34 +82,6 @@ class RegistrationFormType extends AbstractType
                     ])
                 ],
             ])
-            ->add('birthday', BirthdayType::class, [
-                'label' => "Date de naissance",
-                'attr' => [
-                    'class' => "form-control",
-                    'placeholder' => "Date de naissance",
-                ],
-                'label_attr' => [
-                    'class' => "form-label",
-                ],
-                'widget' => "single_text",
-                'data' => new DateTime(),
-                'required' => true,
-                'constraints' => [
-                    new NotNull([
-                        'message' => "Veuillez saisir une date de naissance",
-                    ]),
-                    new Callback([
-                        'callback' => static function (DateTime $data, ExecutionContextInterface $context) {
-                            $now = date_create();
-                            $interval = date_diff($data, $now);
-                            if ($interval->y < 18) {
-                                $context->buildViolation("Vous devait avoir 18 ans minimum pour vous inscrire")
-                                ->addViolation();
-                            }
-                        }
-                    ])
-                ]
-            ])
             ->add('email', EmailType::class, [
                 'label' => "Email",
                 'attr' => [
@@ -129,53 +103,88 @@ class RegistrationFormType extends AbstractType
                     ])
                 ]
             ])
-            ->add('password', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'required' => true,
-                'invalid_message' => "Les mots de passe ne sont pas identique",
-                'first_options' => [
-                    'label' => "Mot de passe",
-                    'label_attr' => [
-                        'class' => "form-label",
-                    ],
-                    'attr' => [
-                        'class' => "form-control",
-                        'placeholder' => "Mot de passe",
-                    ],
-                    'constraints' => [
-                        new NotBlank([
-                            'message' => "Veuillez saisir un mot de passe",
-                        ]),
-                        new Regex([
-                            'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
-                            'match' => true,
-                            'message' => "Votre mot de passe doit contenir au minimum 8 cractères dont 1 minuscule, 1 majuscule, 1 chiffre et 1 caractères spécial",
-                        ])
-                    ]
-                ],
-                'second_options' => [
-                    'label' => "Confirmation du mot de passe",
-                    'label_attr' => [
-                        'class' => "form-label",
-                    ],
-                    'attr' => [
-                        'class' => "form-control",
-                        'placeholder' => "Confirmation du mot de passe",
-                    ],
-                ]
-            ])
-            ->add('agreeTerms', CheckboxType::class, [
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => "Vous devez accepter les conditions d'utilisation",
-                    ]),
-                ],
-                'attr' => [
-                    'class' => "form-check-input me-2",
-                ],
-                'required' => true,
-            ])
+            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                $user = $event->getData();
+                $form = $event->getForm();
+                if (!$user || null === $user->getId()) {
+                    $form
+                    ->add('birthday', BirthdayType::class, [
+                        'label' => "Date de naissance",
+                        'attr' => [
+                            'class' => "form-control",
+                            'placeholder' => "Date de naissance",
+                        ],
+                        'label_attr' => [
+                            'class' => "form-label",
+                        ],
+                        'widget' => "single_text",
+                        //'data' => new DateTime(),
+                        'required' => true,
+                        'constraints' => [
+                            new NotNull([
+                                'message' => "Veuillez saisir une date de naissance",
+                            ]),
+                            new Callback([
+                                'callback' => static function (DateTime $data, ExecutionContextInterface $context) {
+                                    $now = date_create();
+                                    $interval = date_diff($data, $now);
+                                    if ($interval->y < 18) {
+                                        $context->buildViolation("Vous devait avoir 18 ans minimum pour vous inscrire")
+                                        ->addViolation();
+                                    }
+                                }
+                            ])
+                        ]
+                    ])
+                    ->add('password', RepeatedType::class, [
+                        'type' => PasswordType::class,
+                        'required' => true,
+                        'invalid_message' => "Les mots de passe ne sont pas identique",
+                        'first_options' => [
+                            'label' => "Mot de passe",
+                            'label_attr' => [
+                                'class' => "form-label",
+                            ],
+                            'attr' => [
+                                'class' => "form-control",
+                                'placeholder' => "Mot de passe",
+                            ],
+                            'constraints' => [
+                                new NotBlank([
+                                    'message' => "Veuillez saisir un mot de passe",
+                                ]),
+                                new Regex([
+                                    'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
+                                    'match' => true,
+                                    'message' => "Votre mot de passe doit contenir au minimum 8 cractères dont 1 minuscule, 1 majuscule, 1 chiffre et 1 caractères spécial",
+                                ])
+                            ]
+                        ],
+                        'second_options' => [
+                            'label' => "Confirmation du mot de passe",
+                            'label_attr' => [
+                                'class' => "form-label",
+                            ],
+                            'attr' => [
+                                'class' => "form-control",
+                                'placeholder' => "Confirmation du mot de passe",
+                            ],
+                        ]
+                    ])
+                    ->add('agreeTerms', CheckboxType::class, [
+                        'mapped' => false,
+                        'constraints' => [
+                            new IsTrue([
+                                'message' => "Vous devez accepter les conditions d'utilisation",
+                            ]),
+                        ],
+                        'attr' => [
+                            'class' => "form-check-input me-2",
+                        ],
+                        'required' => true,
+                    ]);
+                }
+            })
         ;
     }
 
