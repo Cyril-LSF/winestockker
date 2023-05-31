@@ -18,9 +18,7 @@ class EditPasswordType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        global $userPassword;
         $userPassword = $options['user']->getPassword();
-        //dd($user);
         $builder
             ->add('oldPassword', PasswordType::class, [
                 'mapped' => false,
@@ -37,8 +35,7 @@ class EditPasswordType extends AbstractType
                         'message' => "Veuillez saisir votre ancien mot de passe",
                     ]),
                     new Callback([
-                        'callback' => static function (string $data, ExecutionContextInterface $context) {
-                            global $userPassword;
+                        'callback' => static function (string $data, ExecutionContextInterface $context) use ($userPassword) {
                             $factory = new PasswordHasherFactory([
                                 'common' => ['algorithm' => 'bcrypt'],
                             ]);

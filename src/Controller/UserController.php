@@ -7,16 +7,25 @@ use App\Form\EditPasswordType;
 use App\Form\UserType;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
+use App\Service\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/user')]
 class UserController extends AbstractController
 {
+    private $params;
+
+    public function __construct(ParameterBagInterface $params)
+    {
+        $this->params = $params;
+    }
+
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
@@ -36,13 +45,17 @@ class UserController extends AbstractController
 
     #[IsGranted("ROLE_USER")]
     #[Route('/{id}/edit', name: 'user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, UserRepository $userRepository): Response
+    public function edit(Request $request, User $user, UserRepository $userRepository, UploadedFile $uploadedFile): Response
     {
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setScreenname();
+            if ($form->get('picture')->getData()) {
+                $filename = $uploadedFile->upload($form->get('picture')->getData());
+                $user->setPicture($filename);
+            }
             $userRepository->save($user, true);
 
             return $this->redirectToRoute('user_show', ['id' => $this->getUser()->getId()], Response::HTTP_SEE_OTHER);
@@ -52,6 +65,7 @@ class UserController extends AbstractController
             'user' => $user,
             'registrationForm' => $form->createView(),
             'update' => true,
+            'fileRoot' => $this->params->get('app.uploaded_root'),
         ]);
     }
 

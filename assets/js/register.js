@@ -26,7 +26,7 @@ window.addEventListener('load', function(e) {
     
         for (let i = 0; i < inputs.length; i++) {
     
-            if(!inputs[i].value.trim() && inputs[i] !== inputs['registration_form[description]']) {
+            if(!inputs[i].value.trim() && inputs[i] !== inputs['registration_form[picture]']) {
                 e.preventDefault();
                 error = 'veuillez remplir tous les champs';
                 alert(error);

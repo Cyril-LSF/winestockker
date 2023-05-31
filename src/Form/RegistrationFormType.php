@@ -19,8 +19,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class RegistrationFormType extends AbstractType
@@ -182,6 +184,30 @@ class RegistrationFormType extends AbstractType
                             'class' => "form-check-input me-2",
                         ],
                         'required' => true,
+                    ]);
+                } else {
+                    $form->add('picture', FileType::class, [
+                        'mapped' => false,
+                        'required' => false,
+                        'label' => "Photo de profil",
+                        'label_attr' => [
+                            'class' => "form-label",
+                        ],
+                        'attr' => [
+                            'class' => "form-control",
+                        ],
+                        'constraints' => [
+                            new File([
+                                'maxSize' => "10000k",
+                                'mimeTypes' => [
+                                    'image/png',
+                                    'image/jpg',
+                                    'image/jpeg',
+                                    'image/svg',
+                                ],
+                                'mimeTypesMessage' => "Veuillez sélectionner un fichier valide, les extensions autorisées sont: JPG, JPEG, PNG, SVG",
+                            ])
+                        ]
                     ]);
                 }
             })
