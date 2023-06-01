@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() ~ '- Réinitialisation de mot de passe' }}{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="row min-vh-100">
+			<div class="col d-flex flex-column align-items-center justify-content-center">
+				<!-- Error Inner -->
+				<div class="d-flex flex-column align-items-center">
+                    <h1 class="d-flex flex-column align-items-center text-success mb-5">
+                        <i class="fa fa-envelope fa-2xl mb-5"></i>
+                            Email envoyé avec succès !
+                    </h1>
+					<p class="text-center">Si un compte correspond à votre adresse email, un email contenant un
+         lien de réinitialisation de mot de passe vient d'être envoyé{# {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}#}.</p>
+                    <p class="mb-5">Email non reçu? Vérifier vos spam ou  <a href="{{ path('app_forgot_password_request') }}">Renvoyer un email</a>.</p>
+					<a href={{ path('login') }} class="btn btn-dark btn-lg">Connexion</a>
+				</div>
+				<!--/ End Error Inner -->
+			</div>
+		</div>
+	</div>
+{% endblock %}
