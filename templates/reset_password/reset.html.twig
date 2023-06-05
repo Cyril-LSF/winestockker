@@ -3,10 +3,66 @@
 {% block title %}{{ parent() ~ ' - Réinitialisation de mot de passe' }}{% endblock %}
 
 {% block body %}
-    <h1>Réinitialiser votre mot de passe</h1>
+<div class="min-vh-100" style="background-color: #f2e8cf;">
+  <div class="container h-100 py-5">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-lg-12 col-xl-11">
+        <div class="card text-black" style="border-radius: 25px;">
+          <div class="card-body p-md-5">
+            <div class="row justify-content-center">
+              <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
 
-    {{ form_start(resetForm) }}
-        {{ form_row(resetForm.plainPassword) }}
-        <button class="btn btn-primary">Réinitialiser le mot de passe</button>
-    {{ form_end(resetForm) }}
+                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Réinitialiser votre mot de passe</p>
+
+                {{ form_start(resetForm, {'attr': {'class': 'mx-1 mx-md-4'}}) }}
+                <!-- New password -->
+                    <div class="d-flex justify-content-center align-items-center mb-4">
+                        <h3 class="text-muted mb-1">Nouveau mot de passe</h3>
+                    </div>
+                    <div class="d-flex flex-row align-items-center">
+                        <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                        <div class="form-outline flex-fill mb-0">
+                            {{ form_widget(resetForm.plainPassword.first) }}
+                        </div>
+                    </div>
+                    {% for errorItem in resetForm.plainPassword.first.vars.errors %}
+                        <div class="text-danger">{{ errorItem.message }}</div>
+                    {% endfor %}
+                    <p class="password-error mb-4"></p>
+                    <div class="d-flex flex-row align-items-center">
+                        <i class="fas fa-key fa-lg me-3 fa-fw"></i>
+                        <div class="form-outline flex-fill mb-0">
+                            {{ form_widget(resetForm.plainPassword.second) }}
+                        </div>
+                    </div>
+                    {% for errorItem in resetForm.plainPassword.second.vars.errors %}
+                        <div class="text-danger">{{ errorItem.message }}</div>
+                    {% endfor %}
+                    <p class="confirm-password-error mb-4"></p>
+                <!-- End new password -->
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-dark btn-lg" value="submit">Valider</button>
+                    </div>
+
+                {{ form_end(resetForm) }}
+
+              </div>
+              <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+
+                <img src={{ asset('images/loop.png') }}
+                  class="img-fluid" alt="Bouteille de vin se versant dans un verre">
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('editPassword') }}
 {% endblock %}

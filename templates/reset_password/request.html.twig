@@ -36,6 +36,12 @@
                   {# <input type="email" id="femail" name="email" class="form-control rounded-0" placeholder="E-Mail" required /> #}
                   {{ form_widget(requestForm.email) }}
                 </div>
+                <div>
+                  {% for errorItem in requestForm.email.vars.errors %}
+                    <div class="text-danger">{{ errorItem.message }}</div>
+                  {% endfor %}
+                  <p class="email-error mb-4"></p>
+                </div>
                 <div class="form-group">
                   {# <input type="submit" id="forgot-btn" value="Reset Password" class="btn btn-primary btn-lg btn-block myBtn w-100" /> #}
                   <button type="submit" value="submit" class="btn btn-dark btn-lg btn-block w-100">Valider</button>
@@ -52,4 +58,9 @@
         </div>
       </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {{ encore_entry_script_tags('forgotPasswordRequest') }}
 {% endblock %}

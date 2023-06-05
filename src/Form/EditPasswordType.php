@@ -35,15 +35,17 @@ class EditPasswordType extends AbstractType
                         'message' => "Veuillez saisir votre ancien mot de passe",
                     ]),
                     new Callback([
-                        'callback' => static function (string $data, ExecutionContextInterface $context) use ($userPassword) {
-                            $factory = new PasswordHasherFactory([
-                                'common' => ['algorithm' => 'bcrypt'],
-                            ]);
-                            $passwordHasher = $factory->getPasswordHasher('common');
-                            if (!$passwordHasher->verify($userPassword, $data)) {
-                                $context
-                                    ->buildViolation("Mot de passe incorrect")
-                                    ->addViolation();
+                        'callback' => static function (?string $data, ExecutionContextInterface $context) use ($userPassword) {
+                            if ($data) {
+                                $factory = new PasswordHasherFactory([
+                                    'common' => ['algorithm' => 'bcrypt'],
+                                ]);
+                                $passwordHasher = $factory->getPasswordHasher('common');
+                                if (!$passwordHasher->verify($userPassword, $data)) {
+                                    $context
+                                        ->buildViolation("Mot de passe incorrect")
+                                        ->addViolation();
+                                }
                             }
                         }
                     ])
