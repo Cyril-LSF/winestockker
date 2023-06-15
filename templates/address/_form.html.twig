@@ -1,0 +1,85 @@
+{{ form_start(form, {'attr': {'id': 'address_form', 'class': 'd-none mt-3'}}) }}
+    <div class="col">
+        <div class="text-black">
+            <div class="form-outline mb-2">
+                {{ form_label(form.name) }}
+                {{ form_widget(form.name) }}
+                {% for errorItem in form.name.vars.errors %}
+                    <div class="text-danger">{{ errorItem.message }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-2">
+                    <div class="form-outline">
+                    {{ form_label(form.streetNumber) }}
+                    {{ form_widget(form.streetNumber) }}
+                    {% for errorItem in form.streetNumber.vars.errors %}
+                        <div class="text-danger">{{ errorItem.message }}</div>
+                    {% endfor %}
+                    </div>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <div class="form-outline">
+                        {{ form_label(form.streetNumberExtension) }}
+                        {{ form_widget(form.streetNumberExtension) }}
+                        {% for errorItem in form.streetNumberExtension.vars.errors %}
+                            <div class="text-danger">{{ errorItem.message }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-2">
+                    <div class="form-outline">
+                        {{ form_label(form.streetType) }}
+                        {{ form_widget(form.streetType) }}
+                        {% for errorItem in form.streetType.vars.errors %}
+                            <div class="text-danger">{{ errorItem.message }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <div class="form-outline">
+                        {{ form_label(form.streetName) }}
+                        {{ form_widget(form.streetName) }}
+                        {% for errorItem in form.streetName.vars.errors %}
+                            <div class="text-danger">{{ errorItem.message }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-outline mb-2">
+                {{ form_label(form.complement) }}
+                {{ form_widget(form.complement) }}
+                {% for errorItem in form.complement.vars.errors %}
+                    <div class="text-danger">{{ errorItem.message }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-2">
+                    <div class="form-outline">
+                        {{ form_label(form.postalcode) }}
+                        {{ form_widget(form.postalcode) }}
+                        {% for errorItem in form.postalcode.vars.errors %}
+                            <div class="text-danger">{{ errorItem.message }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <div class="form-outline">
+                        {{ form_label(form.city) }}
+                        {{ form_widget(form.city) }}
+                        {% for errorItem in form.city.vars.errors %}
+                            <div class="text-danger">{{ errorItem.message }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <button type="submit" value="submit" class="mt-2 btn btn-dark">Valider</button>
+        </div>
+    </div>
+{{ form_end(form) }}

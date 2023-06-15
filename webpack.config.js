@@ -24,6 +24,7 @@ Encore
     .addEntry('register', './assets/js/register.js')
     .addEntry('forgotPasswordRequest', './assets/js/forgotPasswordRequest.js')
     .addEntry('editPassword', './assets/js/editPassword.js')
+    .addEntry('address', './assets/js/address.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')

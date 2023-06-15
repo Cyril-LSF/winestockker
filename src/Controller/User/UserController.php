@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\User;
 
+use App\Entity\Address;
 use App\Entity\User;
+use App\Form\AddressType;
 use App\Form\EditPasswordType;
 use App\Form\UserType;
 use App\Form\RegistrationFormType;
+use App\Repository\AddressRepository;
 use App\Repository\UserRepository;
 use App\Service\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,11 +38,25 @@ class UserController extends AbstractController
     }
 
     #[IsGranted("ROLE_USER")]
-    #[Route('/{id}', name: 'user_show', methods: ['GET'])]
-    public function show(User $user): Response
+    #[Route('/{id}', name: 'user_show', methods: ['GET', 'POST'])]
+    public function show(User $user, Request $request, AddressRepository $addressRepository): Response
     {
+        $address = new Address();
+        $form = $this->createForm(AddressType::class, $address);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $address->setauthor($this->getUser());
+            $addressRepository->save($address, true);
+
+            $this->addFlash('success', "L'adresse a été créée !");
+        }
+
         return $this->render('user/show.html.twig', [
             'user' => $user,
+            'form' => $form->createView(),
+            'addresses' => $addressRepository->findBy(['author' => $this->getUser()]),
         ]);
     }
 

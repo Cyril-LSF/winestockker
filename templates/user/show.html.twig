@@ -1,65 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User{% endblock %}
-
-{# {% block body %}
-    <h1>User</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ user.id }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ user.email }}</td>
-            </tr>
-            <tr>
-                <th>Roles</th>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-            </tr>
-            <tr>
-                <th>Password</th>
-                <td>{{ user.password }}</td>
-            </tr>
-            <tr>
-                <th>IsVerified</th>
-                <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>Birthday</th>
-                <td>{{ user.birthday ? user.birthday|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Firstname</th>
-                <td>{{ user.firstname }}</td>
-            </tr>
-            <tr>
-                <th>Lastname</th>
-                <td>{{ user.lastname }}</td>
-            </tr>
-            <tr>
-                <th>Screenname</th>
-                <td>{{ user.screenname }}</td>
-            </tr>
-            <tr>
-                <th>RegisteredAt</th>
-                <td>{{ user.registeredAt ? user.registeredAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Premium</th>
-                <td>{{ user.premium ? 'Yes' : 'No' }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_user_index') }}">back to list</a>
-
-    <a href="{{ path('user_edit', {'id': user.id}) }}">edit</a>
-
-    {{ include('user/_delete_form.html.twig') }}
-{% endblock %} #}
+{% block title %}{{ parent() }} - User{% endblock %}
 
 {% block body %}
 <section class="min-vh-100" style="background-color: #f2e8cf;">
@@ -69,8 +10,13 @@
       <div class="col-lg-4">
         <div class="card mb-4">
           <div class="card-body text-center">
-            <img src={{ asset('upload/' ~ user.picture) }} alt="avatar"
+            {% if user.picture is not empty %}
+              <img src={{ asset('upload/' ~ user.picture) }} alt="avatar"
               class="rounded-circle img-fluid" style="width: 150px;">
+            {% else %}
+              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+              class="rounded-circle img-fluid" style="width: 150px;">
+            {% endif %}
             <h5 class="my-3">{{ user.screenname }}</h5>
             {% if user.isPremium %}
                 <div class="d-flex flex-column justify-content-center mb-2">
@@ -139,33 +85,49 @@
           <div class="col-md-6">
             <div class="card mb-4 mb-md-0">
               <div class="card-body">
-                <p class="mb-4"><span class="text-primary font-italic me-1">assigment</span> Project Status
-                </p>
-                <p class="mb-1" style="font-size: .77rem;">Web Design</p>
-                <div class="progress rounded" style="height: 5px;">
-                  <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="80"
-                    aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <p class="mt-4 mb-1" style="font-size: .77rem;">Website Markup</p>
-                <div class="progress rounded" style="height: 5px;">
-                  <div class="progress-bar" role="progressbar" style="width: 72%" aria-valuenow="72"
-                    aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <p class="mt-4 mb-1" style="font-size: .77rem;">One Page</p>
-                <div class="progress rounded" style="height: 5px;">
-                  <div class="progress-bar" role="progressbar" style="width: 89%" aria-valuenow="89"
-                    aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <p class="mt-4 mb-1" style="font-size: .77rem;">Mobile Template</p>
-                <div class="progress rounded" style="height: 5px;">
-                  <div class="progress-bar" role="progressbar" style="width: 55%" aria-valuenow="55"
-                    aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <p class="mt-4 mb-1" style="font-size: .77rem;">Backend API</p>
-                <div class="progress rounded mb-2" style="height: 5px;">
-                  <div class="progress-bar" role="progressbar" style="width: 66%" aria-valuenow="66"
-                    aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
+                <p><i class="fa-solid fa-map-location-dot"></i> Adresses</p>
+                {% if user.addresses is not empty %}
+                  <div class="container-fluid">
+                    {% set count = 0 %}
+                    {% for address in user.addresses %}
+                      <div class="row">
+                        <div class="col mb-4">
+                          <div id={{ 'address_card' ~ count }} class="card shadow alert {% if address.selected == true %} alert-success {% endif %}">
+                            <div class="w-100">
+                              <div class="d-flex justify-content-between p-md-1">
+                                <div class="d-flex flex-column w-100">
+                                  <div class="align-self-center">
+                                    <h5>{{ address.name }}</h5>
+                                  </div>
+                                  <div>
+                                    <div class="text-center">
+                                      <h6>{{ address.streetNumber ~ ' ' ~ address.streetNumberExtension ~ ' ' ~ address.streetName}}</h6>
+                                      <p class="mb-0">{{ address.postalcode ~ ' ' ~ address.city}}</p>
+                                    </div>
+                                    <div class="mt-2 d-flex justify-content-around">
+                                      <button class="btn btn-link selected_btn" data-url={{ path('address_selected', {'id': address.id}) }}>
+                                        {% if address.selected == true %}
+                                          <i class='fa-solid fa-xmark fa-2x text-danger'></i>
+                                        {% else %}
+                                          <i class="fa-solid fa-check fa-2x text-success"></i>
+                                        {% endif %}
+                                      </button>
+                                      <a href="#" class="btn btn-link"><i class="fa-solid fa-pen-to-square fa-2x text-secondary"></i></a>
+                                      {{ include('address/_delete_form.html.twig') }}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {% set count = count + 1 %}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+                <button id="add_address" class="btn btn-light w-100"><i class="fa-solid fa-plus fa-2x"></i></button>
+                {{ include('address/_form.html.twig') }}
               </div>
             </div>
           </div>
@@ -207,4 +169,9 @@
     </div>
   </div>
 </section>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {{ encore_entry_script_tags('address') }}
 {% endblock %}

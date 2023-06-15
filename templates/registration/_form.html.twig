@@ -111,8 +111,9 @@
                     <div class="d-flex justify-content-center align-items-center mb-4">
                       {% if user.picture is null %}
                         <img class="w-50 form-control" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="Photo de profil">
+                      {% else %}
+                        <img class="w-50 form-control" src={{ asset('upload/' ~ user.picture) }} alt="Photo de profil">
                       {% endif %}
-                      <img class="w-50 form-control" src={{ asset('upload/' ~ user.picture) }} alt="Photo de profil">
                     </div>
                     <div class="d-flex flex-row align-items-center">
                         <i class="fa-solid fa-image fa-lg me-3 fa-fw"></i>
