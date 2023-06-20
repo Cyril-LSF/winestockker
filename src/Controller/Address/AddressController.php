@@ -79,7 +79,8 @@ class AddressController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $addressRepository->save($address, true);
 
-            return $this->redirectToRoute('address_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', "L'adresse a été modifiée !");
+            return $this->redirectToRoute('user_show', ['id' => $address->getauthor()->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('address/edit.html.twig', [

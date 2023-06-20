@@ -51,6 +51,8 @@ class UserController extends AbstractController
             $addressRepository->save($address, true);
 
             $this->addFlash('success', "L'adresse a été créée !");
+        } else if ($form->isSubmitted()) {
+            $this->addFlash('danger', "Erreur de saisie");
         }
 
         return $this->render('user/show.html.twig', [
