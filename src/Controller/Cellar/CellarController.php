@@ -1,0 +1,82 @@
+<?php
+
+namespace App\Controller\Cellar;
+
+use App\Entity\Cellar;
+use App\Form\CellarType;
+use App\Repository\CellarRepository;
+use DateTime;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+#[Route('/cellar')]
+class CellarController extends AbstractController
+{
+    #[Route('/', name: 'cellar_index', methods: ['GET'])]
+    public function index(CellarRepository $cellarRepository): Response
+    {
+        return $this->render('cellar/index.html.twig', [
+            'cellars' => $cellarRepository->findBy(['author' => $this->getUser()]),
+        ]);
+    }
+
+    #[Route('/new', name: 'cellar_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, CellarRepository $cellarRepository): Response
+    {
+        $cellar = new Cellar();
+        $form = $this->createForm(CellarType::class, $cellar);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $cellar->setCreatedAt(new DateTime());
+            $cellar->setAuthor($this->getUser());
+            $cellarRepository->save($cellar, true);
+
+            return $this->redirectToRoute('cellar_show', ['id' => $cellar->getId()], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('cellar/new.html.twig', [
+            'cellar' => $cellar,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'cellar_show', methods: ['GET'])]
+    public function show(Cellar $cellar): Response
+    {
+        return $this->render('cellar/show.html.twig', [
+            'cellar' => $cellar,
+        ]);
+    }
+
+    #[Route('/{id}/edit', name: 'cellar_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Cellar $cellar, CellarRepository $cellarRepository): Response
+    {
+        $form = $this->createForm(CellarType::class, $cellar);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $cellarRepository->save($cellar, true);
+
+            return $this->redirectToRoute('cellar_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('cellar/edit.html.twig', [
+            'cellar' => $cellar,
+            'form' => $form,
+            'update' => true,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'cellar_delete', methods: ['POST'])]
+    public function delete(Request $request, Cellar $cellar, CellarRepository $cellarRepository): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$cellar->getId(), $request->request->get('_token'))) {
+            $cellarRepository->remove($cellar, true);
+        }
+
+        return $this->redirectToRoute('cellar_index', [], Response::HTTP_SEE_OTHER);
+    }
+}

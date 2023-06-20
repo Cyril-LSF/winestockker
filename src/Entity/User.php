@@ -62,9 +62,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Address::class, orphanRemoval: true)]
     private Collection $addresses;
 
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Cellar::class, orphanRemoval: true)]
+    private Collection $cellars;
+
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
+        $this->cellars = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -266,4 +270,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Cellar>
+     */
+    public function getCellars(): Collection
+    {
+        return $this->cellars;
+    }
+
+    public function addCellar(Cellar $cellar): self
+    {
+        if (!$this->cellars->contains($cellar)) {
+            $this->cellars->add($cellar);
+            $cellar->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCellar(Cellar $cellar): self
+    {
+        if ($this->cellars->removeElement($cellar)) {
+            // set the owning side to null (unless already changed)
+            if ($cellar->getAuthor() === $this) {
+                $cellar->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
 }
