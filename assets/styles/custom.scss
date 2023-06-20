@@ -1,6 +1,19 @@
+/* BACKGROUND */
+.bg-wine {
+    background-color: #6F1125;
+}
 .cellar-background {
     background-image: url('/public/images/bottle.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
+.bg-cellar-name {
+    background-image: url('/public/images/boxes.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 8em;
+}
+
+/* END BACKGROUND */

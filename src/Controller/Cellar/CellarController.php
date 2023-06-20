@@ -60,7 +60,8 @@ class CellarController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $cellarRepository->save($cellar, true);
 
-            return $this->redirectToRoute('cellar_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', "La cave a été modifiée !");
+            return $this->redirectToRoute('cellar_show', ['id' => $cellar->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('cellar/edit.html.twig', [
@@ -77,6 +78,7 @@ class CellarController extends AbstractController
             $cellarRepository->remove($cellar, true);
         }
 
+        $this->addFlash('success', "La cave a été sipprimée !");
         return $this->redirectToRoute('cellar_index', [], Response::HTTP_SEE_OTHER);
     }
 }
