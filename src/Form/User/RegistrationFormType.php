@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\User;
 
 use DateTime;
 use App\Entity\User;

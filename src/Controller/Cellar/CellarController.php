@@ -3,7 +3,7 @@
 namespace App\Controller\Cellar;
 
 use App\Entity\Cellar;
-use App\Form\CellarType;
+use App\Form\Cellar\CellarType;
 use App\Repository\CellarRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

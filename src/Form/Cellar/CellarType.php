@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Cellar;
 
 use App\Entity\Cellar;
 use Symfony\Component\Form\AbstractType;

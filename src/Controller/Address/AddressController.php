@@ -3,7 +3,7 @@
 namespace App\Controller\Address;
 
 use App\Entity\Address;
-use App\Form\AddressType;
+use App\Form\Address\AddressType;
 use App\Repository\AddressRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

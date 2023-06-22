@@ -4,10 +4,10 @@ namespace App\Controller\User;
 
 use App\Entity\Address;
 use App\Entity\User;
-use App\Form\AddressType;
-use App\Form\EditPasswordType;
+use App\Form\Address\AddressType;
+use App\Form\Security\EditPasswordType;
 use App\Form\UserType;
-use App\Form\RegistrationFormType;
+use App\Form\User\RegistrationFormType;
 use App\Repository\AddressRepository;
 use App\Repository\UserRepository;
 use App\Service\UploadedFile;
