@@ -14,7 +14,7 @@ window.addEventListener('load', function(e) {
             xhr.send();
 
             xhr.onload = function () {
-            let data = JSON.parse(xhr.response);
+                let data = JSON.parse(xhr.response);
 
                 if (data.status === true) {
                     let addressCard = document.getElementById('address_card' + i);

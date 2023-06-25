@@ -26,6 +26,7 @@ Encore
     .addEntry('editPassword', './assets/js/editPassword.js')
     .addEntry('address', './assets/js/address.js')
     .addEntry('cellar', './assets/js/cellar.js')
+    .addEntry('bottle', './assets/js/bottle.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')

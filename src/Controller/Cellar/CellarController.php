@@ -2,9 +2,13 @@
 
 namespace App\Controller\Cellar;
 
+use App\Entity\Bottle;
 use App\Entity\Cellar;
+use App\Form\Cellar\AddBottleType;
 use App\Form\Cellar\CellarType;
+use App\Repository\BottleRepository;
 use App\Repository\CellarRepository;
+use App\Repository\QuantityRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,11 +47,31 @@ class CellarController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'cellar_show', methods: ['GET'])]
-    public function show(Cellar $cellar): Response
+    #[Route('/{id}', name: 'cellar_show', methods: ['GET', 'POST'])]
+    public function show(Cellar $cellar, Request $request, CellarRepository $cellarRepository, BottleRepository $bottleRepository, QuantityRepository $quantityRepository): Response
     {
+
+        $form = $this->createForm(AddBottleType::class, $cellar, [
+            'user' => $this->getUser(),
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            foreach ($form->get('bottles')->getData() as $bottle) {
+                $newBottle = $bottleRepository->find($bottle);
+                $newBottle->addCellar($cellar);
+                $bottleRepository->save($newBottle, true);
+            }
+            $cellarRepository->save($cellar, true);
+            
+            $this->addFlash('success', "La/les bouteilles ont été ajoutées à la cave");
+            $this->redirectToRoute('cellar_show', ['id' => $cellar->getId(), RESPONSE::HTTP_SEE_OTHER]);
+        }
+        
         return $this->render('cellar/show.html.twig', [
             'cellar' => $cellar,
+            'form' => $form->createView(),
+            'quantities' => $quantityRepository->findBy(['cellar' => $cellar]),
         ]);
     }
 
@@ -76,9 +100,9 @@ class CellarController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$cellar->getId(), $request->request->get('_token'))) {
             $cellarRepository->remove($cellar, true);
+            $this->addFlash('success', "La cave a été supprimée !");
         }
 
-        $this->addFlash('success', "La cave a été sipprimée !");
         return $this->redirectToRoute('cellar_index', [], Response::HTTP_SEE_OTHER);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Bottle;
 use App\Entity\Cellar;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -29,6 +30,7 @@ class CellarRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
 
     public function remove(Cellar $entity, bool $flush = false): void
     {

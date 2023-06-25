@@ -1,0 +1,19 @@
+{{ form_start(form) }}
+    {{ form_label(form.bottles) }}
+    {# <div class="">
+        {{ form_widget(form.bottles, {'attr': {'class': 'form-check form-switch'}}) }}
+    </div> #}
+    <div class="form-check form-switch d-flex flex-column">
+        {% for bottle in form.bottles %}
+            <label class="form-check-label">
+            {{ form_widget(bottle, {'attr': {'class': "form-check-input"}}) }}
+            <span>{{ bottle.vars.label | upper }}</span>
+            </label>
+        {% endfor %}
+    </div>
+    {% for errorItem in form.bottles.vars.errors %}
+        <div class="text-danger">{{ errorItem.message }}</div>
+    {% endfor %}
+    <p class="bottles-error mb-1"></p>
+    <button type="submit" value="submit" class="btn btn-dark mt-3">Ajouter</button>
+{{ form_end(form) }}

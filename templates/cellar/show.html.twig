@@ -3,33 +3,10 @@
 {% block title %}Cellar{% endblock %}
 
 {% block body %}
-    {# <h1>Cellar</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ cellar.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ cellar.name }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ cellar.createdAt ? cellar.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('cellar_index') }}">back to list</a>
-
-    <a href="{{ path('cellar_edit', {'id': cellar.id}) }}">edit</a>
-
-    {{ include('cellar/_delete_form.html.twig') }} #}
 <section class="h-100 gradient-custom">
   <div class="container py-5">
-    <div class="row d-flex justify-content-center my-4"><div class="col-md-4">
+    <div class="row d-flex justify-content-center my-4">
+      <div class="col-md-4">
         <div class="card mb-4">
           <div class="card-header py-3">
             <h5 class="mb-0">{{ cellar.name }}</h5>
@@ -40,6 +17,11 @@
                 class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
                 Créée le
                 <span>{{ cellar.createdAt | date('d/m/Y') }}</span>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                Bouteilles
+                <span>{{ cellar.bottles | length }}</span>
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                 
@@ -59,138 +41,80 @@
                 {{ include('cellar/_delete_form.html.twig') }}
             </div>
           </div>
+          <div>
+          </div>
         </div>
+        <button type="button" class="btn btn-dark mb-4 w-100" data-toggle="modal" data-target="#bottleModal">
+          Ajouter une bouteille
+        </button>
+        {% include 'cellar/bottleModal.html.twig' with {'form': form} %}
       </div>
       <div class="col-md-8">
-        <div class="card mb-4">
-          <div class="card-header py-3">
-            <h5 class="mb-0">Cart - 2 items</h5>
-          </div>
-          <div class="card-body">
-            <!-- Single item -->
-            <div class="row">
-              <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
-                <!-- Image -->
-                <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                  <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Vertical/12a.webp"
-                    class="w-100" alt="Blue Jeans Jacket" />
-                  <a href="#!">
-                    <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
-                  </a>
+        <div class="row">
+          {% for bottle in cellar.bottles %}
+            <div class="col-lg-5 col-md-12 mb-5">
+            <div class="card shadow position-relative">
+                <div class="w-100 d-flex flex-column align-items-end position-absolute">
+                    {{ include('bottle/_delete_form.html.twig') }}
                 </div>
-                <!-- Image -->
-              </div>
-
-              <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
-                <!-- Data -->
-                <p><strong>Blue denim shirt</strong></p>
-                <p>Color: blue</p>
-                <p>Size: M</p>
-                <button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip"
-                  title="Remove item">
-                  <i class="fas fa-trash"></i>
-                </button>
-                <button type="button" class="btn btn-danger btn-sm mb-2" data-mdb-toggle="tooltip"
-                  title="Move to the wish list">
-                  <i class="fas fa-heart"></i>
-                </button>
-                <!-- Data -->
-              </div>
-
-              <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
-                <!-- Quantity -->
-                <div class="d-flex mb-4" style="max-width: 300px">
-                  <button class="btn btn-primary px-3 me-2"
-                    onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                    <i class="fas fa-minus"></i>
-                  </button>
-
-                  <div class="form-outline">
-                    <input id="form1" min="0" name="quantity" value="1" type="number" class="form-control" />
-                    <label class="form-label" for="form1">Quantity</label>
-                  </div>
-
-                  <button class="btn btn-primary px-3 ms-2"
-                    onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                    <i class="fas fa-plus"></i>
-                  </button>
-                </div>
-                <!-- Quantity -->
-
-                <!-- Price -->
-                <p class="text-start text-md-center">
-                  <strong>$17.99</strong>
-                </p>
-                <!-- Price -->
-              </div>
-            </div>
-            <!-- Single item -->
-
-            <hr class="my-4" />
-
-            <!-- Single item -->
-            <div class="row">
-              <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
-                <!-- Image -->
-                <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                  <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Vertical/13a.webp"
+                <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+                    data-mdb-ripple-color="light">
+                    <img src={{ asset('images/bottle-top.jpg') }}
                     class="w-100" />
-                  <a href="#!">
-                    <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
-                  </a>
                 </div>
-                <!-- Image -->
-              </div>
-
-              <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
-                <!-- Data -->
-                <p><strong>Red hoodie</strong></p>
-                <p>Color: red</p>
-                <p>Size: M</p>
-
-                <button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip"
-                  title="Remove item">
-                  <i class="fas fa-trash"></i>
-                </button>
-                <button type="button" class="btn btn-danger btn-sm mb-2" data-mdb-toggle="tooltip"
-                  title="Move to the wish list">
-                  <i class="fas fa-heart"></i>
-                </button>
-                <!-- Data -->
-              </div>
-
-              <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
-                <!-- Quantity -->
-                <div class="d-flex mb-4" style="max-width: 300px">
-                  <button class="btn btn-primary px-3 me-2"
-                    onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                    <i class="fas fa-minus"></i>
-                  </button>
-
-                  <div class="form-outline">
-                    <input id="form1" min="0" name="quantity" value="1" type="number" class="form-control" />
-                    <label class="form-label" for="form1">Quantity</label>
-                  </div>
-
-                  <button class="btn btn-primary px-3 ms-2"
-                    onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                    <i class="fas fa-plus"></i>
-                  </button>
+                <div class="card-body w-75 m-auto">
+                    <div class="d-flex flex-column justify-content-center align-items-center">
+                        <div class="d-flex flex-column align-items-center">
+                            <p class="h6 text-muted">Provenance</p>
+                            <p class="h6">{{ bottle.origin|country_name }}</p>
+                        </div>
+                        <hr class="w-100 m-1" style="border: 1px solid grey;">
+                        <div class="d-flex flex-column align-items-center">
+                            <p class="h6 text-muted">Cépage</p>
+                            <p class="h6">{{ bottle.vine }}</p>
+                        </div>
+                        <hr class="w-100 m-1" style="border: 1px solid grey;">
+                        <div class="d-flex flex-column align-items-center">
+                            <p class="h6 text-muted">Embouteilleur</p>
+                            <p class="h6">{{ bottle.enbottler }}</p>
+                        </div>
+                        <hr class="w-100 m-1" style="border: 1px solid grey;">
+                        <div class="d-flex flex-column align-items-center">
+                            <p class="h6 text-muted">Prix</p>
+                            <p class="h6">{{ bottle.price }}</p>
+                        </div>
+                        <hr class="w-100 m-1" style="border: 1px solid grey;">
+                        <div class="d-flex flex-column align-items-center">
+                            <p class="h6 text-muted">Quantité</p>
+                            <div class="d-flex align-items-center">
+                              <button type="button" data-url={{ path('quantity_edit', {'cellar': cellar.id, 'bottle': bottle.id, 'action': "less"}) }} class="btn btn-link text-danger edit-quantity"><i class="fa-solid fa-minus fa-lg"></i></button>
+                              {% if quantities is not empty %}
+                                {% for quantity in quantities %}
+                                  {% if quantity.bottle.id == bottle.id %}
+                                    <p class="m-0 quantity">{{ quantity.quantity }}</p>
+                                  {% endif %}
+                                {% endfor %}
+                              {% endif %}
+                              <button type="button" data-url={{ path('quantity_edit', {'cellar': cellar.id, 'bottle': bottle.id, 'action': "add"}) }} class="btn btn-link text-success edit-quantity"><i class="fa-solid fa-plus fa-lg"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <fieldset class="purple-fieldset rounded mt-2 text-center">
+                        <legend class="h4 purple mt-1">{{ bottle.name | upper }}</legend>
+                        <p class="h6">{{ bottle.year }}</p>
+                    </fieldset>
                 </div>
-                <!-- Quantity -->
-
-                <!-- Price -->
-                <p class="text-start text-md-center">
-                  <strong>$17.99</strong>
-                </p>
-                <!-- Price -->
-              </div>
             </div>
-            <!-- Single item -->
-          </div>
+        </div>
+          {% endfor %}
         </div>
       </div>
     </div>
   </div>
 </section>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {{ encore_entry_script_tags('bottle') }}
 {% endblock %}
