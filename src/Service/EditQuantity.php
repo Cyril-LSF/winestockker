@@ -22,7 +22,7 @@ class EditQuantity {
             switch ($action) {
                 case 'less':
                     if ($quantity->getQuantity() == 0) {
-                        continue;
+                        break;
                     }
                     $quantity->setQuantity(intval($quantity->getQuantity()) - 1);
                     break;

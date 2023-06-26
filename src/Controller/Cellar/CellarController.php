@@ -9,6 +9,7 @@ use App\Form\Cellar\CellarType;
 use App\Repository\BottleRepository;
 use App\Repository\CellarRepository;
 use App\Repository\QuantityRepository;
+use App\Service\Bottle\BottleToCellar;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,6 +19,13 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/cellar')]
 class CellarController extends AbstractController
 {
+    private BottleToCellar $bottleToCellar;
+
+    public function __construct(BottleToCellar $bottleToCellar)
+    {
+        $this->bottleToCellar = $bottleToCellar;
+    }
+
     #[Route('/', name: 'cellar_index', methods: ['GET'])]
     public function index(CellarRepository $cellarRepository): Response
     {
@@ -53,18 +61,18 @@ class CellarController extends AbstractController
 
         $form = $this->createForm(AddBottleType::class, $cellar, [
             'user' => $this->getUser(),
+            'cellar' => $cellar,
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            foreach ($form->get('bottles')->getData() as $bottle) {
-                $newBottle = $bottleRepository->find($bottle);
-                $newBottle->addCellar($cellar);
-                $bottleRepository->save($newBottle, true);
+            $add = $this->bottleToCellar->bottleToCellar($cellar, $form->get('bottles')->getData());
+
+            $message = "La/les bouteilles ont été ajoutées à la cave";
+            if ($add == false) {
+                $message = "La/les bouteilles ont été retirées la cave";
             }
-            $cellarRepository->save($cellar, true);
-            
-            $this->addFlash('success', "La/les bouteilles ont été ajoutées à la cave");
+            $this->addFlash('success', $message);
             $this->redirectToRoute('cellar_show', ['id' => $cellar->getId(), RESPONSE::HTTP_SEE_OTHER]);
         }
         

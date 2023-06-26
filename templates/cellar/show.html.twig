@@ -45,7 +45,7 @@
           </div>
         </div>
         <button type="button" class="btn btn-dark mb-4 w-100" data-toggle="modal" data-target="#bottleModal">
-          Ajouter une bouteille
+          Ajouter / retirer une bouteille
         </button>
         {% include 'cellar/bottleModal.html.twig' with {'form': form} %}
       </div>
@@ -54,9 +54,6 @@
           {% for bottle in cellar.bottles %}
             <div class="col-lg-5 col-md-12 mb-5">
             <div class="card shadow position-relative">
-                <div class="w-100 d-flex flex-column align-items-end position-absolute">
-                    {{ include('bottle/_delete_form.html.twig') }}
-                </div>
                 <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
                     data-mdb-ripple-color="light">
                     <img src={{ asset('images/bottle-top.jpg') }}
@@ -88,13 +85,11 @@
                             <p class="h6 text-muted">Quantité</p>
                             <div class="d-flex align-items-center">
                               <button type="button" data-url={{ path('quantity_edit', {'cellar': cellar.id, 'bottle': bottle.id, 'action': "less"}) }} class="btn btn-link text-danger edit-quantity"><i class="fa-solid fa-minus fa-lg"></i></button>
-                              {% if quantities is not empty %}
-                                {% for quantity in quantities %}
-                                  {% if quantity.bottle.id == bottle.id %}
-                                    <p class="m-0 quantity">{{ quantity.quantity }}</p>
-                                  {% endif %}
-                                {% endfor %}
-                              {% endif %}
+                              {% for quantity in quantities %}
+                                {% if quantity.bottle.id == bottle.id %}
+                                  <p class="m-0 quantity">{{ quantity.quantity }}</p>
+                                {% endif %}
+                              {% endfor %}
                               <button type="button" data-url={{ path('quantity_edit', {'cellar': cellar.id, 'bottle': bottle.id, 'action': "add"}) }} class="btn btn-link text-success edit-quantity"><i class="fa-solid fa-plus fa-lg"></i></button>
                             </div>
                         </div>

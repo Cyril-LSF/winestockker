@@ -16,10 +16,11 @@ class AddBottleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $user = $options['user'];
+        $cellarId = $options['cellar']->getId();
         $builder
             ->add('bottles', EntityType::class, [
                 'class' => Bottle::class,
-                'query_builder' => function (EntityRepository $er) use ($user) {
+                'query_builder' => function (EntityRepository $er) use ($user, $cellarId) {
                     return $er->createQueryBuilder('b')
                         ->where("b.author = $user");
                 },
@@ -47,6 +48,7 @@ class AddBottleType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Cellar::class,
             'user' => null,
+            'cellar' => null,
         ]);
     }
 }

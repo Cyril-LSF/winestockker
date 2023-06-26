@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Bottle;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\Cellar;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Bottle>
@@ -37,6 +38,15 @@ class BottleRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function getCellarBotlles(Cellar $cellar)
+    {
+        return $this->createQueryBuilder('b')
+            ->where(':cellar MEMBER OF b.cellars')
+            ->setParameters(['cellar' => $cellar])
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**
