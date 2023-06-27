@@ -78,19 +78,27 @@
                         <hr class="w-100 m-1" style="border: 1px solid grey;">
                         <div class="d-flex flex-column align-items-center">
                             <p class="h6 text-muted">Prix</p>
-                            <p class="h6">{{ bottle.price }}</p>
+                            <p class="h6">{{ bottle.price ~ ' €' }}</p>
                         </div>
                         <hr class="w-100 m-1" style="border: 1px solid grey;">
                         <div class="d-flex flex-column align-items-center">
                             <p class="h6 text-muted">Quantité</p>
-                            <div class="d-flex align-items-center">
-                              <button type="button" data-url={{ path('quantity_edit', {'cellar': cellar.id, 'bottle': bottle.id, 'action': "less"}) }} class="btn btn-link text-danger edit-quantity"><i class="fa-solid fa-minus fa-lg"></i></button>
+                            <div class="d-flex flex-column align-items-center">
                               {% for quantity in quantities %}
                                 {% if quantity.bottle.id == bottle.id %}
-                                  <p class="m-0 quantity">{{ quantity.quantity }}</p>
+                                  <div class="d-flex align-items-center">
+                                    <button type="button" data-url={{ path('quantity_edit', {'cellar': cellar.id, 'bottle': bottle.id, 'action': "less"}) }} class="btn btn-link text-danger edit-quantity"><i class="fa-solid fa-minus fa-lg"></i></button>
+                                    <p class="m-0 quantity">{{ quantity.quantity }}</p>
+                                    <button type="button" data-url={{ path('quantity_edit', {'cellar': cellar.id, 'bottle': bottle.id, 'action': "add"}) }} class="btn btn-link text-success edit-quantity"><i class="fa-solid fa-plus fa-lg"></i></button>
+                                    {% if quantity.quantity < 1 %}
+                                      <div class="w-100 d-flex justify-content-end">
+                                        <span class="badge bg-danger">Rupture</span>
+                                      </div>
+                                    {% endif %}
+                                  </div>
+                                  <a href={{ path('quantity_edit_big', {'quantity': quantity.id}) }} class="link-secondary text-center">Grosse quantité</a>
                                 {% endif %}
                               {% endfor %}
-                              <button type="button" data-url={{ path('quantity_edit', {'cellar': cellar.id, 'bottle': bottle.id, 'action': "add"}) }} class="btn btn-link text-success edit-quantity"><i class="fa-solid fa-plus fa-lg"></i></button>
                             </div>
                         </div>
                     </div>

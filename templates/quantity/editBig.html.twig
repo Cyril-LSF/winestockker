@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Quantity{% endblock %}
+
+{% block body %}
+    {{ include('quantity/_form.html.twig') }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {{ encore_entry_script_tags('quantity') }}
+{% endblock %}

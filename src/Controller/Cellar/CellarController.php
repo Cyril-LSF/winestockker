@@ -6,6 +6,7 @@ use App\Entity\Bottle;
 use App\Entity\Cellar;
 use App\Form\Cellar\AddBottleType;
 use App\Form\Cellar\CellarType;
+use App\Form\Quantity\QuantityType;
 use App\Repository\BottleRepository;
 use App\Repository\CellarRepository;
 use App\Repository\QuantityRepository;

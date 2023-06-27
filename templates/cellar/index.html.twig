@@ -19,7 +19,7 @@
                                         <span>Créée le</span><span>{{ cellar.createdAt | date('d/m/Y') }}</span>
                                     </div>
                                     <div class="d-flex justify-content-between text-muted">
-                                        <span>Nombre de bouteilles</span><span>10</span>
+                                        <span>Nombre de bouteilles</span><span>{{ cellar.bottles | length }}</span>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between total font-weight-bold mt-4">

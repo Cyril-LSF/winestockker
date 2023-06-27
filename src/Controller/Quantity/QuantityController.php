@@ -4,9 +4,12 @@ namespace App\Controller\Quantity;
 
 use App\Entity\Bottle;
 use App\Entity\Cellar;
+use App\Entity\Quantity;
+use App\Form\Quantity\QuantityType;
 use App\Service\EditQuantity;
 use App\Repository\BottleRepository;
 use App\Repository\CellarRepository;
+use App\Repository\QuantityRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,15 +19,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/quantity')]
 class QuantityController extends AbstractController
 {
-    private CellarRepository $cellarRepository;
-    private BottleRepository $bottleRepository;
+    private QuantityRepository $quantityRepository;
     private EditQuantity     $editQuantity;
 
-    public function __construct(CellarRepository $cellarRepository, BottleRepository $bottleRepository, EditQuantity $editQuantity)
+    public function __construct(QuantityRepository $quantityRepository, EditQuantity $editQuantity)
     {
-        $this->cellarRepository = $cellarRepository;
-        $this->bottleRepository = $bottleRepository;
-        $this->editQuantity     = $editQuantity;
+        $this->quantityRepository = $quantityRepository;
+        $this->editQuantity       = $editQuantity;
     }
 
     #[Route('/edit/{cellar}/{bottle}/{action}', name: 'quantity_edit', methods: ['POST'])]
@@ -35,6 +36,27 @@ class QuantityController extends AbstractController
         return new JsonResponse([
             'status' => true,
             'quantity' => $bottleQuantity,
+        ]);
+    }
+
+    #[Route('/edit/big/{quantity}', name: 'quantity_edit_big', methods: ['GET', 'POST'])]
+    public function editBig(Quantity $quantity, Request $request): Response
+    {
+        $form = $this->createForm(QuantityType::class, $quantity);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->quantityRepository->save($quantity, true);
+
+            $this->addFlash('success', "La quantité a été modifiée !");
+            return $this->redirectToRoute('cellar_show', ['id' => $quantity->getCellar()->getId()], RESPONSE::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('quantity/editBig.html.twig', [
+            'form' => $form->createView(),
+            'quantity' => $quantity,
+            'cellar' => $quantity->getCellar(),
+            'bottle' => $quantity->getBottle(),
         ]);
     }
 }
