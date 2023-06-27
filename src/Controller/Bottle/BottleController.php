@@ -5,6 +5,7 @@ namespace App\Controller\Bottle;
 use App\Entity\Bottle;
 use App\Form\Bottle\BottleType;
 use App\Repository\BottleRepository;
+use App\Service\Bottle\BottleToCategory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +14,13 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/bottle')]
 class BottleController extends AbstractController
 {
+    private BottleToCategory $bottleToCategory;
+
+    public function __construct(BottleToCategory $bottleToCategory)
+    {
+        $this->bottleToCategory = $bottleToCategory;
+    }
+
     #[Route('/', name: 'bottle_index', methods: ['GET'])]
     public function index(BottleRepository $bottleRepository): Response
     {
@@ -25,12 +33,15 @@ class BottleController extends AbstractController
     public function new(Request $request, BottleRepository $bottleRepository): Response
     {
         $bottle = new Bottle();
-        $form = $this->createForm(BottleType::class, $bottle);
+        $form = $this->createForm(BottleType::class, $bottle, [
+            'user' => $this->getUser(),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $bottle->setAuthor($this->getUser());
-            $bottleRepository->save($bottle, true);
+            $this->bottleToCategory->bottleToCategory($bottle, $form->get('categories')->getData());
+            //$bottleRepository->save($bottle, true);
 
             return $this->redirectToRoute('bottle_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -52,11 +63,14 @@ class BottleController extends AbstractController
     #[Route('/{id}/edit', name: 'bottle_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Bottle $bottle, BottleRepository $bottleRepository): Response
     {
-        $form = $this->createForm(BottleType::class, $bottle);
+        $form = $this->createForm(BottleType::class, $bottle, [
+            'user' => $this->getUser(),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $bottleRepository->save($bottle, true);
+            //$bottleRepository->save($bottle, true);
+            $this->bottleToCategory->bottleToCategory($bottle, $form->get('categories')->getData());
 
             return $this->redirectToRoute('bottle_index', [], Response::HTTP_SEE_OTHER);
         }

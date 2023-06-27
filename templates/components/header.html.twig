@@ -27,7 +27,7 @@
           {% endif %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa-solid fa-boxes-stacked fa-lg me-2"></i>
+            <i class="fa-solid fa-boxes-stacked fa-lg me-3"></i>
               Mes caves
             </a>
             <ul class="dropdown-menu dropdown-menu-light">
@@ -52,7 +52,7 @@
               </li>
               <li>
                 <a class="dropdown-item" href={{ path('cellar_new') }}>
-                  <i class="fa-regular fa-square-plus fa-lg me-2"></i>
+                  <i class="fa-regular fa-square-plus fa-lg me-3"></i>
                   Créer une cave
                 </a>
               </li>
@@ -60,30 +60,63 @@
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fa-solid fa-wine-bottle fa-lg"></i>
+              <i class="fa-solid fa-wine-bottle fa-lg me-3"></i>
               Mes bouteilles
             </a>
             <ul class="dropdown-menu dropdown-menu-light">
               <li>
                   <a class="dropdown-item" href={{ path('bottle_index') }}>
-                    <i class="fa-solid fa-eye fa-lg"></i>
+                    <i class="fa-solid fa-eye fa-lg me-2"></i>
                     Toutes mes bouteilles
                   </a>
               </li>
               <li>
                 <a class="dropdown-item" href={{ path('bottle_new') }}>
-                  <i class="fa-regular fa-square-plus fa-lg"></i>
+                  <i class="fa-regular fa-square-plus fa-lg me-3"></i>
                   Créer une bouteille
                 </a>
               </li>
             </ul>
           </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa-solid fa-sitemap fa-lg me-3"></i>
+              Mes catégories
+            </a>
+            <ul class="dropdown-menu dropdown-menu-light">
+              {% if app.user.categories is defined %}
+                {% for category in app.user.categories %}
+                  <li>
+                      <a class="dropdown-item" href={{ path('category_show', {'id': category.id}) }}>
+                        <i class="fa-solid fa-sitemap fa-lg me-2"></i>
+                        {{ category.name }}
+                      </a>
+                  </li>
+                {% endfor %}
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+              {% endif %}
+              <li>
+                  <a class="dropdown-item" href={{ path('category_index') }}>
+                    <i class="fa-solid fa-eye fa-lg me-2"></i>
+                    Toutes mes catégories
+                  </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href={{ path('category_new') }}>
+                  <i class="fa-regular fa-square-plus fa-lg me-3"></i>
+                  Créer une catégorie
+                </a>
+              </li>
+            </ul>
+          </li>
             {% if app.user %}
-                <li class="nav-item">
+                <li class="nav-item mt-2">
                     <a class="nav-link text-light btn btn-sm btn-danger" aria-current="page" href={{ path('logout') }}>Se déconnecter</a>
                 </li>
             {% else %}
-                <li class="nav-item">
+                <li class="nav-item mt-2">
                     <a class="nav-link text-light btn btn-sm btn-success" aria-current="page" href={{ path('login') }}>Se connecter</a>
                 </li>
             {% endif %}

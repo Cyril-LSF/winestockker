@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Form\Cellar;
+namespace App\Form\Category;
 
 use App\Entity\Bottle;
-use App\Entity\Cellar;
+use App\Entity\Category;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -45,7 +45,7 @@ class AddBottleType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Cellar::class,
+            'data_class' => Category::class,
             'user' => null,
         ]);
     }

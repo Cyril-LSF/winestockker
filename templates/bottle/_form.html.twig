@@ -90,27 +90,26 @@
                     {% endfor %}
                     <p class="price-error mb-4"></p>
                 <!-- End price -->
-                {# <!-- Picture -->
-                  {% if form.picture is defined %}
-                    <div class="d-flex justify-content-center align-items-center mb-4">
-                      {% if user.picture is null %}
-                        <img class="w-50 form-control" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="Photo de profil">
-                      {% else %}
-                        <img class="w-50 form-control" src={{ asset('upload/' ~ user.picture) }} alt="Photo de profil">
-                      {% endif %}
+                <!-- Categories -->
+                  <div class="d-flex flex-column align-items-start">
+                    <div class="d-flex flex-row align-items-center text-muted mb-2">
+                      <i class="fa-solid fa-sitemap fa-lg me-3"></i>
+                      {{ form_label(form.categories) }}
                     </div>
-                    <div class="d-flex flex-row align-items-center">
-                        <i class="fa-solid fa-image fa-lg me-3 fa-fw"></i>
-                        <div class="form-outline flex-fill mb-0">
-                            {{ form_widget(form.picture) }}
-                        </div>
+                    <div class="w-100 form-check form-switch d-flex flex-column align-items-start offset-1">
+                      {% for category in form.categories %}
+                          <label class="form-check-label">
+                            {{ form_widget(category, {'attr': {'class': "form-check-input"}}) }}
+                            <span>{{ category.vars.label | upper }}</span>
+                          </label>
+                      {% endfor %}
                     </div>
-                    {% for errorItem in form.picture.vars.errors %}
+                  </div>
+                    {% for errorItem in form.categories.vars.errors %}
                         <div class="text-danger">{{ errorItem.message }}</div>
                     {% endfor %}
-                    <p class="picture-error mb-4"></p>
-                  {% endif %}
-                <!-- End picture --> #}
+                    <p class="categories-error mb-4"></p>
+                <!-- End categories -->
                   <div class="d-flex justify-content-center">
                     {% if update is defined %}
                       <button type="submit" class="btn btn-dark btn-lg" value="submit">Modifier</button>

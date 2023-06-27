@@ -3,19 +3,23 @@
 namespace App\Form\Bottle;
 
 use App\Entity\Bottle;
+use App\Entity\Category;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CountryType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CountryType;
 
 class BottleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $user = $options['user'];
         $builder
             ->add('name', TextType::class, [
                 'label' => "Nom",
@@ -147,7 +151,24 @@ class BottleType extends AbstractType
                     ]),
                 ],
             ])
-            //->add('cellars')
+            ->add('categories', EntityType::class, [
+                'class' => Category::class,
+                'query_builder' => function (EntityRepository $er) use ($user) {
+                    return $er->createQueryBuilder('c')
+                        ->where("c.author = $user");
+                },
+                'label' => "Catégories",
+                'label_attr' => [
+                    'class' => "form-label m-0",
+                ],
+                'required' => false,
+                //'mapped' => false,
+                'expanded' => true,
+                'multiple' => true,
+                'attr' => [
+                    'class' => "form-control",
+                ],
+            ])
         ;
     }
 
@@ -155,6 +176,7 @@ class BottleType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Bottle::class,
+            'user' => null,
         ]);
     }
 }

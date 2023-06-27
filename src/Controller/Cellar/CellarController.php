@@ -62,7 +62,6 @@ class CellarController extends AbstractController
 
         $form = $this->createForm(AddBottleType::class, $cellar, [
             'user' => $this->getUser(),
-            'cellar' => $cellar,
         ]);
         $form->handleRequest($request);
 

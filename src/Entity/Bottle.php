@@ -43,10 +43,14 @@ class Bottle
     #[ORM\OneToMany(mappedBy: 'bottle', targetEntity: Quantity::class, orphanRemoval: true)]
     private Collection $quantities;
 
+    #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'bottles')]
+    private Collection $categories;
+
     public function __construct()
     {
         $this->cellars = new ArrayCollection();
         $this->quantities = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -192,6 +196,33 @@ class Bottle
             if ($quantity->getBottle() === $this) {
                 $quantity->setBottle(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+            $category->addBottle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        if ($this->categories->removeElement($category)) {
+            $category->removeBottle($this);
         }
 
         return $this;
