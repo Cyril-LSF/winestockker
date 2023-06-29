@@ -3,6 +3,9 @@
 {% block title %}Edit Bottle{% endblock %}
 
 {% block body %}
+    <div class="pagetitle">
+        <h1 class="text-start">Modifier une bouteille</h1>
+    </div>
     {{ include('bottle/_form.html.twig', {'button_label': 'Update'}) }}
 
 {% endblock %}

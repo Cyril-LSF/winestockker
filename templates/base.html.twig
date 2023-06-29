@@ -5,6 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}Wine Stockker{% endblock %}</title>
         <link rel="icon" href={{ asset('images/logo_ws.png') }}>
+        <!-- Google Fonts -->
+        <link href="https://fonts.gstatic.com" rel="preconnect">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
@@ -12,19 +16,27 @@
 
     </head>
     
-    <body style="background-color: #f2e8cf;">
-        {{ include('components/header.html.twig') }}
+    <body>
+        {% if app.user %}
+            {{ include('components/header.html.twig') }}
+        {% endif %}
         <div class="notification mt-2">
-			{% for label, messages in app.flashes %}
-				{% for message in messages %}
-                    <div class="alert alert-{{ label }} alert-dismissible fade show text-center" role="alert">
-						{{ message }}
-						<button type="button" id="notification" class="btn-close"></button>
-					</div>
-				{% endfor %}
-			{% endfor %}
-		</div>
-        {% block body %}{% endblock %}
+          {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                        <div class="alert alert-{{ label }} alert-dismissible fade show text-center" role="alert">
+                {{ message }}
+                <button type="button" id="notification" class="btn-close"></button>
+              </div>
+            {% endfor %}
+          {% endfor %}
+        </div>
+        {% if app.user %}
+            <main id="main" class="main">
+        {% endif %}
+            {% block body %}{% endblock %}
+        {% if app.user %}
+            </main>
+        {% endif %}
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
@@ -39,5 +51,184 @@
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+        <script>
+        (function() {
+          "use strict";
+
+          /**
+           * Easy selector helper function
+           */
+          const select = (el, all = false) => {
+            el = el.trim()
+            if (all) {
+              return [...document.querySelectorAll(el)]
+            } else {
+              return document.querySelector(el)
+            }
+          }
+
+          /**
+           * Easy event listener function
+           */
+          const on = (type, el, listener, all = false) => {
+            if (all) {
+              select(el, all).forEach(e => e.addEventListener(type, listener))
+            } else {
+              select(el, all).addEventListener(type, listener)
+            }
+          }
+
+          /**
+           * Easy on scroll event listener 
+           */
+          const onscroll = (el, listener) => {
+            el.addEventListener('scroll', listener)
+          }
+
+          /**
+           * Sidebar toggle
+           */
+          if (select('.toggle-sidebar-btn')) {
+            on('click', '.toggle-sidebar-btn', function(e) {
+              select('body').classList.toggle('toggle-sidebar')
+            })
+          }
+
+          /**
+           * Search bar toggle
+           */
+          if (select('.search-bar-toggle')) {
+            on('click', '.search-bar-toggle', function(e) {
+              select('.search-bar').classList.toggle('search-bar-show')
+            })
+          }
+
+          /**
+           * Navbar links active state on scroll
+           */
+          let navbarlinks = select('#navbar .scrollto', true)
+          const navbarlinksActive = () => {
+            let position = window.scrollY + 200
+            navbarlinks.forEach(navbarlink => {
+              if (!navbarlink.hash) return
+              let section = select(navbarlink.hash)
+              if (!section) return
+              if (position >= section.offsetTop && position <= (section.offsetTop + section.offsetHeight)) {
+                navbarlink.classList.add('active')
+              } else {
+                navbarlink.classList.remove('active')
+              }
+            })
+          }
+          window.addEventListener('load', navbarlinksActive)
+          onscroll(document, navbarlinksActive)
+
+          /**
+           * Toggle .header-scrolled class to #header when page is scrolled
+           */
+          let selectHeader = select('#header')
+          if (selectHeader) {
+            const headerScrolled = () => {
+              if (window.scrollY > 100) {
+                selectHeader.classList.add('header-scrolled')
+              } else {
+                selectHeader.classList.remove('header-scrolled')
+              }
+            }
+            window.addEventListener('load', headerScrolled)
+            onscroll(document, headerScrolled)
+          }
+
+          /**
+           * Back to top button
+           */
+          let backtotop = select('.back-to-top')
+          if (backtotop) {
+            const toggleBacktotop = () => {
+              if (window.scrollY > 100) {
+                backtotop.classList.add('active')
+              } else {
+                backtotop.classList.remove('active')
+              }
+            }
+            window.addEventListener('load', toggleBacktotop)
+            onscroll(document, toggleBacktotop)
+          }
+
+          /**
+           * Initiate tooltips
+           */
+          var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+          var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+          })
+
+          /**
+           * Initiate quill editors
+           */
+          if (select('.quill-editor-default')) {
+            new Quill('.quill-editor-default', {
+              theme: 'snow'
+            });
+          }
+
+          if (select('.quill-editor-bubble')) {
+            new Quill('.quill-editor-bubble', {
+              theme: 'bubble'
+            });
+          }
+
+          if (select('.quill-editor-full')) {
+            new Quill(".quill-editor-full", {
+              modules: {
+                toolbar: [
+                  [{
+                    font: []
+                  }, {
+                    size: []
+                  }],
+                  ["bold", "italic", "underline", "strike"],
+                  [{
+                      color: []
+                    },
+                    {
+                      background: []
+                    }
+                  ],
+                  [{
+                      script: "super"
+                    },
+                    {
+                      script: "sub"
+                    }
+                  ],
+                  [{
+                      list: "ordered"
+                    },
+                    {
+                      list: "bullet"
+                    },
+                    {
+                      indent: "-1"
+                    },
+                    {
+                      indent: "+1"
+                    }
+                  ],
+                  ["direction", {
+                    align: []
+                  }],
+                  ["link", "image", "video"],
+                  ["clean"]
+                ]
+              },
+              theme: "snow"
+            });
+          }
+
+          
+        })();
+        </script>
     </body>
 </html>

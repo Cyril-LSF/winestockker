@@ -4,43 +4,45 @@
 
 {% block body %}
 <section>
-  <div class="text-center container py-5">
-    <h1 class="text-start mb-5">Mes bouteilles</h1>
-    <div class="row">
-      {% for bottle in bottles %}
-        <div class="col-lg-4 col-md-12 mb-4">
-            <div class="card shadow position-relative">
-                <div class="w-100 d-flex flex-column align-items-end position-absolute">
-                    <a href={{ path('bottle_edit', {'id': bottle.id}) }} class="btn btn-link text-secondary"><i class="fa-solid fa-pen-to-square fa-xl"></i></a>
-                    {{ include('bottle/_delete_form.html.twig') }}
-                </div>
-                <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
-                    data-mdb-ripple-color="light">
-                    <img src={{ asset('images/bottle-top.jpg') }}
-                    class="w-100" />
-                </div>
-                <div class="card-body w-75 m-auto">
-                    <div class="d-flex justify-content-around">
-                        <div class="d-flex flex-column align-items-start">
-                            <p class="h6 text-muted">Provenance</p>
-                            <p class="h6 text-muted">Cépage</p>
-                            <p class="h6 text-muted">Embouteilleur</p>
+    <div class="text-center container py-2">
+        <div class="pagetitle">
+            <h1 class="text-start">Mes bouteilles</h1>
+        </div>
+        <div class="row">
+            {% for bottle in bottles %}
+                <div class="col-lg-4 col-md-12 py-3">
+                    <div class="card shadow position-relative">
+                        <div class="w-100 d-flex flex-column align-items-end position-absolute">
+                            <a href={{ path('bottle_edit', {'id': bottle.id}) }} class="btn btn-link text-secondary"><i class="fa-solid fa-pen-to-square fa-xl"></i></a>
+                            {{ include('bottle/_delete_form.html.twig') }}
                         </div>
-                        <div class="d-flex flex-column align-items-end">
-                            <p class="h6">{{ bottle.origin|country_name }}</p>
-                            <p class="h6">{{ bottle.vine }}</p>
-                            <p class="h6">{{ bottle.enbottler }}</p>
+                        <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+                            data-mdb-ripple-color="light">
+                            <img src={{ asset('images/bottle-top.jpg') }}
+                            class="w-100" />
+                        </div>
+                        <div class="card-body w-75 m-auto">
+                            <div class="d-flex justify-content-around">
+                                <div class="d-flex flex-column align-items-start">
+                                    <p class="h6 text-muted">Provenance</p>
+                                    <p class="h6 text-muted">Cépage</p>
+                                    <p class="h6 text-muted">Embouteilleur</p>
+                                </div>
+                                <div class="d-flex flex-column align-items-end">
+                                    <p class="h6">{{ bottle.origin|country_name }}</p>
+                                    <p class="h6">{{ bottle.vine }}</p>
+                                    <p class="h6">{{ bottle.enbottler }}</p>
+                                </div>
+                            </div>
+                            <fieldset class="purple-fieldset rounded mt-2">
+                                <legend class="h4 purple mt-1">{{ bottle.name | upper }}</legend>
+                                <p class="h6">{{ bottle.year }}</p>
+                            </fieldset>
                         </div>
                     </div>
-                    <fieldset class="purple-fieldset rounded mt-2">
-                        <legend class="h4 purple mt-1">{{ bottle.name | upper }}</legend>
-                        <p class="h6">{{ bottle.year }}</p>
-                    </fieldset>
                 </div>
-            </div>
+            {% endfor %}
         </div>
-      {% endfor %}
     </div>
-  </div>
 </section>
 {% endblock %}

@@ -1,35 +1,44 @@
 
-<div class="container py-5">
-    <div class="row d-flex justify-content-center align-items-center min-vh-100 cellar-background">
-        <div class="col-sm-12 col-md-6 ">
-            {{ form_start(form) }}
-                <div class="d-flex flex-column justify-content-center align-items-center bg-light bg-opacity-75 rounded p-4">
-                    <!-- Name -->
-                    <div class="form-outline mb-4 h5 w-100">
-                        {{ form_label(form.name) }}
-                        {{ form_widget(form.name) }}
-                        {% for errorItem in form.name.vars.errors %}
-                            <div class="text-danger">{{ errorItem.message }}</div>
-                        {% endfor %}
-                        <p class="name-error mb-4"></p>
-                    </div>
-                    <!-- End name -->
-
-                    <!-- Submit button -->
-                    <div>
-                        <button type="submit" value="submit" class="btn btn-dark mb-4">
-                          {% if update is defined %}
-                            Modifier
-                          {% else %}
-                            Créer
-                          {% endif %}
-                        </button>
+<section>
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col col-lg-8 mb-4 mb-lg-0">
+                <div class="card mb-3">
+                    <div class="row g-0">
+                        <div class="col-md-4 gradient-custom text-center text-white">
+                            <img src={{ asset('images/bottle.png') }}
+                            alt="Avatar" class="img-fluid my-5 w-75" />
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body p-4 h-100 d-flex flex-column justify-content-center">
+                                {{ form_start(form) }}
+                                    <!-- Name -->
+                                    <div class="form-outline mb-4 h5 w-100">
+                                        {{ form_label(form.name) }}
+                                        {{ form_widget(form.name) }}
+                                        {% for errorItem in form.name.vars.errors %}
+                                            <div class="text-danger">{{ errorItem.message }}</div>
+                                        {% endfor %}
+                                        <p class="name-error mb-4"></p>
+                                    </div>
+                                    <!-- End name -->
+                                    <!-- Submit button -->
+                                    <div class="w-100 d-flex justify-content-center">
+                                        <button type="submit" value="submit" class="btn btn-dark w-25">
+                                            {% if update is defined %}
+                                                Modifier
+                                            {% else %}
+                                                Créer
+                                            {% endif %}
+                                        </button>
+                                    </div>
+                                    <!-- End submit button -->
+                                {{ form_end(form) }}
+                            </div>
+                        </div>
                     </div>
                 </div>
-            {{ form_end(form) }}
+            </div>
         </div>
     </div>
-</div>
-
-
-
+</section>

@@ -1,127 +1,244 @@
-<nav class="navbar navbar-light bg-light">
-  <div class="container-fluid">
-    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <a class="navbar-brand" href="#">WINE STOCKKER</a>
-    <div class="offcanvas offcanvas-start text-bg-light" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Menu</h5>
-        <button type="button" class="btn-close btn-close-dark" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-      </div>
-      <div class="offcanvas-body">
-        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-          {% if app.user %}
-            <li class="nav-item">
-              <a class="nav-link active d-flex align-items-end" aria-current="page" href={{ path('user_show', {'id': app.user.id}) }}>
-                {% if app.user.picture is not empty %}
-                  <img src={{ asset('upload/' ~ app.user.picture) }} alt="avatar"
-                  class="rounded-circle img-fluid me-2" style="width: 50px;">
-                {% else %}
-                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
-                  class="rounded-circle img-fluid me-2" style="width: 50px;">
-                {% endif %}
-                {{ app.user.screenname }}
+  <header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="index.html" class="logo d-flex align-items-center">
+        <img src={{ asset('images/logo_ws.png') }} alt="Logo WineStockker">
+        <span class="d-none d-lg-block">Wine Stockker</span>
+      </a>
+      {# <i class="bi bi-list toggle-sidebar-btn"></i> #}
+      <i class="fa-solid fa-bars toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+
+    <div class="search-bar">
+      <form class="search-form d-flex align-items-center" method="POST" action="#">
+        <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+        <button type="submit" title="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </form>
+    </div><!-- End Search Bar -->
+
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+
+        <li class="nav-item d-block d-lg-none">
+          <a class="nav-link nav-icon search-bar-toggle " href="#">
+           <i class="fa-solid fa-magnifying-glass"></i>
+          </a>
+        </li><!-- End Search Icon-->
+
+        <li class="nav-item dropdown pe-3">
+
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            {% if app.user.picture is not empty %}
+                <img src={{ asset('upload/' ~ app.user.picture) }} alt="Profile" class="rounded-circle">
+            {% else %}
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="Profile" class="rounded-circle">
+            {% endif %}
+            <span class="d-none d-md-block dropdown-toggle ps-2">{{ app.user.screenname }}</span>
+          </a><!-- End Profile Iamge Icon -->
+
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+              <h6>{{ app.user.firstname ~ ' ' ~ app.user.lastname }}</h6>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href={{ path('user_show', {'id': app.user.id}) }}>
+                <i class="fa-regular fa-user"></i>
+                <span>Mon profile</span>
               </a>
             </li>
-          {% endif %}
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa-solid fa-boxes-stacked fa-lg me-3"></i>
-              Mes caves
-            </a>
-            <ul class="dropdown-menu dropdown-menu-light">
-              {% if app.user.cellars is defined %}
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
+                <i class="fa-regular fa-circle-question"></i>
+                <span>Besoin d'aide?</span>
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href={{ path('logout') }}>
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <span>Se déconnecter</span>
+              </a>
+            </li>
+
+          </ul><!-- End Profile Dropdown Items -->
+        </li><!-- End Profile Nav -->
+
+      </ul>
+    </nav><!-- End Icons Navigation -->
+
+  </header>
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+      <!-- Dashboard Nav -->
+      <li class="nav-item">
+        <a class="nav-link " href="index.html">
+          <i class="fa-solid fa-vector-square"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <!-- End Dashboard Nav -->
+
+      <!-- Cellars Nav -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+          <i class="fa-solid fa-boxes-stacked"></i><span>Mes caves</span><i class="fa-solid fa-chevron-down chevron-down ms-auto"></i>
+        </a>
+        <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            {% if app.user.cellars is defined %}
                 {% for cellar in app.user.cellars %}
-                  <li>
-                      <a class="dropdown-item" href={{ path('cellar_show', {'id': cellar.id}) }}>
-                        <i class="fa-solid fa-box fa-lg me-2"></i>
-                        {{ cellar.name }}
-                      </a>
-                  </li>
+                    <li>
+                        <a class="dropdown-item" href={{ path('cellar_show', {'id': cellar.id}) }}>
+                            <i class="fa-solid fa-box me-2"></i>
+                            <span>{{ cellar.name }}</span>
+                        </a>
+                    </li>
                 {% endfor %}
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-              {% endif %}
-              <li>
-                  <a class="dropdown-item" href={{ path('cellar_index') }}>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            {% endif %}
+            <li class="my-2">
+                <hr class="w-75 m-auto">
+            </li>
+            <li>
+                <a class="dropdown-item" href={{ path('cellar_index') }}>
                     <i class="fa-solid fa-eye fa-lg me-2"></i>
                     Toutes mes caves
-                  </a>
-              </li>
-              <li>
-                <a class="dropdown-item" href={{ path('cellar_new') }}>
-                  <i class="fa-regular fa-square-plus fa-lg me-3"></i>
-                  Créer une cave
                 </a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fa-solid fa-wine-bottle fa-lg me-3"></i>
-              Mes bouteilles
-            </a>
-            <ul class="dropdown-menu dropdown-menu-light">
-              <li>
-                  <a class="dropdown-item" href={{ path('bottle_index') }}>
+            </li>
+            <li>
+                <a class="dropdown-item" href={{ path('cellar_new') }}>
+                    <i class="fa-regular fa-square-plus fa-lg me-3"></i>
+                    Créer une cave
+                </a>
+            </li>
+        </ul>
+      </li>
+      <!-- End Cellars Nav -->
+
+      <!-- Bottles Nav -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+          <i class="fa-solid fa-wine-bottle"></i></i><span>Mes bouteilles</span><i class="fa-solid fa-chevron-down chevron-down ms-auto"></i>
+        </a>
+        <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+                <a class="dropdown-item" href={{ path('bottle_index') }}>
                     <i class="fa-solid fa-eye fa-lg me-2"></i>
                     Toutes mes bouteilles
-                  </a>
-              </li>
-              <li>
+                </a>
+            </li>
+            <li>
                 <a class="dropdown-item" href={{ path('bottle_new') }}>
-                  <i class="fa-regular fa-square-plus fa-lg me-3"></i>
-                  Créer une bouteille
+                    <i class="fa-regular fa-square-plus fa-lg me-3"></i>
+                    Créer une bouteille
                 </a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fa-solid fa-sitemap fa-lg me-3"></i>
-              Mes catégories
-            </a>
-            <ul class="dropdown-menu dropdown-menu-light">
-              {% if app.user.categories is defined %}
+            </li>
+        </ul>
+      </li>
+      <!-- End Bottles Nav -->
+
+      <!-- Categories Nav -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+          <i class="fa-solid fa-sitemap"></i><span>Mes catégories</span><i class="fa-solid fa-chevron-down chevron-down ms-auto"></i>
+        </a>
+        <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            {% if app.user.categories is defined %}
                 {% for category in app.user.categories %}
-                  <li>
-                      <a class="dropdown-item" href={{ path('category_show', {'id': category.id}) }}>
-                        <i class="fa-solid fa-sitemap fa-lg me-2"></i>
-                        {{ category.name }}
-                      </a>
-                  </li>
+                    <li>
+                        <a class="dropdown-item" href={{ path('category_show', {'id': category.id}) }}>
+                            <i class="fa-solid fa-sitemap fa-lg me-2"></i>
+                            {{ category.name }}
+                        </a>
+                    </li>
                 {% endfor %}
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-              {% endif %}
-              <li>
-                  <a class="dropdown-item" href={{ path('category_index') }}>
-                    <i class="fa-solid fa-eye fa-lg me-2"></i>
-                    Toutes mes catégories
-                  </a>
-              </li>
-              <li>
-                <a class="dropdown-item" href={{ path('category_new') }}>
-                  <i class="fa-regular fa-square-plus fa-lg me-3"></i>
-                  Créer une catégorie
-                </a>
-              </li>
-            </ul>
-          </li>
-            {% if app.user %}
-                <li class="nav-item mt-2">
-                    <a class="nav-link text-light btn btn-sm btn-danger" aria-current="page" href={{ path('logout') }}>Se déconnecter</a>
-                </li>
-            {% else %}
-                <li class="nav-item mt-2">
-                    <a class="nav-link text-light btn btn-sm btn-success" aria-current="page" href={{ path('login') }}>Se connecter</a>
+                <li class="my-2">
+                    <hr class="w-75 m-auto">
                 </li>
             {% endif %}
+            <li>
+                <a class="dropdown-item" href={{ path('category_index') }}>
+                    <i class="fa-solid fa-eye fa-lg me-2"></i>
+                    Toutes mes catégories
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href={{ path('category_new') }}>
+                    <i class="fa-regular fa-square-plus fa-lg me-3"></i>
+                    Créer une catégorie
+                </a>
+            </li>
         </ul>
-      </div>
-    </div>
-  </div>
-</nav>
+      </li>
+      <!-- End Categories Nav -->
+
+      <li class="nav-heading">Pages</li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="users-profile.html">
+          <i class="bi bi-person"></i>
+          <span>Profile</span>
+        </a>
+      </li><!-- End Profile Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="pages-faq.html">
+          <i class="bi bi-question-circle"></i>
+          <span>F.A.Q</span>
+        </a>
+      </li><!-- End F.A.Q Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="pages-contact.html">
+          <i class="bi bi-envelope"></i>
+          <span>Contact</span>
+        </a>
+      </li><!-- End Contact Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="pages-register.html">
+          <i class="bi bi-card-list"></i>
+          <span>Register</span>
+        </a>
+      </li><!-- End Register Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="pages-login.html">
+          <i class="bi bi-box-arrow-in-right"></i>
+          <span>Login</span>
+        </a>
+      </li><!-- End Login Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="pages-error-404.html">
+          <i class="bi bi-dash-circle"></i>
+          <span>Error 404</span>
+        </a>
+      </li><!-- End Error 404 Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="pages-blank.html">
+          <i class="bi bi-file-earmark"></i>
+          <span>Blank</span>
+        </a>
+      </li><!-- End Blank Page Nav -->
+
+    </ul>
+
+  </aside>
