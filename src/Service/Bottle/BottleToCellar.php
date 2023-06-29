@@ -4,24 +4,11 @@ namespace App\Service\Bottle;
 
 use App\Entity\Cellar;
 use App\Entity\Quantity;
-use App\Repository\BottleRepository;
-use App\Repository\CellarRepository;
-use App\Repository\QuantityRepository;
+use App\Service\Abstract\AbstractService;
 
-class BottleToCellar {
+class BottleToCellar extends AbstractService {
 
-    private BottleRepository $bottleRepository;
-    private CellarRepository $cellarRepository;
-    private QuantityRepository $quantityRepository;
-
-    public function __construct(BottleRepository $bottleRepository, CellarRepository $cellarRepository, QuantityRepository $quantityRepository)
-    {
-        $this->bottleRepository = $bottleRepository;
-        $this->cellarRepository = $cellarRepository;
-        $this->quantityRepository = $quantityRepository;
-    }
-
-    public function bottleToCellar(Cellar $cellar, $data)
+    public function bottleToCellar(Cellar $cellar, $data): void
     {
         // GET CELLAR BOTTLES
         $cellarBottles = $this->bottleRepository->getCellarBotlles($cellar);
@@ -35,15 +22,13 @@ class BottleToCellar {
             $newBottlesId[] = $bottles->getId();
         }
         // ADD OR REMOVE BOTTLES IN CELLAR
-        $bool = true;
         if ($bottles = array_diff($newBottlesId, $cellarBottlesId)) {
             $this->_addOrRemove(true, $bottles, $cellar);
-        } elseif ($bottles = array_diff($cellarBottlesId, $newBottlesId)) {
+        }
+        if ($bottles = array_diff($cellarBottlesId, $newBottlesId)) {
             $this->_addOrRemove(false, $bottles, $cellar);
-            $bool = false;
         }
         $this->cellarRepository->save($cellar, true);
-        return $bool;
     }
 
     private function _addOrRemove(bool $add, array $bottles, Cellar $cellar): void

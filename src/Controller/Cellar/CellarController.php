@@ -66,13 +66,9 @@ class CellarController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $add = $this->bottleToCellar->bottleToCellar($cellar, $form->get('bottles')->getData());
+            $this->bottleToCellar->bottleToCellar($cellar, $form->get('bottles')->getData());
 
-            $message = "La/les bouteilles ont été ajoutées à la cave";
-            if ($add == false) {
-                $message = "La/les bouteilles ont été retirées la cave";
-            }
-            $this->addFlash('success', $message);
+            $this->addFlash('success', "Les bouteilles de la cave " . $cellar->getName() . " ont été modifiées !");
             $this->redirectToRoute('cellar_show', ['id' => $cellar->getId(), RESPONSE::HTTP_SEE_OTHER]);
         }
         

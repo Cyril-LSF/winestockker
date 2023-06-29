@@ -52,13 +52,13 @@ class BottleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'bottle_show', methods: ['GET'])]
-    public function show(Bottle $bottle): Response
-    {
-        return $this->render('bottle/show.html.twig', [
-            'bottle' => $bottle,
-        ]);
-    }
+    // #[Route('/{id}', name: 'bottle_show', methods: ['GET'])]
+    // public function show(Bottle $bottle): Response
+    // {
+    //     return $this->render('bottle/show.html.twig', [
+    //         'bottle' => $bottle,
+    //     ]);
+    // }
 
     #[Route('/{id}/edit', name: 'bottle_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Bottle $bottle, BottleRepository $bottleRepository): Response
@@ -69,9 +69,9 @@ class BottleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //$bottleRepository->save($bottle, true);
             $this->bottleToCategory->bottleToCategory($bottle, $form->get('categories')->getData());
 
+            $this->addFlash('success', "La bouteille a été modifiée !");
             return $this->redirectToRoute('bottle_index', [], Response::HTTP_SEE_OTHER);
         }
 
