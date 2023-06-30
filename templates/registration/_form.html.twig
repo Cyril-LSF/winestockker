@@ -5,19 +5,19 @@
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
         <div class="container">
           <div class="row justify-content-center">
-            <div class="col-lg-6 col-md-6 d-flex flex-column align-items-center justify-content-center">
+            <div class="col-lg-7 col-md-6 d-flex flex-column align-items-center justify-content-center px-5">
 
-              <div class="d-flex justify-content-center py-4">
-                <a href="index.html" class="logo d-flex align-items-center w-auto">
-                  <img src={{ asset('images/logo_ws.png') }} alt="Logo">
-                  <span class="d-none d-lg-block">Wine Stockker</span>
-                </a>
-              </div><!-- End Logo -->
-
+              {% if app.user %}
+              {% else %}
+                <div class="d-flex justify-content-center py-3">
+                  <a href="index.html" class="logo d-flex align-items-center w-auto">
+                    <img src={{ asset('images/logo_ws.png') }} alt="Logo">
+                    <span class="d-none d-lg-block">Wine Stockker</span>
+                  </a>
+                </div><!-- End Logo -->
+              {% endif %}
               <div class="card mb-3">
-
                 <div class="card-body">
-
                   <div class="pt-4 pb-2">
                     <h5 class="card-title text-center pb-0 fs-4">
                       {% if update is defined %}
@@ -28,11 +28,9 @@
                     </h5>
                     <p class="text-center small">Entrer vos informations pour créer votre compte</p>
                   </div>
-
                   {% for flash_error in app.flashes('verify_email_error') %}
                     <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
                   {% endfor %}
-
                   {{ form_start(registrationForm, {'attr': {'class': 'row g-3 needs-validation'}}) }}
                     <!-- Firstname -->
                     <div class="col-12">
@@ -45,7 +43,6 @@
                       <p class="firstname-error"></p>
                     </div>
                     <!-- End firstname -->
-
                     <!-- Lastname -->
                     <div class="col-12 mt-0">
                       <i class="fas fa-user fa-lg me-3 fa-fw"></i>
@@ -57,7 +54,6 @@
                       <p class="lastname-error"></p>
                     </div>
                     <!-- End lastname -->
-
                     <!-- Email -->
                     <div class="col-12 mt-0">
                       <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
@@ -65,6 +61,7 @@
                       <div class="input-group has-validation">
                         <span class="input-group-text" id="inputGroupPrepend">@</span>
                         {{ form_widget(registrationForm.email) }}
+                        <div></div>
                       </div>
                       {% for errorItem in registrationForm.email.vars.errors %}
                       <div class="text-danger">{{ errorItem.message }}</div>
@@ -72,7 +69,6 @@
                       <p class="email-error"></p>
                     </div>
                     <!-- End email -->
-
                     <!-- Birthday -->
                     {% if registrationForm.birthday is defined %}
                       <div class="col-12 mt-0">
@@ -86,7 +82,6 @@
                       </div>
                     {% endif %}
                     <!-- End birthday -->
-
                     <!-- Password -->
                     {% if registrationForm.password is defined %}
                       <div class="col-12 mt-0">
@@ -111,7 +106,6 @@
                       </div>
                     {% endif %}
                     <!-- End password -->
-
                     <!-- AgreeTerms -->
                     {% if registrationForm.agreeTerms is defined %}
                       <div class="col-12 mt-0">
@@ -126,7 +120,6 @@
                       </div>
                     {% endif %}
                     <!-- End agreeTerms -->
-
                     <!-- Picture -->
                     {% if registrationForm.picture is defined %}
                       <div class="col-12 mt-0">
@@ -147,9 +140,8 @@
                       </div>
                     {% endif %}
                     <!-- End picture -->
-
                     <div class="col-12">
-                      <button class="btn btn-primary w-100" type="submit" value="submit">
+                      <button class="btn btn-purple w-100" type="submit" value="submit">
                         {% if update is defined %}
                           Modifier
                         {% else %}
@@ -157,21 +149,15 @@
                         {% endif %}
                       </button>
                     </div>
-
                     <div class="col-12">
-                      <p class="small mb-0">Déjà un compte ? <a href={{ path('login') }}>Se connecter</a></p>
+                      <p class="small mb-0">Déjà un compte ? <a href={{ path('login') }} class="link-purple">Se connecter</a></p>
                     </div>
-
                   {{ form_end(registrationForm) }}
-
                 </div>
               </div>
-
             </div>
           </div>
         </div>
-
       </section>
-
     </div>
   </main><!-- End #main -->

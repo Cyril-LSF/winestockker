@@ -22,18 +22,16 @@
     <div class="row justify-content-center" id="forgot-box">
         <div class="col-lg-10 p-4 min-vh-100 my-auto d-flex justify-content-center align-items-center">
           <div class="row">
-            <div class="col-lg-7 bg-white p-4">
+            <div class="col-lg-7 bg-white p-4 shadow">
               <h1 class="text-center font-weight-bold" style="color: #6F1125;">Mot de passe oublié?</h1>
               <hr class="my-3" />
               <p class="lead text-center text-secondary">Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.</p>
-              {# <form action="#" method="post" class="px-3" id="forgot-form"> #}
               {{ form_start(requestForm, {'attr': {'class': "px-3"}}) }}
                 <div id="forgotAlert"></div>
                 <div class="input-group input-group-lg mb-4">
                   <div class="input-group-prepend input-group-lg">
                     <span class="input-group-text rounded-0">@</span>
                   </div>
-                  {# <input type="email" id="femail" name="email" class="form-control rounded-0" placeholder="E-Mail" required /> #}
                   {{ form_widget(requestForm.email) }}
                 </div>
                 <div>
@@ -43,13 +41,11 @@
                   <p class="email-error mb-4"></p>
                 </div>
                 <div class="form-group">
-                  {# <input type="submit" id="forgot-btn" value="Reset Password" class="btn btn-primary btn-lg btn-block myBtn w-100" /> #}
-                  <button type="submit" value="submit" class="btn btn-dark btn-lg btn-block w-100">Valider</button>
+                  <button type="submit" value="submit" class="btn btn-purple btn-lg btn-block w-100">Valider</button>
                 </div>
               {{ form_end(requestForm) }}
-              {# </form> #}
             </div>
-            <div class="col-lg-5 d-flex flex-column justify-content-center p-4" style="background-color: #6F1125;">
+            <div class="col-lg-5 d-flex flex-column justify-content-center p-4 shadow" style="background-color: #6F1125;">
               <h1 class="text-center font-weight-bold text-white">Réinitialisation de mot de passe!</h1>
               <hr class="my-4 bg-white text-white" style="height: 1.5%;" />
               <a href={{ path('login') }} class="btn btn-outline-light btn-lg font-weight-bolder align-self-center" id="back-link">Retour</a>

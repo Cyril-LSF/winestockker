@@ -4,12 +4,12 @@
 
 {% block body %}
 <section class="h-100 gradient-custom">
-  <div class="container py-5">
+  <div class="container pt-2 pb-5">
     <div class="row d-flex justify-content-center my-4">
-      <div class="col-md-4">
+      <div class="col-md-8">
         <div class="card mb-4">
           <div class="card-header py-3">
-            <h5 class="mb-0">{{ cellar.name }}</h5>
+            <h5 class="mb-0 text-center">{{ cellar.name | upper }}</h5>
           </div>
           <div class="card-body">
             <ul class="list-group list-group-flush">
@@ -44,79 +44,77 @@
           <div>
           </div>
         </div>
-        <button type="button" class="btn btn-dark mb-4 w-100" data-toggle="modal" data-target="#bottleModal">
+        <button type="button" class="btn btn-purple mb-4 w-100" data-bs-toggle="modal" data-bs-target="#bottleModal">
           Ajouter / retirer une bouteille
         </button>
         {% include 'cellar/bottleModal.html.twig' with {'form': form} %}
       </div>
-      <div class="col-md-8">
-        <div class="row">
-          {% for bottle in cellar.bottles %}
-            <div class="col-lg-5 col-md-12 mb-5">
-            <div class="card shadow position-relative">
-                <div class="w-100 d-flex justify-content-end position-absolute mt-1">
-                  {% for category in bottle.categories %}
-                    <span class="badge bg-dark me-1">{{ category.name }}</span>
-                  {% endfor %}
-                </div>
-                <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
-                    data-mdb-ripple-color="light">
-                    <img src={{ asset('images/bottle-top.jpg') }}
-                    class="w-100" />
-                </div>
-                <div class="card-body w-75 m-auto">
-                    <div class="d-flex flex-column justify-content-center align-items-center">
-                        <div class="d-flex flex-column align-items-center">
-                            <p class="h6 text-muted">Provenance</p>
-                            <p class="h6">{{ bottle.origin|country_name }}</p>
-                        </div>
-                        <hr class="w-100 m-1" style="border: 1px solid grey;">
-                        <div class="d-flex flex-column align-items-center">
-                            <p class="h6 text-muted">Cépage</p>
-                            <p class="h6">{{ bottle.vine }}</p>
-                        </div>
-                        <hr class="w-100 m-1" style="border: 1px solid grey;">
-                        <div class="d-flex flex-column align-items-center">
-                            <p class="h6 text-muted">Embouteilleur</p>
-                            <p class="h6">{{ bottle.enbottler }}</p>
-                        </div>
-                        <hr class="w-100 m-1" style="border: 1px solid grey;">
-                        <div class="d-flex flex-column align-items-center">
-                            <p class="h6 text-muted">Prix</p>
-                            <p class="h6">{{ bottle.price ~ ' €' }}</p>
-                        </div>
-                        <hr class="w-100 m-1" style="border: 1px solid grey;">
-                        <div class="d-flex flex-column align-items-center">
-                            <p class="h6 text-muted">Quantité</p>
-                            <div class="d-flex flex-column align-items-center">
-                              {% for quantity in quantities %}
-                                {% if quantity.bottle.id == bottle.id %}
-                                  <div class="d-flex align-items-center">
-                                    <button type="button" data-url={{ path('quantity_edit', {'cellar': cellar.id, 'bottle': bottle.id, 'action': "less"}) }} class="btn btn-link text-danger edit-quantity"><i class="fa-solid fa-minus fa-lg"></i></button>
-                                    <p class="m-0 quantity">{{ quantity.quantity }}</p>
-                                    <button type="button" data-url={{ path('quantity_edit', {'cellar': cellar.id, 'bottle': bottle.id, 'action': "add"}) }} class="btn btn-link text-success edit-quantity"><i class="fa-solid fa-plus fa-lg"></i></button>
-                                    {% if quantity.quantity < 1 %}
-                                      <div class="w-100 d-flex justify-content-end">
-                                        <span class="badge bg-danger">Rupture</span>
-                                      </div>
-                                    {% endif %}
-                                  </div>
-                                  <a href={{ path('quantity_edit_big', {'quantity': quantity.id}) }} class="link-secondary text-center">Grosse quantité</a>
-                                {% endif %}
-                              {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                    <fieldset class="purple-fieldset rounded mt-2 text-center">
-                        <legend class="h4 purple mt-1">{{ bottle.name | upper }}</legend>
-                        <p class="h6">{{ bottle.year }}</p>
-                    </fieldset>
-                </div>
+    </div>
+    <div class="row">
+      {% for bottle in cellar.bottles %}
+        <div class="col-lg-4 col-md-12 py-2">
+          <div class="card shadow position-relative">
+            <div class="w-100 d-flex justify-content-end position-absolute mt-1">
+              {% for category in bottle.categories %}
+                <span class="badge bg-dark me-1">{{ category.name }}</span>
+              {% endfor %}
             </div>
+            <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+                data-mdb-ripple-color="light">
+                <img src={{ asset('images/bottle-top.jpg') }}
+                class="w-100" />
+            </div>
+            <div class="card-body w-75 m-auto">
+              <div class="d-flex flex-column justify-content-center align-items-center">
+                <div class="d-flex flex-column align-items-center">
+                    <p class="h6 text-muted">Provenance</p>
+                    <p class="h6">{{ bottle.origin|country_name }}</p>
+                </div>
+                <hr class="w-100 m-1" style="border: 1px solid grey;">
+                <div class="d-flex flex-column align-items-center">
+                    <p class="h6 text-muted">Cépage</p>
+                    <p class="h6">{{ bottle.vine }}</p>
+                </div>
+                <hr class="w-100 m-1" style="border: 1px solid grey;">
+                <div class="d-flex flex-column align-items-center">
+                    <p class="h6 text-muted">Embouteilleur</p>
+                    <p class="h6">{{ bottle.enbottler }}</p>
+                </div>
+                <hr class="w-100 m-1" style="border: 1px solid grey;">
+                <div class="d-flex flex-column align-items-center">
+                    <p class="h6 text-muted">Prix</p>
+                    <p class="h6">{{ bottle.price ~ ' €' }}</p>
+                </div>
+                <hr class="w-100 m-1" style="border: 1px solid grey;">
+                <div class="d-flex flex-column align-items-center">
+                    <p class="h6 text-muted">Quantité</p>
+                    <div class="d-flex flex-column align-items-center">
+                      {% for quantity in quantities %}
+                        {% if quantity.bottle.id == bottle.id %}
+                          <div class="d-flex align-items-center">
+                            <button type="button" data-url={{ path('quantity_edit', {'cellar': cellar.id, 'bottle': bottle.id, 'action': "less"}) }} class="btn btn-link text-danger edit-quantity"><i class="fa-solid fa-minus fa-lg"></i></button>
+                            <p class="m-0 quantity">{{ quantity.quantity }}</p>
+                            <button type="button" data-url={{ path('quantity_edit', {'cellar': cellar.id, 'bottle': bottle.id, 'action': "add"}) }} class="btn btn-link text-success edit-quantity"><i class="fa-solid fa-plus fa-lg"></i></button>
+                            {% if quantity.quantity < 1 %}
+                              <div class="w-100 d-flex justify-content-end">
+                                <span class="badge bg-danger">Rupture</span>
+                              </div>
+                            {% endif %}
+                          </div>
+                          <a href={{ path('quantity_edit_big', {'quantity': quantity.id}) }} class="link-secondary text-center">Grosse quantité</a>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                </div>
+              </div>
+              <fieldset class="purple-fieldset rounded mt-2 text-center">
+                  <legend class="h4 purple mt-1">{{ bottle.name | upper }}</legend>
+                  <p class="h6">{{ bottle.year }}</p>
+              </fieldset>
+            </div>
+          </div>
         </div>
-          {% endfor %}
-        </div>
-      </div>
+      {% endfor %}
     </div>
   </div>
 </section>

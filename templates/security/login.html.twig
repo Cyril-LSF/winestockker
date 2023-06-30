@@ -55,11 +55,12 @@
                         <label class="form-check-label" for="rememberMe">Remember me</label>
                       </div>
                     </div> #}
+                    <a class="small link-purple" href={{ path('app_forgot_password_request') }}>Mot de passe oublié ?</a>
                     <div class="col-12">
-                      <button class="btn btn-primary w-100" type="submit">Connexion</button>
+                      <button class="btn btn-purple w-100" type="submit">Connexion</button>
                     </div>
                     <div class="col-12">
-                      <p class="small mb-0">Pas encore de compte ? <a href={{ path('register') }}>S'inscrire ici</a></p>
+                      <p class="small mb-0">Pas encore de compte ? <a href={{ path('register') }} class="link-purple">S'inscrire ici</a></p>
                     </div>
                   </form>
 
