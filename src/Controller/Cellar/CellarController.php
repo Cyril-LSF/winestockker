@@ -99,7 +99,7 @@ class CellarController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'cellar_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'cellar_delete', methods: ['POST'])]
     public function delete(Request $request, Cellar $cellar, CellarRepository $cellarRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$cellar->getId(), $request->request->get('_token'))) {
