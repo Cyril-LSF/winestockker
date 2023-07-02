@@ -43,6 +43,7 @@ class BottleController extends AbstractController
             $this->bottleToCategory->bottleToCategory($bottle, $form->get('categories')->getData());
             //$bottleRepository->save($bottle, true);
 
+            $this->addFlash('success', "La bouteille a été créée !");
             return $this->redirectToRoute('bottle_index', [], Response::HTTP_SEE_OTHER);
         }
 
