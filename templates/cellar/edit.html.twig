@@ -9,3 +9,8 @@
     {{ include('cellar/_form.html.twig', {'button_label': 'Update'}) }}
 
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('cellar') }}
+{% endblock %}
