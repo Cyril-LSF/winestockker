@@ -47,6 +47,7 @@ class CellarController extends AbstractController
             $cellar->setAuthor($this->getUser());
             $cellarRepository->save($cellar, true);
 
+            $this->addFlash('success', "La cave a été créée !");
             return $this->redirectToRoute('cellar_show', ['id' => $cellar->getId()], Response::HTTP_SEE_OTHER);
         }
 
