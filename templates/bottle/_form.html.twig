@@ -13,86 +13,86 @@
                             <div class="card-body p-4 h-100 d-flex flex-column justify-content-center">
                                 {{ form_start(form) }}
                                     <!-- Name -->
-                                    <div class="d-flex flex-row align-items-center mb-4">
+                                    <div class="d-flex flex-row align-items-center mb-1">
                                       <i class="fa-solid fa-signature fa-lg me-3"></i>
-                                      <div class="form-outline flex-fill mb-0">
+                                      <div class="form-outline flex-fill mb-0 mt-3">
                                         {{ form_widget(form.name) }}
                                         {% if form.name.vars.errors is not empty %}
                                           {% for errorItem in form.name.vars.errors %}
                                             <div class="text-danger">{{ errorItem.message }}</div>
                                           {% endfor %}
-                                          <p class="name-error mb-4"></p>
                                         {% endif %}
+                                        <p class="name-error"></p>
                                       </div>
                                     </div>
                                     <!-- End name -->
                                     <!-- Year -->
-                                    <div class="d-flex flex-row align-items-center mb-4">
+                                    <div class="d-flex flex-row align-items-center mb-1">
                                         <i class="fa-solid fa-calendar fa-lg me-3"></i>
-                                        <div class="form-outline flex-fill mb-0">
+                                        <div class="form-outline flex-fill mb-0 mt-3">
                                             {{ form_widget(form.year) }}
                                             {% if form.year.vars.errors is not empty %}
                                               {% for errorItem in form.year.vars.errors %}
                                                   <div class="text-danger">{{ errorItem.message }}</div>
                                               {% endfor %}
-                                              <p class="year-error mb-4"></p>
                                             {% endif %}
+                                            <p class="year-error"></p>
                                         </div>
                                     </div>
                                     <!-- End year -->
                                     <!-- Origin -->
-                                    <div class="d-flex flex-row align-items-center mb-4">
+                                    <div class="d-flex flex-row align-items-center mb-1">
                                       <i class="fa-solid fa-flag fa-lg me-3"></i>
-                                      <div class="form-outline flex-fill mb-0">
+                                      <div class="form-outline flex-fill mb-0 mt-3">
                                           {{ form_widget(form.origin) }}
                                           {% if form.origin.vars.errors is not empty %}
                                             {% for errorItem in form.origin.vars.errors %}
                                                 <div class="text-danger">{{ errorItem.message }}</div>
                                             {% endfor %}
-                                            <p class="origin-error mb-4"></p>
                                           {% endif %}
+                                          <p class="origin-error"></p>
                                       </div>
                                     </div>
                                     <!-- End origin -->
                                     <!-- Vine -->
-                                    <div class="d-flex flex-row align-items-center mb-4">
+                                    <div class="d-flex flex-row align-items-center mb-1">
                                       <i class="fa-solid fa-seedling fa-lg me-3"></i>
-                                      <div class="form-outline flex-fill mb-0">
+                                      <div class="form-outline flex-fill mb-0 mt-3">
                                           {{ form_widget(form.vine) }}
                                           {% if form.vine.vars.errors is not empty %}
                                             {% for errorItem in form.vine.vars.errors %}
                                                 <div class="text-danger">{{ errorItem.message }}</div>
                                             {% endfor %}
-                                            <p class="vine-error mb-4"></p>
                                           {% endif %}
+                                          <p class="vine-error"></p>
                                       </div>
                                     </div>
                                     <!-- End vine -->
                                     <!-- Enbottler -->
-                                    <div class="d-flex flex-row align-items-center mb-4">
+                                    <div class="d-flex flex-row align-items-center mb-1">
                                       <i class="fa-solid fa-wine-bottle fa-lg me-3"></i>
-                                      <div class="form-outline flex-fill mb-0">
+                                      <div class="form-outline flex-fill mb-0 mt-3">
                                           {{ form_widget(form.enbottler) }}
                                           {% if form.enbottler.vars.errors is not empty %}
                                             {% for errorItem in form.enbottler.vars.errors %}
                                                 <div class="text-danger">{{ errorItem.message }}</div>
                                             {% endfor %}
-                                            <p class="enbottler-error mb-4"></p>
                                           {% endif %}
+                                          <p class="enbottler-error"></p>
                                       </div>
                                     </div>
                                     <!-- End enbottler -->
                                     <!-- Price -->
-                                    <div class="d-flex flex-row align-items-center mb-4">
+                                    <div class="d-flex flex-row align-items-center mb-1">
                                       <i class="fa-solid fa-coins fa-lg me-3"></i>
-                                      <div class="form-outline flex-fill mb-0">
+                                      <div class="form-outline flex-fill mb-0 mt-3">
                                           {{ form_widget(form.price) }}
                                           {% if form.price.vars.errors is not empty %}
                                             {% for errorItem in form.price.vars.errors %}
                                                 <div class="text-danger">{{ errorItem.message }}</div>
                                             {% endfor %}
-                                            <p class="price-error mb-4"></p>
                                           {% endif %}
+                                          <p class="price-error"></p>
                                       </div>
                                     </div>
                                     <!-- End price -->
@@ -113,8 +113,8 @@
                                           {% for errorItem in form.categories.vars.errors %}
                                               <div class="text-danger">{{ errorItem.message }}</div>
                                           {% endfor %}
-                                          <p class="categories-error mb-4"></p>
                                         {% endif %}
+                                        <p class="categories-error"></p>
                                       </div>
                                     </div>
                                     <!-- End categories -->
