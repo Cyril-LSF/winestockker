@@ -189,3 +189,14 @@ import './bootstrap';
 
     
   })();
+
+  // SLIDER RANGE
+  var slider = document.getElementById("filter_bottle_price");
+  var output = document.getElementById("sliderValue");
+  output.innerHTML = slider.value; // Display the default slider value
+
+  // Update the current slider value (each time you drag the slider handle)
+  slider.oninput = function() {
+    output.innerHTML = this.value;
+  }
+  // END SLIDER RANGE

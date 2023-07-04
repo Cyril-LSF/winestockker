@@ -60,6 +60,32 @@ class BottleRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findByFilter(User $user, Cellar $cellar, array $data)
+    {
+        $results = $this->createQueryBuilder('b')
+            ->where('b.author = :author')
+            ->setParameter('author', $user)
+            ->andWhere(':cellar MEMBER OF b.cellars')
+            ->setParameter('cellar', $cellar);
+        foreach ($data as $key => $value) {
+            switch ($key) {
+                case 'price':
+                    $results->andWhere("b.price BETWEEN 0 AND :$key");
+                    $results->setParameter($key, $value);
+                    break;
+                case 'categories':
+                    $results->andWhere(":$key MEMBER OF b.categories");
+                    $results->setParameter($key, $value);
+                    break;
+                default:
+                    $results->andWhere("b.$key = :$key");
+                    $results->setParameter($key, $value);
+                    break;
+            }
+        }
+        return $results->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Bottle[] Returns an array of Bottle objects
 //     */
