@@ -1,0 +1,132 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - recherche' }}{% endblock %}
+
+{% block body %}
+<section>
+    <div class="text-center container py-2">
+        <div class="pagetitle mb-4">
+            <h1 class="text-start">Résultats de la recherche pour : {{ search }}</h1>
+        </div>
+        {% if results['bottles'] is not empty %}
+            <div class="row">
+                <h4 class="text-start">Mes bouteilles :</h4>
+                {% for bottle in results['bottles'] %}
+                    <div class="col-md-8 col-lg-5 col-xl-4 py-3">
+                        <div class="card text-black shadow position-relative">
+                            <div class="w-100 d-flex justify-content-end position-absolute mt-1">
+                                {% for category in bottle.categories %}
+                                    <span class="badge bg-dark me-1">{{ category.name }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+                                data-mdb-ripple-color="light">
+                                <img src={{ asset('images/bottle-top-2.jpg') }}
+                                class="w-100" />
+                            </div>
+                            <div class="card-body">
+                                <fieldset class="purple-fieldset rounded mt-2 text-center">
+                                    <legend class="h4 purple mt-1">{{ bottle.name | upper }}</legend>
+                                    <p class="h6">{{ bottle.year }}</p>
+                                </fieldset>
+                                <div class="mt-3">
+                                    {% for cellar in bottle.cellars %}
+                                        <div class="card shadow mb-2">
+                                            <div class="card-body">
+                                                <div class="text-muted">
+                                                    <i class="fa-solid fa-boxes-stacked fa-lg me-3"></i>
+                                                    {{ cellar.name }}
+                                                    <a href={{ path('cellar_show', {'id': cellar.id}) }} class="ms-2 link-purple">Voir le cave</a>
+                                                </div>
+                                                <div class="d-flex flex-column align-items-center">
+                                                    {% for quantity in cellar.quantities %}
+                                                        {% if quantity.bottle == bottle and quantity.cellar == cellar %}
+                                                            <div class="d-flex align-items-center">
+                                                                <button type="button" data-url={{ path('quantity_edit', {'cellar': cellar.id, 'bottle': bottle.id, 'action': "less"}) }} class="btn btn-link text-danger edit-quantity"><i class="fa-solid fa-minus fa-lg"></i></button>
+                                                                <p class="m-0 quantity">{{ quantity.quantity }}</p>
+                                                                <button type="button" data-url={{ path('quantity_edit', {'cellar': cellar.id, 'bottle': bottle.id, 'action': "add"}) }} class="btn btn-link text-success edit-quantity"><i class="fa-solid fa-plus fa-lg"></i></button>
+                                                                {% if quantity.quantity < 1 %}
+                                                                <div class="w-100 d-flex justify-content-end">
+                                                                    <span class="badge bg-danger">Rupture</span>
+                                                                </div>
+                                                                {% endif %}
+                                                            </div>
+                                                            <a href={{ path('quantity_edit_big', {'quantity': quantity.id}) }} class="link-secondary text-center">Grosse quantité</a>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if results['cellars'] is not empty %}
+            <div class="row">
+                <h4 class="text-start">Mes caves :</h4>
+                {% for cellar in results['cellars'] %}
+                    <div class="col-md-8 col-lg-5 col-xl-4 py-3">
+                        <div class="card text-black shadow">
+                            <div class="card-body">
+                                <div class="text-center d-flex justify-content-center align-items-end bg-cellar-name">
+                                    <h5 class="card-title bg-wine text-light rounded py-1 px-4 m-0">{{ cellar.name }}</h5>
+                                </div>
+                                <div class="mt-5">
+                                    <div class="d-flex justify-content-between text-muted">
+                                        <span>Créée le</span><span>{{ cellar.createdAt | date('d/m/Y') }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between text-muted">
+                                        <span>Nombre de bouteilles</span><span>{{ cellar.bottles | length }}</span>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between total font-weight-bold mt-4">
+                                    <span>Valeur totale</span><span>$7,197.00</span>
+                                </div>
+                                <div class="w-100 d-flex justify-content-center mt-3">
+                                    <a href={{ path('cellar_show', {'id': cellar.id}) }} class="btn btn-purple w-50"><i class="fa-regular fa-eye fa-lg"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if results['categories'] is not empty %}
+            <div class="row">
+                <h4 class="text-start">Mes catégories :</h4>
+                {% for category in results['categories'] %}
+                    <div class="col-md-8 col-lg-5 col-xl-4 py-3">
+                        <div class="card text-black shadow">
+                            <div class="card-body">
+                                <div class="text-center d-flex justify-content-center align-items-end bg-category-name">
+                                    <h5 class="card-title bg-wine text-light rounded py-1 px-4 m-0">{{ category.name }}</h5>
+                                </div>
+                                <div class="mt-5">
+                                    <div class="d-flex justify-content-between text-muted">
+                                        <span>Créée le</span><span>{{ category.createdAt | date('d/m/Y') }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between text-muted">
+                                        <span>Nombre de bouteilles</span><span>{{ category.bottles | length }}</span>
+                                    </div>
+                                </div>
+                                <div class="w-100 d-flex justify-content-center mt-3">
+                                    <a href={{ path('category_show', {'id': category.id}) }} class="btn btn-purple w-50"><i class="fa-regular fa-eye fa-lg"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('bottle') }}
+{% endblock %}

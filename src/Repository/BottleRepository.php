@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Bottle;
 use App\Entity\Cellar;
 use Doctrine\Persistence\ManagerRegistry;
@@ -45,6 +46,16 @@ class BottleRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('b')
             ->where(':cellar MEMBER OF b.cellars')
             ->setParameters(['cellar' => $cellar])
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findBySearch(User $user, string $search)
+    {
+        return $this->createQueryBuilder('b')
+            ->where('b.name LIKE :val')
+            ->setParameters(['val' => '%' . $search . '%'])
+            ->andWhere("b.author = $user")
             ->getQuery()
             ->getResult();
     }

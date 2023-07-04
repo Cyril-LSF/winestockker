@@ -42,6 +42,16 @@ class CellarRepository extends ServiceEntityRepository
         }
     }
 
+    public function findBySearch(User $user, string $search)
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.name LIKE :val')
+            ->setParameters(['val' => '%' . $search . '%'])
+            ->andWhere("c.author = $user")
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Cellar[] Returns an array of Cellar objects
 //     */

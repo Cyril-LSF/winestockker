@@ -2,10 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Bottle;
 use App\Entity\Category;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Category>
@@ -45,6 +46,16 @@ class CategoryRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
             ->where(':bottle MEMBER OF c.bottles')
             ->setParameters(['bottle' => $bottle])
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findBySearch(User $user, string $search)
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.name LIKE :val')
+            ->setParameters(['val' => '%' . $search . '%'])
+            ->andWhere("c.author = $user")
             ->getQuery()
             ->getResult();
     }

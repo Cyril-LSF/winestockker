@@ -94,4 +94,5 @@ class BottleController extends AbstractController
 
         return $this->redirectToRoute('bottle_index', [], Response::HTTP_SEE_OTHER);
     }
+
 }
