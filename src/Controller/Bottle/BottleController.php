@@ -3,30 +3,50 @@
 namespace App\Controller\Bottle;
 
 use App\Entity\Bottle;
+use App\Entity\Cellar;
+use App\Service\Search\Search;
 use App\Form\Bottle\BottleType;
 use App\Repository\BottleRepository;
+use App\Form\Search\FilterBottleType;
 use App\Service\Bottle\BottleToCategory;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/bottle')]
 class BottleController extends AbstractController
 {
     private BottleToCategory $bottleToCategory;
+    private Search $search;
 
-    public function __construct(BottleToCategory $bottleToCategory)
+    public function __construct(BottleToCategory $bottleToCategory, Search $search)
     {
         $this->bottleToCategory = $bottleToCategory;
+        $this->search = $search;
     }
 
-    #[Route('/', name: 'bottle_index', methods: ['GET'])]
-    public function index(BottleRepository $bottleRepository): Response
+    #[Route('/', name: 'bottle_index', methods: ['GET', 'POST'])]
+    public function index(BottleRepository $bottleRepository, Request $request): Response
     {
-        return $this->render('bottle/index.html.twig', [
-            'bottles' => $bottleRepository->findBy(['author' => $this->getUser()]),
+        // Filter search form
+        $filterForm = $this->createForm(FilterBottleType::class, [], [
+            'user' => $this->getUser(),
         ]);
+        $filterForm->handleRequest($request);
+
+        $variables = [
+            'filterForm' => $filterForm->createView(),
+            'bottles' => $bottleRepository->findBy(['author' => $this->getUser()]),
+        ];
+
+        // Filter search
+        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
+            $variables['bottles'] = $this->search->filter($this->getUser(), $filterForm);
+            $this->addFlash('success', "Les bouteilles ont été filtrées !");
+        }
+
+        return $this->render('bottle/index.html.twig', $variables);
     }
 
     #[Route('/new', name: 'bottle_new', methods: ['GET', 'POST'])]

@@ -60,26 +60,42 @@ class BottleRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findByFilter(User $user, Cellar $cellar, array $data)
+    public function findByFilter(User $user, array $data, Object $entity = null)
     {
         $results = $this->createQueryBuilder('b')
             ->where('b.author = :author')
-            ->setParameter('author', $user)
-            ->andWhere(':cellar MEMBER OF b.cellars')
-            ->setParameter('cellar', $cellar);
-        foreach ($data as $key => $value) {
-            switch ($key) {
-                case 'price':
-                    $results->andWhere("b.price BETWEEN 0 AND :$key");
-                    $results->setParameter($key, $value);
+            ->setParameter('author', $user);
+        if ($entity) {
+            $param = explode('\\', get_class($entity));
+            switch (end($param)) {
+                case 'Cellar':
+                    $results->andWhere(':entity MEMBER OF b.cellars');
                     break;
-                case 'categories':
-                    $results->andWhere(":$key MEMBER OF b.categories");
-                    $results->setParameter($key, $value);
+                case 'Category':
+                    $results->andWhere(':entity MEMBER OF b.categories');
                     break;
                 default:
-                    $results->andWhere("b.$key = :$key");
-                    $results->setParameter($key, $value);
+                    break;
+            }
+            $results->setParameter('entity', $entity);
+        }
+        foreach ($data as $key => $value) {
+            switch ($key) {
+                case 'name':
+                    $results->andWhere("b.name LIKE :$key")
+                        ->setParameter($key, '%' . $value . '%');
+                    break;
+                case 'price':
+                    $results->andWhere("b.price BETWEEN 0 AND :$key")
+                        ->setParameter($key, $value);
+                    break;
+                case 'categories':
+                    $results->andWhere(":$key MEMBER OF b.categories")
+                        ->setParameter($key, $value);
+                    break;
+                default:
+                    $results->andWhere("b.$key = :$key")
+                        ->setParameter($key, $value);
                     break;
             }
         }

@@ -9,48 +9,59 @@
             <h1 class="text-start">Mes bouteilles</h1>
         </div>
         <div class="row">
-            {% for bottle in bottles %}
-                <div class="col-lg-4 col-md-12 mb-3">
-                    <div class="card shadow position-relative">
-                        <div class="w-100 d-flex flex-column align-items-end position-absolute">
-                            <a href={{ path('bottle_edit', {'id': bottle.id}) }} class="btn btn-link text-secondary"><i class="fa-solid fa-pen-to-square fa-xl"></i></a>
-                            {{ include('bottle/_delete_form.html.twig') }}
-                        </div>
-                        <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
-                            data-mdb-ripple-color="light">
-                            <img src={{ asset('images/bottle-top-2.jpg') }}
-                            class="w-100" />
-                        </div>
-                        <div class="card-body w-75 m-auto">
-                            <div class="d-flex flex-column justify-content-center align-items-center">
-                                <div class="d-flex flex-column align-items-center">
-                                    <p class="h6 text-muted">Provenance</p>
-                                    <p class="h6">{{ bottle.origin|country_name }}</p>
-                                </div>
-                                <hr class="w-100 m-1" style="border: 1px solid grey;">
-                                <div class="d-flex flex-column align-items-center">
-                                    <p class="h6 text-muted">Cépage</p>
-                                    <p class="h6">{{ bottle.vine }}</p>
-                                </div>
-                                <hr class="w-100 m-1" style="border: 1px solid grey;">
-                                <div class="d-flex flex-column align-items-center">
-                                    <p class="h6 text-muted">Embouteilleur</p>
-                                    <p class="h6">{{ bottle.enbottler }}</p>
-                                </div>
-                                <hr class="w-100 m-1" style="border: 1px solid grey;">
-                                <div class="d-flex flex-column align-items-center">
-                                    <p class="h6 text-muted">Prix</p>
-                                    <p class="h6">{{ bottle.price ~ ' €' }}</p>
-                                </div>
+            {% include 'components/filter_bar/filter_bar.html.twig' with {'filterForm': filterForm} %}
+            <a href={{ path('bottle_index') }} class="btn btn-outline-dark mb-4 w-100">
+                <i class="fa-solid fa-rotate-right fa-lg me-3"></i>
+                Réinitialiser les filtres
+            </a>
+        </div>
+        <div class="row">
+            {% if bottles|length > 0 %}
+                {% for bottle in bottles %}
+                    <div class="col-lg-4 col-md-12 mb-3">
+                        <div class="card shadow position-relative">
+                            <div class="w-100 d-flex flex-column align-items-end position-absolute">
+                                <a href={{ path('bottle_edit', {'id': bottle.id}) }} class="btn btn-link text-secondary"><i class="fa-solid fa-pen-to-square fa-xl"></i></a>
+                                {{ include('bottle/_delete_form.html.twig') }}
                             </div>
-                            <fieldset class="purple-fieldset rounded mt-2 text-center">
-                                <legend class="h4 purple mt-1">{{ bottle.name | upper }}</legend>
-                                <p class="h6">{{ bottle.year }}</p>
-                            </fieldset>
+                            <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+                                data-mdb-ripple-color="light">
+                                <img src={{ asset('images/bottle-top-2.jpg') }}
+                                class="w-100" />
+                            </div>
+                            <div class="card-body w-75 m-auto">
+                                <div class="d-flex flex-column justify-content-center align-items-center">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <p class="h6 text-muted">Provenance</p>
+                                        <p class="h6">{{ bottle.origin|country_name }}</p>
+                                    </div>
+                                    <hr class="w-100 m-1" style="border: 1px solid grey;">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <p class="h6 text-muted">Cépage</p>
+                                        <p class="h6">{{ bottle.vine }}</p>
+                                    </div>
+                                    <hr class="w-100 m-1" style="border: 1px solid grey;">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <p class="h6 text-muted">Embouteilleur</p>
+                                        <p class="h6">{{ bottle.enbottler }}</p>
+                                    </div>
+                                    <hr class="w-100 m-1" style="border: 1px solid grey;">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <p class="h6 text-muted">Prix</p>
+                                        <p class="h6">{{ bottle.price ~ ' €' }}</p>
+                                    </div>
+                                </div>
+                                <fieldset class="purple-fieldset rounded mt-2 text-center">
+                                    <legend class="h4 purple mt-1">{{ bottle.name | upper }}</legend>
+                                    <p class="h6">{{ bottle.year }}</p>
+                                </fieldset>
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            {% else %}
+                {{ include('components/no_result/no_result.html.twig') }}
+            {% endif %}
         </div>
     </div>
 </section>

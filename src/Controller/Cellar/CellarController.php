@@ -73,6 +73,7 @@ class CellarController extends AbstractController
         // Filter search form
         $filterForm = $this->createForm(FilterBottleType::class, [], [
             'user' => $this->getUser(),
+            'category' => true,
         ]);
         $filterForm->handleRequest($request);
 
@@ -94,7 +95,7 @@ class CellarController extends AbstractController
 
         // Filter search
         if ($filterForm->isSubmitted() && $filterForm->isValid()) {
-            $variables['bottles'] = $this->search->filter($this->getUser(), $cellar, $filterForm);
+            $variables['bottles'] = $this->search->filter($this->getUser(), $filterForm, $cellar);
             
             $this->addFlash('success', "Les bouteilles ont été filtrées !");
         }

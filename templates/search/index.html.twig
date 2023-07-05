@@ -119,6 +119,9 @@
                 {% endfor %}
             </div>
         {% endif %}
+        {% if results['bottles'] is empty and results['cellars'] is empty and results['categories'] is empty %}
+            {{ include('components/no_result/no_result.html.twig') }}
+        {% endif %}
     </div>
 </section>
 {% endblock %}

@@ -28,23 +28,17 @@ class FilterBottleType extends AbstractType
     {
         $this->user = $options['user'];
         $builder
-            // ->add('name', EntityType::class, [
-            //     'class' => Bottle::class,
-            //     'query_builder' => function (EntityRepository $er) use ($user) {
-            //         return $er->createQueryBuilder('b')
-            //             ->select('b.name')
-            //             ->where("b.author = $user");
-            //     },
-            //     'required' => false,
-            //     'attr' => [
-            //         'class' => "form-control",
-            //         'placeholder' => "Nom",
-            //     ],
-            // ])
+            ->add('name', TextType::class, [
+                'required' => false,
+                'attr' => [
+                    'class' => "form-control",
+                    'placeholder' => "Par nom",
+                ],
+            ])
             ->add('origin', ChoiceType::class, [
                 'choices' => $this->getChoices('getOrigin'),
                 'required' => false,
-                'placeholder' => "Provenance",
+                'placeholder' => "Par provenance",
                 'attr' => [
                     'class' => "form-control",
                 ],
@@ -52,7 +46,7 @@ class FilterBottleType extends AbstractType
             ->add('vine', ChoiceType::class, [
                 'choices' => $this->getChoices('getVine'),
                 'required' => false,
-                'placeholder' => "Cépage",
+                'placeholder' => "Par cépage",
                 'attr' => [
                     'class' => "form-control",
                 ],
@@ -60,33 +54,21 @@ class FilterBottleType extends AbstractType
             ->add('enbottler', ChoiceType::class, [
                 'choices' => $this->getChoices('getEnbottler'),
                 'required' => false,
-                'placeholder' => "Embouteilleur",
+                'placeholder' => "Par embouteilleur",
                 'attr' => [
                     'class' => "form-control",
                 ],
             ])
             ->add('year', TextType::class, [
-                'label' => "Année",
+                'label' => "Par année",
                 'label_attr' => [
                     'class' => "form-label",
                 ],
                 'required' => false,
                 'attr' => [
                     'class' => "form-control",
-                    'placeholder' => "Année",
+                    'placeholder' => "Par année",
                 ],
-            ])
-            ->add('category', EntityType::class, [
-                'class' => Category::class,
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('c')
-                        ->where("c.author = $this->user");
-                },
-                'required' => false,
-                'placeholder' => "Catégorie",
-                'attr' => [
-                    'class' => "form-control",
-                ]
             ])
             ->add('price', RangeType::class, [
                 'label' => "Prix max",
@@ -96,11 +78,28 @@ class FilterBottleType extends AbstractType
                 'required' => false,
                 'attr' => [
                     'min' => 0,
+                    'max' => 10000,
                     'class' => "slider h-100 rounded",
                     'value' => 0,
+                    'step' => 100,
                 ],
             ])
         ;
+        if ($options['category']) {
+            $builder
+                ->add('category', EntityType::class, [
+                    'class' => Category::class,
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('c')
+                            ->where("c.author = $this->user");
+                    },
+                    'required' => false,
+                    'placeholder' => "Par catégorie",
+                    'attr' => [
+                        'class' => "form-control",
+                    ],
+                ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -108,6 +107,7 @@ class FilterBottleType extends AbstractType
         $resolver->setDefaults([
             'data_class' => null,
             'user' => null,
+            'category' => null,
         ]);
     }
 
