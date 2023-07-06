@@ -3,38 +3,6 @@
 {% block title %}Category index{% endblock %}
 
 {% block body %}
-    {# <div class="pagetitle">
-        <h1 class="text-start">Mes catégories</h1>
-    </div>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for category in categories %}
-            <tr>
-                <td>{{ category.id }}</td>
-                <td>{{ category.name }}</td>
-                <td>
-                    <a href="{{ path('category_show', {'id': category.id}) }}">show</a>
-                    <a href="{{ path('category_edit', {'id': category.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('category_new') }}">Create new</a> #}
-
 <section>
     <div class="container py-2">
         <div class="pagetitle">
@@ -42,26 +10,7 @@
         </div>
         <div class="row justify-content-center">
             {% for category in categories %}
-                <div class="col-md-8 col-lg-5 col-xl-4 py-3">
-                    <div class="card text-black shadow">
-                        <div class="card-body">
-                            <div class="text-center d-flex justify-content-center align-items-end bg-category-name">
-                                <h5 class="bg-wine text-light rounded py-1 px-4 m-0">{{ category.name }}</h5>
-                            </div>
-                            <div class="mt-5">
-                                <div class="d-flex justify-content-between text-muted">
-                                    <span>Créée le</span><span>{{ category.createdAt | date('d/m/Y') }}</span>
-                                </div>
-                                <div class="d-flex justify-content-between text-muted">
-                                    <span>Nombre de bouteilles</span><span>{{ category.bottles | length }}</span>
-                                </div>
-                            </div>
-                            <div class="w-100 d-flex justify-content-center mt-3">
-                                <a href={{ path('category_show', {'id': category.id}) }} class="btn btn-purple w-50"><i class="fa-regular fa-eye fa-lg"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% include 'components/card/card_index.html.twig' with {'entity': category, 'type': 'category'} %}
             {% endfor %}
         </div>
     </div>
