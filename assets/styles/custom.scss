@@ -2,6 +2,9 @@
 .bg-wine {
     background-color: #6F1125 !important;
 }
+.bg-wine-ligth {
+    background-color: #FEF6F6 !important;
+}
 .cellar-background {
     background-image: url('/public/images/bottle.png');
     background-size: contain;
@@ -358,7 +361,7 @@ hr.style-eight:after {
   
   .card-title {
     padding: 20px 0 15px 0;
-    font-size: 18px;
+    font-size: 28px;
     font-weight: 500;
     color: #6F1125;
     font-family: "Poppins", sans-serif;
@@ -928,25 +931,25 @@ hr.style-eight:after {
   }
   
   .dashboard .info-card h6 {
-    font-size: 28px;
-    color: #012970;
+    font-size: 48px;
+    color: #6F1125;
     font-weight: 700;
     margin: 0;
     padding: 0;
   }
   
   .dashboard .card-icon {
-    font-size: 32px;
+    font-size: 40px;
     line-height: 0;
-    width: 64px;
-    height: 64px;
+    width: 100px;
+    height: 100px;
     flex-shrink: 0;
     flex-grow: 0;
   }
   
   .dashboard .sales-card .card-icon {
-    color: #4154f1;
-    background: #f6f6fe;
+    color: #6F1125;
+    background: #FFF;
   }
   
   .dashboard .revenue-card .card-icon {

@@ -3,49 +3,21 @@
 {% block title %}Cellar{% endblock %}
 
 {% block body %}
-<section class="h-100 gradient-custom">
+<section>
   <div class="container pt-2 pb-5">
-    <div class="row d-flex justify-content-center my-4">
-      <div class="col-md-8">
-        <div class="card mb-4">
-          <div class="card-header py-3">
-            <h5 class="mb-0 text-center">{{ cellar.name | upper }}</h5>
-          </div>
-          <div class="card-body">
-            <ul class="list-group list-group-flush">
-              <li
-                class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                Créée le
-                <span>{{ cellar.createdAt | date('d/m/Y') }}</span>
-              </li>
-              <li
-                class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                Bouteilles
-                <span>{{ cellar.bottles | length }}</span>
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                
-              </li>
-            </ul>
-            <div class="mt-2 d-flex">
-                <a href={{ path('cellar_edit', {'id': cellar.id}) }} class="btn btn-link">
-                    <i class="fa-solid fa-pen-to-square fa-2x text-secondary"></i>
-                </a>
-                {{ include('cellar/_delete_form.html.twig') }}
-            </div>
-          </div>
-          <div>
-          </div>
-        </div>
-        <button type="button" class="btn btn-purple mb-3 w-100" data-bs-toggle="modal" data-bs-target="#bottleModal">
-          Ajouter / retirer une bouteille
-        </button>
-        {% include 'cellar/bottleModal.html.twig' with {'form': form} %}
-        <a href={{ path('cellar_show', {'id': cellar.id}) }} class="btn btn-outline-dark mb-4 w-100">
-          <i class="fa-solid fa-rotate-right fa-lg me-3"></i>
-          Réinitialiser les filtres
-        </a>
-      </div>
+    <div class="pagetitle mb-4">
+        <h1 class="text-start">Ma cave</h1>
+    </div>
+    <div class="row my-4">
+      {% include 'components/card/card.html.twig' with {
+        'title': cellar.name,
+        'icon': "fa-solid fa-boxes-stacked fa-lg",
+        'type': 'cellar',
+        'entity': cellar,
+        'path': 'cellar_show',
+        'param': cellar.id,
+      } %}
+      {% include 'cellar/bottleModal.html.twig' with {'form': form} %}
       {% include 'components/filter_bar/filter_bar.html.twig' with {'filterForm': filterForm, 'formCategory': true} %}
     </div>
     <div class="row">

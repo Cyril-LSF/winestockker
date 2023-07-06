@@ -9,11 +9,12 @@
             <h1 class="text-start">Mes bouteilles</h1>
         </div>
         <div class="row">
+            {% include 'components/card/card.html.twig' with {
+                'icon': "fa-solid fa-wine-bottle fa-lg",
+                'path': 'bottle_index',
+                'param': null,
+            } %}
             {% include 'components/filter_bar/filter_bar.html.twig' with {'filterForm': filterForm} %}
-            <a href={{ path('bottle_index') }} class="btn btn-outline-dark mb-4 w-100">
-                <i class="fa-solid fa-rotate-right fa-lg me-3"></i>
-                Réinitialiser les filtres
-            </a>
         </div>
         <div class="row">
             {% if bottles|length > 0 %}
