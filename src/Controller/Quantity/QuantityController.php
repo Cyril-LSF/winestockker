@@ -7,8 +7,6 @@ use App\Entity\Cellar;
 use App\Entity\Quantity;
 use App\Form\Quantity\QuantityType;
 use App\Service\EditQuantity;
-use App\Repository\BottleRepository;
-use App\Repository\CellarRepository;
 use App\Repository\QuantityRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class QuantityController extends AbstractController
 {
     private QuantityRepository $quantityRepository;
-    private EditQuantity     $editQuantity;
+    private EditQuantity       $editQuantity;
 
     public function __construct(QuantityRepository $quantityRepository, EditQuantity $editQuantity)
     {
@@ -29,7 +27,7 @@ class QuantityController extends AbstractController
     }
 
     #[Route('/edit/{cellar}/{bottle}/{action}', name: 'quantity_edit', methods: ['POST'])]
-    public function edit(Cellar $cellar, Bottle $bottle, REquest $request): Response
+    public function edit(Cellar $cellar, Bottle $bottle, Request $request): Response
     {
         $action = $request->attributes->get('action');
         $bottleQuantity = $this->editQuantity->editQuantity($cellar, $bottle, $action);

@@ -14,16 +14,23 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/address')]
 class AddressController extends AbstractController
 {
+    private AddressRepository $addressRepository;
+
+    public function __construct(AddressRepository $addressRepository)
+    {
+        $this->addressRepository = $addressRepository;
+    }
+
     #[Route('/', name: 'address_index', methods: ['GET'])]
-    public function index(AddressRepository $addressRepository): Response
+    public function index(): Response
     {
         return $this->render('address/index.html.twig', [
-            'addresses' => $addressRepository->findAll(),
+            'addresses' => $this->addressRepository->findAll(),
         ]);
     }
 
     #[Route('/new', name: 'address_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, AddressRepository $addressRepository): Response
+    public function new(Request $request): Response
     {
         $address = new Address();
         $form = $this->createForm(AddressType::class, $address);
@@ -31,7 +38,7 @@ class AddressController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $address->setauthor($this->getUser());
-            $addressRepository->save($address, true);
+            $this->addressRepository->save($address, true);
 
             return $this->redirectToRoute('address_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -51,19 +58,19 @@ class AddressController extends AbstractController
     }
 
     #[Route('/{id}/selected', name: 'address_selected', methods: ['POST'])]
-    public function selected(Address $address, AddressRepository $addressRepository): Response
+    public function selected(Address $address): Response
     {
         if ($address->isSelected()) {
             $address->setSelected(false);
         } else {
-            $userAddresses = $addressRepository->findBy(['author' => $this->getUser(), 'selected' => true]);
+            $userAddresses = $this->addressRepository->findBy(['author' => $this->getUser(), 'selected' => true]);
             foreach ($userAddresses as $userAddress) {
                 $userAddress->setSelected(false);
-                $addressRepository->save($userAddress, true);
+                $this->addressRepository->save($userAddress, true);
             }
             $address->setSelected(true);
         }
-        $addressRepository->save($address, true);
+        $this->addressRepository->save($address, true);
         return new JsonResponse([
             'status' => true,
             'isSelected' => $address->isSelected(),
@@ -71,13 +78,13 @@ class AddressController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'address_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Address $address, AddressRepository $addressRepository): Response
+    public function edit(Request $request, Address $address): Response
     {
         $form = $this->createForm(AddressType::class, $address);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $addressRepository->save($address, true);
+            $this->addressRepository->save($address, true);
 
             $this->addFlash('success', "L'adresse a été modifiée !");
             return $this->redirectToRoute('user_show', ['id' => $address->getauthor()->getId()], Response::HTTP_SEE_OTHER);
@@ -90,10 +97,10 @@ class AddressController extends AbstractController
     }
 
     #[Route('/{id}', name: 'address_delete', methods: ['POST'])]
-    public function delete(Request $request, Address $address, AddressRepository $addressRepository): Response
+    public function delete(Request $request, Address $address): Response
     {
         if ($this->isCsrfTokenValid('delete'.$address->getId(), $request->request->get('_token'))) {
-            $addressRepository->remove($address, true);
+            $this->addressRepository->remove($address, true);
         }
 
         return $this->redirectToRoute('user_show', ['id' => $this->getUser()->getId()], Response::HTTP_SEE_OTHER);

@@ -7,7 +7,6 @@ use App\Entity\Category;
 use App\Form\Category\AddBottleType;
 use App\Form\Category\CategoryType;
 use App\Form\Search\FilterBottleType;
-use App\Repository\BottleRepository;
 use App\Repository\CategoryRepository;
 use App\Service\Bottle\BottleToCategory;
 use App\Service\Search\Search;
@@ -19,24 +18,30 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/category')]
 class CategoryController extends AbstractController
 {
-    private BottleToCategory $bottleToCategory;
-    private Search $search;
+    private CategoryRepository $categoryRepository;
+    private BottleToCategory   $bottleToCategory;
+    private Search             $search;
 
-    public function __construct(BottleToCategory $bottleToCategory, Search $search)
-    {
-        $this->bottleToCategory = $bottleToCategory;
-        $this->search = $search;
+    public function __construct(
+        CategoryRepository $categoryRepository,
+        BottleToCategory   $bottleToCategory,
+        Search             $search
+    ){
+        $this->categoryRepository = $categoryRepository;
+        $this->bottleToCategory   = $bottleToCategory;
+        $this->search             = $search;
     }
+
     #[Route('/', name: 'category_index', methods: ['GET'])]
-    public function index(CategoryRepository $categoryRepository): Response
+    public function index(): Response
     {
         return $this->render('category/index.html.twig', [
-            'categories' => $categoryRepository->findBy(['author' => $this->getUser()]),
+            'categories' => $this->categoryRepository->findBy(['author' => $this->getUser()]),
         ]);
     }
 
     #[Route('/new', name: 'category_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, CategoryRepository $categoryRepository): Response
+    public function new(Request $request): Response
     {
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
@@ -44,7 +49,7 @@ class CategoryController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $category->setAuthor($this->getUser())->setCreatedAt(new DateTime());
-            $categoryRepository->save($category, true);
+            $this->categoryRepository->save($category, true);
 
             $this->addFlash('success', "La catégorie a été créée !");
             return $this->redirectToRoute('category_show', ['id' => $category->getId()], Response::HTTP_SEE_OTHER);
@@ -57,7 +62,7 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/{id}', name: 'category_show', methods: ['GET', 'POST'])]
-    public function show(Category $category, Request $request, CategoryRepository $categoryRepository): Response
+    public function show(Category $category, Request $request): Response
     {
         // Add or remove bottles form
         $form = $this->createForm(AddBottleType::class, $category, [
@@ -96,13 +101,13 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'category_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Category $category, CategoryRepository $categoryRepository): Response
+    public function edit(Request $request, Category $category): Response
     {
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $categoryRepository->save($category, true);
+            $this->categoryRepository->save($category, true);
 
             $this->addFlash('success', "La catégorie a été modifiée !");
             return $this->redirectToRoute('category_show', ['id' => $category->getId()], Response::HTTP_SEE_OTHER);
@@ -116,10 +121,10 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'category_delete', methods: ['POST'])]
-    public function delete(Request $request, Category $category, CategoryRepository $categoryRepository): Response
+    public function delete(Request $request, Category $category): Response
     {
         if ($this->isCsrfTokenValid('delete'.$category->getId(), $request->request->get('_token'))) {
-            $categoryRepository->remove($category, true);
+            $this->categoryRepository->remove($category, true);
             $this->addFlash('success', "La catégorie a été supprimée !");
         }
 
