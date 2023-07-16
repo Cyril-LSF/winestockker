@@ -95,7 +95,8 @@ class CellarController extends AbstractController
             $this->bottleToCellar->bottleToCellar($cellar, $form->get('bottles')->getData());
 
             $this->addFlash('success', "Les bouteilles de la cave " . $cellar->getName() . " ont été modifiées !");
-            $this->redirectToRoute('cellar_show', ['id' => $cellar->getId(), RESPONSE::HTTP_SEE_OTHER]);
+            $variables['bottles'] = $cellar->getBottles();
+            $variables['quantities'] = $this->quantityRepository->findBy(['cellar' => $cellar]);
         }
 
         // Filter search
