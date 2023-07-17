@@ -121,6 +121,6 @@ class FilterBottleType extends AbstractType
             ] = $bottle->$method();
         }
 
-        return $choices;
+        return array_filter($choices);
     }
 }

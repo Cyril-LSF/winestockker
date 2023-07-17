@@ -1,0 +1,19 @@
+<!-- Card -->
+<div class="col-lg-4 col-md-6 dashboard">
+    <div class="card info-card sales-card">
+
+        <div class="card-body">
+            <h5 class="card-title py-0 mb-4 text-center bg-wine-ligth shadow-sm">{{ data['title']|upper }}</h5>
+
+            <div class="d-flex justify-content-around align-items-center">
+                <p>
+                    {{ data['content']|nl2br }}
+                </p>
+            </div>
+            <div>
+                <a href={{ data['url'] }} target="_blanck" class="link-purple">Accéder à l'article entier</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Card -->

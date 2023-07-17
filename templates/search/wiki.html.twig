@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() ~ " - Plus d'info"  }}{% endblock %}
+
+{% block body %}
+    {% if data %}
+        {{ include('components/card/card_wiki.html.twig') }}
+    {% else %}
+        {% include 'components/no_result/no_result.html.twig' %}
+    {% endif %}
+{% endblock %}

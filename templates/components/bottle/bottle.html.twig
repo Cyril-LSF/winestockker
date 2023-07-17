@@ -27,7 +27,13 @@
                 <hr class="w-100 m-1" style="border: 1px solid grey;">
                 <div class="d-flex flex-column align-items-center">
                     <p class="h6 text-muted">Cépage</p>
-                    <p class="h6">{{ bottle.vine }}</p>
+                    {% if bottle.vine is not empty %}
+                        <a href={{ path('search_vine', {'id': bottle.id}) }} class="link-purple" data-bs-toggle="tooltip" data-bs-placement="right" title="En savoir plus sur le cépage">
+                            {{ bottle.vine }}
+                        </a>
+                    {% else %}
+                        <p class="h6">Non renseigné</p>
+                    {% endif %}
                 </div>
                 <hr class="w-100 m-1" style="border: 1px solid grey;">
                 <div class="d-flex flex-column align-items-center">
