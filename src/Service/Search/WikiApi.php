@@ -17,7 +17,7 @@ class WikiApi extends AbstractService {
     public function searchVine(string $vine)
     {
         $data = str_replace([' ', 'À', 'Á', 'Â', 'à', 'Ä', 'Å', 'à', 'á', 'â', 'à', 'ä', 'å', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ø', 'ò', 'ó', 'ô', 'õ', 'ö', 'ø', 'È', 'É', 'Ê', 'Ë', 'è', 'é', 'ê', 'ë', 'Ç', 'ç', 'Ì', 'Í', 'Î', 'Ï'],
-        ['%20', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a' ,'a', 'a' ,'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o' ,'o', 'o', 'o', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'c', 'c', 'i' ,'i', 'i', 'i', 'i', 'i', 'i', 'i'],
+        ['_', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a' ,'a', 'a' ,'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o' ,'o', 'o', 'o', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'c', 'c', 'i' ,'i', 'i', 'i', 'i', 'i', 'i', 'i'],
         $vine);
 
         $base_api_url = $this->params->get('app.api_wiki');
@@ -41,6 +41,7 @@ class WikiApi extends AbstractService {
         curl_close($curl);
 
         $result = json_decode($result, true);
+        //dd($result);
         $pageId = array_keys($result['query']['pages'])[0];
 
         if ($pageId != -1) {
@@ -53,7 +54,6 @@ class WikiApi extends AbstractService {
         } else {
             return false;
         }
-        
     }
 
 }

@@ -4,7 +4,11 @@
 
 {% block body %}
     {% if data %}
-        {{ include('components/card/card_wiki.html.twig') }}
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                {{ include('components/card/card_wiki.html.twig') }}
+            </div>
+        </div>
     {% else %}
         {% include 'components/no_result/no_result.html.twig' %}
     {% endif %}
