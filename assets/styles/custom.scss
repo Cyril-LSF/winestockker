@@ -31,6 +31,9 @@
     background-position: center;
     height: 5em;
 }
+.bg-credit-card {
+  background-color: #1E2143 !important;
+}
 /* END BACKGROUND */
 
 /* GENERIC */
@@ -54,7 +57,44 @@
 .link-purple:hover {
   color: #ec4242;
 }
+.text-bold {
+  font-weight: 700;
+}
 /* END GENERIC */
+
+/* CREDIT CARD FORM */
+.credit-card{
+	border: none;
+	max-width: 450px;
+	border-radius: 15px;
+	//margin: 150px 0 150px;
+	padding: 25px;
+	//padding-bottom: 20px!important;
+  background-color: #6F1125 !important;
+}
+#cno{
+	transform: translateY(-10px);
+}
+.credit-card-input{
+	border-bottom: 1.5px solid #FFF!important;
+	font-weight: bold;
+	border-radius: 0;
+	border: 0;
+  background-color: #6F1125 !important;
+  color: #FFF;
+}
+.col-sm-5{
+	padding-left: 90px;
+}
+.card_selected {
+  border: 4px solid #57cc99!important;
+}
+@media (max-width: 576px) {
+  .custom-margin {
+    margin-top: 1em !important;
+  }
+}
+/* END CREDIT CARD FORM */
 
 /* FILTER_BAR */
 hr.style-eight {

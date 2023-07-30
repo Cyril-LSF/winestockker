@@ -7,6 +7,9 @@ parameters:
     app.uploaded_root: '../public/upload'
     app.reset_password: 'http://localhost:1234/reset-password/reset/'
     app.api_wiki: 'https://fr.wikipedia.org/w/api.php'
+    app.encrypt_key: 'Je suis un caviste'
+    app.cipher: 'AES-256-GCM'
+    app.tag: "GCM"
 services:
     # default configuration for services in *this* file
     _defaults:

@@ -1,0 +1,61 @@
+
+<div class="container-fluid">
+	<div class="row d-flex justify-content-center">
+		<div class="col-12">
+			<div class="card credit-card">
+				{{ form_start(creditCardForm, {'attr': {'class': "card-details"}}) }}
+					<div class="row">
+						<div class="col-md-8 col-sm-12">
+							<div class="form-group mb-2">
+								<p class="mb-0">{{ form_label(creditCardForm.number) }}</p>
+								{{ form_widget(creditCardForm.number, {'attr': {'minlength': 16, 'maxlength': 16}}) }}
+								{% for errorItem in creditCardForm.number.vars.errors %}
+									<div class="text-danger">{{ errorItem.message }}</div>
+								{% endfor %}
+								<p class="number-error mb-1"></p>
+							</div>
+							<div class="form-group">
+								<p class="mb-0">{{ form_label(creditCardForm.name) }}</p>
+								{{ form_widget(creditCardForm.name) }}
+								{% for errorItem in creditCardForm.name.vars.errors %}
+									<div class="text-danger">{{ errorItem.message }}</div>
+								{% endfor %}
+								<p class="nameCard-error mb-1"></p>
+							</div>
+							<div class="form-group pt-2 d-flex justify-content-between">
+								<div class="row d-flex justify-content-around">
+									<div class="col">
+										<p class="mb-0">{{ form_label(creditCardForm.expiration) }}</p>
+										{{ form_widget(creditCardForm.expiration, {'attr': {'size': 7, 'minlength': 5, 'maxlength': 5}}) }}
+										{% for errorItem in creditCardForm.expiration.vars.errors %}
+											<div class="text-danger">{{ errorItem.message }}</div>
+										{% endfor %}
+										<p class="expiration-error mb-1"></p>
+									</div>
+									<div class="col">
+										<p class="mb-0">{{ form_label(creditCardForm.securityCode) }}</p>
+										{{ form_widget(creditCardForm.securityCode, {'attr': {'size': 6, 'minlength': 3, 'maxlength': 3}}) }}
+										{% for errorItem in creditCardForm.securityCode.vars.errors %}
+											<div class="text-danger">{{ errorItem.message }}</div>
+										{% endfor %}
+										<p class="securityCode-error mb-1"></p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4 col-sm-12">
+							<div class="d-flex align-items-center h-100 custom-margin">
+								<div>
+									<i class="fa-solid fa-microchip fa-2xl text-light"></i>
+								</div>
+								<div class="pt-0 ms-4">
+									<button type="submit" class="btn btn-light" value="submit"><i class="fas fa-arrow-right px-3 py-2"></i></button>
+								</div>
+							</div>
+						</div>
+					</div>
+				{{ form_end(creditCardForm) }}
+			</div>
+		</div>
+	</div>
+</div>

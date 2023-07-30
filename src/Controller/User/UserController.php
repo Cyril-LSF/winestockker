@@ -3,12 +3,16 @@
 namespace App\Controller\User;
 
 use App\Entity\Address;
+use App\Entity\CreditCard;
 use App\Entity\User;
 use App\Form\Address\AddressType;
+use App\Form\Payment\CreditCardType;
 use App\Form\Security\EditPasswordType;
 use App\Form\User\RegistrationFormType;
 use App\Repository\AddressRepository;
+use App\Repository\CreditCardRepository;
 use App\Repository\UserRepository;
+use App\Service\Payment\CreditCard as CreditCardService;
 use App\Service\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,15 +28,21 @@ class UserController extends AbstractController
     private ParameterBagInterface $params;
     private UserRepository        $userRepository;
     private AddressRepository     $addressRepository;
+    private CreditCardRepository  $creditCardRepository;
+    private CreditCardService     $creditCardService;
 
     public function __construct(
         ParameterBagInterface $params,
         UserRepository        $userRepository,
         AddressRepository     $addressRepository,
+        CreditCardRepository  $creditCardRepository,
+        CreditCardService     $creditCardService
     ){
-        $this->params            = $params;
-        $this->userRepository    = $userRepository;
-        $this->addressRepository = $addressRepository;
+        $this->params               = $params;
+        $this->userRepository       = $userRepository;
+        $this->addressRepository    = $addressRepository;
+        $this->creditCardRepository = $creditCardRepository;
+        $this->creditCardService    = $creditCardService;
     }
 
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
@@ -47,11 +57,19 @@ class UserController extends AbstractController
     #[Route('/{id}', name: 'user_show', methods: ['GET', 'POST'])]
     public function show(User $user, Request $request): Response
     {
+        // Adress from
         $address = new Address();
         $form = $this->createForm(AddressType::class, $address);
 
         $form->handleRequest($request);
 
+        // Credit card form
+        $creditCard = new CreditCard();
+        $creditCardForm = $this->createForm(CreditCardType::class, $creditCard);
+
+        $creditCardForm->handleRequest($request);
+
+        // Adress form control
         if ($form->isSubmitted() && $form->isValid()) {
             $address->setauthor($this->getUser());
             $this->addressRepository->save($address, true);
@@ -61,10 +79,23 @@ class UserController extends AbstractController
             $this->addFlash('danger', "Erreur de saisie");
         }
 
+        // Credit card control
+        if ($creditCardForm->isSubmitted() && $creditCardForm->isValid()) {
+            $this->creditCardService->addCreditCard($creditCard, $this->getUser());
+
+            $this->addFlash('success', "La carte a été créée !");
+        } else if ($creditCardForm->isSubmitted()) {
+            $this->addFlash('danger', "Erreur de saisie");
+        }
+
         return $this->render('user/show.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
+            'creditCardForm' => $creditCardForm->createView(),
             'addresses' => $this->addressRepository->findBy(['author' => $this->getUser()]),
+            'creditCards' => $this->creditCardService->decryptCreditCards(
+                $this->creditCardRepository->findBy(['author' => $this->getUser()])
+            ),
         ]);
     }
 

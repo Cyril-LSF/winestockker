@@ -88,7 +88,7 @@
           <div class="col-md-6">
             <div class="card mb-4 mb-md-0">
               <div class="card-body">
-                <p><i class="fa-solid fa-map-location-dot"></i> Adresses</p>
+                <p><i class="fa-solid fa-map-location-dot me-3"></i> Adresses</p>
                 {% if user.addresses is not empty %}
                   <div class="container-fluid">
                     {% set count = 0 %}
@@ -104,7 +104,7 @@
                                   </div>
                                   <div>
                                     <div class="text-center">
-                                      <h6>{{ address.streetNumber ~ ' ' ~ address.streetNumberExtension ~ ' ' ~ address.streetName}}</h6>
+                                      <h6>{{ address.streetNumber ~ ' ' ~ address.streetNumberExtension ~ ' ' ~ address.streetType ~ ' ' ~ address.streetName}}</h6>
                                       <p class="mb-0">{{ address.postalcode ~ ' ' ~ address.city}}</p>
                                     </div>
                                     <div class="mt-2 d-flex justify-content-around">
@@ -140,33 +140,49 @@
           <div class="col-md-6">
             <div class="card mb-4 mb-md-0">
               <div class="card-body">
-                <p class="mb-4"><span class="text-primary font-italic me-1">assigment</span> Project Status
-                </p>
-                <p class="mb-1" style="font-size: .77rem;">Web Design</p>
-                <div class="progress rounded" style="height: 5px;">
-                  <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="80"
-                    aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <p class="mt-4 mb-1" style="font-size: .77rem;">Website Markup</p>
-                <div class="progress rounded" style="height: 5px;">
-                  <div class="progress-bar" role="progressbar" style="width: 72%" aria-valuenow="72"
-                    aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <p class="mt-4 mb-1" style="font-size: .77rem;">One Page</p>
-                <div class="progress rounded" style="height: 5px;">
-                  <div class="progress-bar" role="progressbar" style="width: 89%" aria-valuenow="89"
-                    aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <p class="mt-4 mb-1" style="font-size: .77rem;">Mobile Template</p>
-                <div class="progress rounded" style="height: 5px;">
-                  <div class="progress-bar" role="progressbar" style="width: 55%" aria-valuenow="55"
-                    aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <p class="mt-4 mb-1" style="font-size: .77rem;">Backend API</p>
-                <div class="progress rounded mb-2" style="height: 5px;">
-                  <div class="progress-bar" role="progressbar" style="width: 66%" aria-valuenow="66"
-                    aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
+                <p><i class="fa-regular fa-credit-card me-3"></i> Mes cartes de paiement</p>
+                {% if creditCards is not empty %}
+                  <div class="container-fluid">
+                    {% set count = 0 %}
+                    {% for creditCard in creditCards %}
+                      <div class="row">
+                        <div class="col mb-4 d-flex flex-column">
+                          <div id={{ 'creditCard_card' ~ count }} class="card_creditCard card shadow alert bg-wine {% if creditCard['selected'] == true %} card_selected {% endif %}"> {# {% if address.selected == true %} alert-success {% endif %}#}
+                            <div class="w-100">
+                              <div class="d-flex justify-content-between align-items-center text-light">
+                                <i class="fa-regular fa-credit-card fa-2xl"></i>
+                                <div>
+                                  <small><span class="text-bold">Nom: </span>{{ creditCard['name'] }}</small>
+                                </div>
+                              </div>
+                              <div class="mt-3 text-bold text-light">
+                                {{ '**** **** **** ' ~ creditCard['number'] }}
+                              </div>
+                              <div class="mt-1 text-light">
+                                <small><span class="text-bold">Expiration: </span>{{ creditCard['expiration'] }}</small>
+                              </div>
+                              <div class="m-1 d-flex justify-content-center align-items-center bg-light rounded">
+                                <button class="btn btn-link selected_btn_credit_card" data-url={{ path('credit_card_selected', {'id': creditCard['id']}) }}>
+                                  {% if creditCard['selected'] == true %}
+                                    <i class='fa-solid fa-xmark text-danger'></i>
+                                  {% else %}
+                                    <i class="fa-solid fa-check text-success"></i>
+                                  {% endif %}
+                                </button>
+                                {{ include('credit_card/_delete_form.html.twig') }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {% set count = count + 1 %}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+                <button type="button" class="btn btn-light w-100"  data-bs-toggle="modal" data-bs-target="#modalPayment">
+                  <i class="fa-solid fa-plus fa-2x"></i>
+                </button>
+                {% include 'credit_card/modal.html.twig' %}
               </div>
             </div>
           </div>
@@ -181,4 +197,5 @@
 {% block javascripts %}
   {{ parent() }}
   {{ encore_entry_script_tags('address') }}
+  {{ encore_entry_script_tags('creditCard') }}
 {% endblock %}

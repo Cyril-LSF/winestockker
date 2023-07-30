@@ -71,12 +71,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Category::class, orphanRemoval: true)]
     private Collection $categories;
 
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: CreditCard::class, orphanRemoval: true)]
+    private Collection $creditCards;
+
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
         $this->cellars = new ArrayCollection();
         $this->bottles = new ArrayCollection();
         $this->categories = new ArrayCollection();
+        $this->creditCards = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -368,6 +372,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($category->getAuthor() === $this) {
                 $category->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CreditCard>
+     */
+    public function getCreditCards(): Collection
+    {
+        return $this->creditCards;
+    }
+
+    public function addCreditCard(CreditCard $creditCard): self
+    {
+        if (!$this->creditCards->contains($creditCard)) {
+            $this->creditCards->add($creditCard);
+            $creditCard->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCreditCard(CreditCard $creditCard): self
+    {
+        if ($this->creditCards->removeElement($creditCard)) {
+            // set the owning side to null (unless already changed)
+            if ($creditCard->getAuthor() === $this) {
+                $creditCard->setAuthor(null);
             }
         }
 

@@ -3,16 +3,8 @@
 namespace App\Service\Search;
 
 use App\Service\Abstract\AbstractService;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class WikiApi extends AbstractService {
-
-    private ParameterBagInterface $params;
-
-    public function __construct(ParameterBagInterface $params)
-    {
-        $this->params = $params;
-    }
 
     public function searchVine(string $vine)
     {
