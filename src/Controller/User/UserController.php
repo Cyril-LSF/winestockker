@@ -13,6 +13,7 @@ use App\Repository\AddressRepository;
 use App\Repository\CreditCardRepository;
 use App\Repository\UserRepository;
 use App\Service\Payment\CreditCard as CreditCardService;
+use App\Service\Payment\Stripe;
 use App\Service\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,19 +31,22 @@ class UserController extends AbstractController
     private AddressRepository     $addressRepository;
     private CreditCardRepository  $creditCardRepository;
     private CreditCardService     $creditCardService;
+    private Stripe                $stripe;
 
     public function __construct(
         ParameterBagInterface $params,
         UserRepository        $userRepository,
         AddressRepository     $addressRepository,
         CreditCardRepository  $creditCardRepository,
-        CreditCardService     $creditCardService
+        CreditCardService     $creditCardService,
+        Stripe                $stripe
     ){
         $this->params               = $params;
         $this->userRepository       = $userRepository;
         $this->addressRepository    = $addressRepository;
         $this->creditCardRepository = $creditCardRepository;
         $this->creditCardService    = $creditCardService;
+        $this->stripe               = $stripe;
     }
 
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
@@ -82,7 +86,7 @@ class UserController extends AbstractController
         // Credit card control
         if ($creditCardForm->isSubmitted() && $creditCardForm->isValid()) {
             $this->creditCardService->addCreditCard($creditCard, $this->getUser());
-
+            //$this->stripe->createCard($this->getUser(), $creditCard);
             $this->addFlash('success', "La carte a été créée !");
         } else if ($creditCardForm->isSubmitted()) {
             $this->addFlash('danger', "Erreur de saisie");

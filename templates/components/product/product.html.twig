@@ -1,0 +1,28 @@
+<div class="col-lg-4 col-md-12 py-2">
+    <div class="card shadow">
+        <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+            data-mdb-ripple-color="light">
+            <img src={{ asset('images/bottle-top-2.jpg') }}
+            class="w-100" />
+        </div>
+        <div class="card-body w-75 m-auto">
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <div class="d-flex flex-column align-items-center">
+                    <p class="h6 text-muted">Nom</p>
+                    <p class="h6">{{ product.name }}</p>
+                </div>
+                <hr class="w-100 m-1" style="border: 1px solid grey;">
+                <div class="d-flex flex-column align-items-center">
+                    <p class="h6 text-muted">Prix</p>
+                    <p>{{ product.price ~ ' €' }}</p>
+                </div>
+                <hr class="w-100 m-1" style="border: 1px solid grey;">
+                <div class="d-flex flex-column align-items-center">
+                    <p class="h6 text-muted">Durée</p>
+                    <p class="h6">{{ product.duration ~ ' jours' }}</p>
+                </div>
+            </div>
+            <a href={{ path('payment_payment', {'id': product.id}) }} class="btn btn-warning w-100"><i class="fa-solid fa-crown fa-xl me-3"></i>Devenir premium</a>
+        </div>
+    </div>
+</div>

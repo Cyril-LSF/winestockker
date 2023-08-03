@@ -1,3 +1,7 @@
 controllers:
     resource: ../src/Controller/
     type: attribute
+
+payment_webhook:
+    path: /webhook
+    controller: App\Controller\Payment\PaymentController::handleWebhook

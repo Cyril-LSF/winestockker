@@ -55,4 +55,24 @@ class CreditCard extends AbstractService {
         return $data;
     }
 
+    public function decryptOneForStripe(EntityCreditCard $creditCard): array
+    {
+        $key = $this->params->get('app.encrypt_key');
+        $cipher = $this->params->get('app.cipher');
+        $tag = $this->params->get('app.tag');
+        $crypt = base64_decode($creditCard->getNumber());
+        $dataCrypt = $this->dataCryptRepository->findOneBy(['creditCard' => $creditCard]);
+        $iv = base64_decode($dataCrypt->getIv());
+        $tag = base64_decode($dataCrypt->getTag());
+
+        $data = [
+            'id' => $creditCard->getId(),
+            'name' => $creditCard->getName(),
+            'number' => openssl_decrypt($crypt, $cipher, $key, OPENSSL_RAW_DATA, $iv, $tag),
+            'expiration' => $creditCard->getExpiration(),
+            'securityCode' => $creditCard->getSecurityCode(),
+            'selected' => $creditCard->isSelected(),
+        ];
+        return $data;
+    }
 }
