@@ -23,8 +23,8 @@
             <h5 class="my-3">{{ user.screenname }}</h5>
             {% if user.isPremium %}
                 <div class="d-flex flex-column justify-content-center mb-2">
-                <p class="text-muted mb-1"><i class="fa-solid fa-unlock-keyhole me-3"></i>Version pro</p>
-                    <a href="#" class="btn btn-outline-warning"><i class="fa-solid fa-crown fa-xl me-3"></i>Gérer mon abonnement</a>
+                <p class="text-muted mb-1"><i class="fa-solid fa-unlock-keyhole me-3"></i>Version premium</p>
+                    {# <a href="#" class="btn btn-outline-warning"><i class="fa-solid fa-crown fa-xl me-3"></i>Gérer mon abonnement</a> #}
                 </div>
             {% else %}
                 <div class="d-flex flex-column justify-content-center mb-2">
@@ -79,7 +79,13 @@
                 <p class="mb-0">Premium</p>
               </div>
               <div class="col-sm-9">
-                <p class="text-muted mb-0">jusqu'au 31/12/2050</p>
+                <p class="text-muted mb-0">
+                  {% if user.isPremium %}
+                    Jusqu'au {{ user.premiumTo|date('d/m/Y') }}
+                  {% else %}
+                    Pas d'abonnement en cours
+                  {% endif %}
+                </p>
               </div>
             </div>
           </div>

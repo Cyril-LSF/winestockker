@@ -7,6 +7,7 @@ use App\Entity\Product;
 use App\Repository\ProductRepository;
 use App\Repository\TransactionRepository;
 use App\Repository\UserRepository;
+use DateTime;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -95,14 +96,16 @@ class Stripe {
         switch ($event->type) {
             case 'payment_intent.succeeded':
                 $paymentIntent = $event->data->object;
+                $user = $this->userRepository->findOneBy(['id' => $paymentIntent->metadata->user_id]);
+                $product = $this->productRepository->findOneBy(['id' => $paymentIntent->metadata->product_id]);
                 $this->transactionRepository->create(
                     $paymentIntent,
-                    $this->userRepository->findOneBy(['id' => $paymentIntent->metadata->user_id]),
-                    $this->productRepository->findOneBy(['id' => $paymentIntent->metadata->product_id])
+                    $user,
+                    $product
                 );
+                $this->userRepository->upgradePremium($user, $product->getDuration());
                 break;
             default:
-                echo 'Received unknown event type ' . $event->type;
                 break;
         }
 

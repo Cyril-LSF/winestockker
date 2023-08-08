@@ -74,11 +74,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: CreditCard::class, orphanRemoval: true)]
     private Collection $creditCards;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $stripeId = null;
-
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Transaction::class, orphanRemoval: true)]
     private Collection $transactions;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $premiumTo = null;
 
     public function __construct()
     {
@@ -415,18 +415,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getStripeId(): ?string
-    {
-        return $this->stripeId;
-    }
-
-    public function setStripeId(?string $stripeId): self
-    {
-        $this->stripeId = $stripeId;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Transaction>
      */
@@ -453,6 +441,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $transaction->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPremiumTo(): ?\DateTimeInterface
+    {
+        return $this->premiumTo;
+    }
+
+    public function setPremiumTo(?\DateTimeInterface $premiumTo): self
+    {
+        $this->premiumTo = $premiumTo;
 
         return $this;
     }
