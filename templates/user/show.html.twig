@@ -24,7 +24,7 @@
             {% if user.isPremium %}
                 <div class="d-flex flex-column justify-content-center mb-2">
                 <p class="text-muted mb-1"><i class="fa-solid fa-unlock-keyhole me-3"></i>Version premium</p>
-                    {# <a href="#" class="btn btn-outline-warning"><i class="fa-solid fa-crown fa-xl me-3"></i>Gérer mon abonnement</a> #}
+                <a href={{ path('product_index') }} class="btn btn-outline-warning"><i class="fa-solid fa-crown fa-xl me-3"></i>Prolonger mon abonnement</a>
                 </div>
             {% else %}
                 <div class="d-flex flex-column justify-content-center mb-2">

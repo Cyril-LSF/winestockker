@@ -27,6 +27,9 @@ class Product
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Transaction::class)]
     private Collection $transactions;
 
+    #[ORM\Column(length: 50)]
+    private ?string $priceInCents = null;
+
     public function __construct()
     {
         $this->transactions = new ArrayCollection();
@@ -99,6 +102,18 @@ class Product
                 $transaction->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPriceInCents(): ?string
+    {
+        return $this->priceInCents;
+    }
+
+    public function setPriceInCents(string $priceInCents): self
+    {
+        $this->priceInCents = $priceInCents;
 
         return $this;
     }

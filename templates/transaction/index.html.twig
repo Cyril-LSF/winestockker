@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Factures{% endblock %}
+
+{% block body %}
+    <div class="pagetitle">
+        <h1 class="text-start">Mes factures</h1>
+    </div>
+    {% if transactions is not empty %}
+        <div class="container mt-4">
+            {% for transaction in transactions %}
+                <div class="row mb-3 d-flex justify-content-center">
+                    <div class="col-lg-10 col-md-11 col-sm-12">
+                        <div class="accordion shadow" id="invoice-list">
+                            <div class="accordion-item">
+                                <div class="accordion-header" id="{{ 'heading_' ~ transaction.paymentId }}">
+                                    <!-- Card -->
+                                    <div class="accordion-button collapsed card mb-0" type="button" data-bs-toggle="collapse" data-bs-target="#{{ transaction.paymentId }}" aria-expanded="false" aria-controls="{{ transaction.paymentId }}">
+                                        <div class="row g-0 w-100">
+                                            <div class="col-md-4">
+                                                <div class="rounded bg-wine text-light h-100 d-flex flex-column justify-content-center align-items-center p-3">
+                                                    <p><i class="fa-solid fa-2x fa-coins"></i></p>
+                                                    <p class="h3 text-center">{{ transaction.amount ~ ' €' }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="card-body text-center">
+                                                    <h5 class="card-title py-2"><i class="fa-solid fa-calendar-day me-3"></i>{{ transaction.createdAt|date('d/m/Y H:i') }}</h5>
+                                                    <p class="card-text text-muted"><i class="fa-solid fa-hashtag me-3"></i>{{ transaction.paymentId }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Card -->
+                                </div>
+                                <div id="{{ transaction.paymentId }}" class="accordion-collapse collapse" aria-labelledby="{{ 'heading_' ~ transaction.paymentId }}" data-bs-parent="#invoice-list">
+                                    <div class="accordion-body">
+                                        <object data={{ asset('invoices/' ~ transaction.invoice) }} type="application/pdf" width="100%" height="700">
+                                            <p>La navigation mobile ne permet pas le lecture de PDFs</p>
+                                            <a href={{ path('transaction_download', {'id': transaction.id}) }} class="link-purple">Télécharger la facture</a>
+                                        </object>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        {% include 'components/no_result/no_result.html.twig' %}
+    {% endif %}
+
+{% endblock %}

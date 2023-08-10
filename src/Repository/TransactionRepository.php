@@ -42,15 +42,17 @@ class TransactionRepository extends ServiceEntityRepository
         }
     }
 
-    public function create(object $paymentIntent, User $user, Product $product): void
+    public function create(object $paymentIntent, User $user, Product $product): Transaction
     {
         $transaction = new Transaction();
         $transaction->setUser($user);
         $transaction->setPaymentId($paymentIntent->id);
         $transaction->setCreatedAt(new DateTime());
         $transaction->setProduct($product);
+        $transaction->setAmount($product->getPrice());
 
         $this->save($transaction, true);
+        return $transaction;
     }
 
 //    /**

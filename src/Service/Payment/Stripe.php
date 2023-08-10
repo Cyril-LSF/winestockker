@@ -4,10 +4,11 @@ namespace App\Service\Payment;
 
 use App\Entity\User;
 use App\Entity\Product;
+use App\Repository\AddressRepository;
 use App\Repository\ProductRepository;
 use App\Repository\TransactionRepository;
 use App\Repository\UserRepository;
-use DateTime;
+use App\Service\Invoice\Invoice;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -21,20 +22,26 @@ class Stripe {
     private UserRepository        $userRepository;
     private ProductRepository     $productRepository;
     private TransactionRepository $transactionRepository;
+    private AddressRepository     $addressRepository;
+    private Invoice               $invoice;
 
     public function __construct(
         ParameterBagInterface $params,
         UrlGeneratorInterface $urlGenerator,
         UserRepository        $userRepository,
         ProductRepository     $productRepository,
-        TransactionRepository $transactionRepository
+        TransactionRepository $transactionRepository,
+        AddressRepository     $addressRepository,
+        Invoice               $invoice
     )
     {
-        $this->params         = $params;
-        $this->urlGenerator   = $urlGenerator;
-        $this->userRepository = $userRepository;
-        $this->productRepository = $productRepository;
+        $this->params                = $params;
+        $this->urlGenerator          = $urlGenerator;
+        $this->userRepository        = $userRepository;
+        $this->productRepository     = $productRepository;
         $this->transactionRepository = $transactionRepository;
+        $this->addressRepository     = $addressRepository;
+        $this->invoice               = $invoice;
         \Stripe\Stripe::setApiKey($this->params->get('app.stripe_private_key'));
     }
 
@@ -43,7 +50,7 @@ class Stripe {
         $productStripe = [
             'price_data' => [
                 'currency' => "EUR",
-                'unit_amount' => $product->getPrice(),
+                'unit_amount' => $product->getPriceInCents(),
                 'product_data' => [
                     'name' => $product->getName(),
                 ],
@@ -96,20 +103,32 @@ class Stripe {
         switch ($event->type) {
             case 'payment_intent.succeeded':
                 $paymentIntent = $event->data->object;
-                $user = $this->userRepository->findOneBy(['id' => $paymentIntent->metadata->user_id]);
-                $product = $this->productRepository->findOneBy(['id' => $paymentIntent->metadata->product_id]);
-                $this->transactionRepository->create(
-                    $paymentIntent,
-                    $user,
-                    $product
-                );
-                $this->userRepository->upgradePremium($user, $product->getDuration());
+                $this->_paymentSuccess($paymentIntent);
                 break;
             default:
                 break;
         }
 
         return new Response('Webhook Handled', 200);
+    }
+
+    private function _paymentSuccess(object $paymentIntent): void
+    {
+        // GET USER, USER ADDRESS AND PRODUCT
+        $user = $this->userRepository->findOneBy(['id' => $paymentIntent->metadata->user_id]);
+        $userAddress = $this->addressRepository->findOneBy(['author' => $user, 'selected' => true]);
+        $product = $this->productRepository->findOneBy(['id' => $paymentIntent->metadata->product_id]);
+        // CREATE TRANSACTION
+        $transaction = $this->transactionRepository->create(
+            $paymentIntent,
+            $user,
+            $product
+        );
+        // UPGRADE USER, CREATE INVOICE AND SET TRANSACTION
+        $this->userRepository->upgradePremium($user, $product->getDuration());
+        $invoice = $this->invoice->generate($user, $userAddress, $transaction, $product);
+        $transaction->setInvoice($invoice);
+        $this->transactionRepository->save($transaction, true);
     }
 
 }
