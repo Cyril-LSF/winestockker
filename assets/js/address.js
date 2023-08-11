@@ -79,7 +79,8 @@ window.addEventListener('load', function(e) {
     
         for (let i = 0; i < inputs.length; i++) {
     
-            if(!inputs[i].value.trim()) {
+            if(!inputs[i].value.trim() && inputs[i] !== inputs['address[streetNumberExtension]']
+            && inputs[i] !== inputs['address[complement]']) {
                 e.preventDefault();
                 error = 'veuillez remplir tous les champs';
                 alert(error);
@@ -122,7 +123,7 @@ window.addEventListener('load', function(e) {
             setErrorField('.postalcode-error', 'postalcode');
         }
 
-        if(!inputs['address[city]'].value.match(/^[a-z\-]{3,200}$/i)) {
+        if(!inputs['address[city]'].value.match(/^[a-z\-éèëêîïçôœâàÿ]{3,200}$/i)) {
             setErrorField('.city-error', 'city');
         }
     
