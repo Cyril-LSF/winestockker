@@ -21,9 +21,8 @@ class Transaction
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\ManyToOne(inversedBy: 'transactions')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Product $product = null;
+    #[ORM\Column]
+    private ?int $subscriptionId = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
@@ -63,14 +62,14 @@ class Transaction
         return $this;
     }
 
-    public function getProduct(): ?Product
+    public function getSubscriptionId(): ?int
     {
-        return $this->product;
+        return $this->subscriptionId;
     }
 
-    public function setProduct(?Product $product): self
+    public function setSubscriptionId(?int $subscriptionId): self
     {
-        $this->product = $product;
+        $this->subscriptionId = $subscriptionId;
 
         return $this;
     }

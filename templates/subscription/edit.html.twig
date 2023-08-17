@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Subscription{% endblock %}
+
+{% block body %}
+    <div class="pagetitle">
+        <h1 class="text-start">Modifier un abonnement</h1>
+    </div>
+
+    {{ include('subscription/_form.html.twig') }}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('subscription') }}
+{% endblock %}

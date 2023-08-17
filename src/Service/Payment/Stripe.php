@@ -3,9 +3,9 @@
 namespace App\Service\Payment;
 
 use App\Entity\User;
-use App\Entity\Product;
+use App\Entity\Subscription;
 use App\Repository\AddressRepository;
-use App\Repository\ProductRepository;
+use App\Repository\SubscriptionRepository;
 use App\Repository\TransactionRepository;
 use App\Repository\UserRepository;
 use App\Service\Invoice\Invoice;
@@ -20,7 +20,7 @@ class Stripe {
     private ParameterBagInterface $params;
     private UrlGeneratorInterface $urlGenerator;
     private UserRepository        $userRepository;
-    private ProductRepository     $productRepository;
+    private SubscriptionRepository     $subscriptionRepository;
     private TransactionRepository $transactionRepository;
     private AddressRepository     $addressRepository;
     private Invoice               $invoice;
@@ -29,7 +29,7 @@ class Stripe {
         ParameterBagInterface $params,
         UrlGeneratorInterface $urlGenerator,
         UserRepository        $userRepository,
-        ProductRepository     $productRepository,
+        SubscriptionRepository     $subscriptionRepository,
         TransactionRepository $transactionRepository,
         AddressRepository     $addressRepository,
         Invoice               $invoice
@@ -38,21 +38,21 @@ class Stripe {
         $this->params                = $params;
         $this->urlGenerator          = $urlGenerator;
         $this->userRepository        = $userRepository;
-        $this->productRepository     = $productRepository;
+        $this->subscriptionRepository     = $subscriptionRepository;
         $this->transactionRepository = $transactionRepository;
         $this->addressRepository     = $addressRepository;
         $this->invoice               = $invoice;
         \Stripe\Stripe::setApiKey($this->params->get('app.stripe_private_key'));
     }
 
-    public function payment(Product $product, User $user): RedirectResponse
+    public function payment(Subscription $subscription, User $user): RedirectResponse
     {
-        $productStripe = [
+        $subscriptionStripe = [
             'price_data' => [
                 'currency' => "EUR",
-                'unit_amount' => $product->getPriceInCents(),
+                'unit_amount' => $subscription->getPriceInCents(),
                 'product_data' => [
-                    'name' => $product->getName(),
+                    'name' => $subscription->getName(),
                 ],
             ],
             'quantity' => 1,
@@ -62,14 +62,14 @@ class Stripe {
             'customer_email' => $user->getEmail(),
             'payment_method_types' => ['card'],
             'line_items' => [
-                $productStripe
+                $subscriptionStripe
             ],
             'mode' => 'payment',
             'success_url' => $this->params->get('app.base_url') . $this->urlGenerator->generate('payment_success', referenceType: UrlGeneratorInterface::ABSOLUTE_PATH),
             'cancel_url' => $this->params->get('app.base_url') . $this->urlGenerator->generate(name: 'payment_cancel', referenceType: UrlGeneratorInterface::ABSOLUTE_PATH),
             'payment_intent_data' => [
                 'metadata' => [
-                    'product_id' => $product->getId(),
+                    'subscription_id' => $subscription->getId(),
                     'quantity' => 1,
                     'user_id' => $user->getId()
                 ]
@@ -114,19 +114,19 @@ class Stripe {
 
     private function _paymentSuccess(object $paymentIntent): void
     {
-        // GET USER, USER ADDRESS AND PRODUCT
+        // GET USER, USER ADDRESS AND SUBSCRIPTION
         $user = $this->userRepository->findOneBy(['id' => $paymentIntent->metadata->user_id]);
         $userAddress = $this->addressRepository->findOneBy(['author' => $user, 'selected' => true]);
-        $product = $this->productRepository->findOneBy(['id' => $paymentIntent->metadata->product_id]);
+        $subscription = $this->subscriptionRepository->findOneBy(['id' => $paymentIntent->metadata->subscription_id]);
         // CREATE TRANSACTION
         $transaction = $this->transactionRepository->create(
             $paymentIntent,
             $user,
-            $product
+            $subscription
         );
         // UPGRADE USER, CREATE INVOICE AND SET TRANSACTION
-        $this->userRepository->upgradePremium($user, $product->getDuration());
-        $invoice = $this->invoice->generate($user, $userAddress, $transaction, $product);
+        $this->userRepository->upgradePremium($user, $subscription->getDuration());
+        $invoice = $this->invoice->generate($user, $userAddress, $transaction, $subscription);
         $transaction->setInvoice($invoice);
         $this->transactionRepository->save($transaction, true);
     }

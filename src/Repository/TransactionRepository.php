@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Product;
+use App\Entity\Subscription;
 use DateTime;
 use App\Entity\User;
 use App\Entity\Transaction;
@@ -42,14 +42,14 @@ class TransactionRepository extends ServiceEntityRepository
         }
     }
 
-    public function create(object $paymentIntent, User $user, Product $product): Transaction
+    public function create(object $paymentIntent, User $user, Subscription $subscription): Transaction
     {
         $transaction = new Transaction();
         $transaction->setUser($user);
         $transaction->setPaymentId($paymentIntent->id);
         $transaction->setCreatedAt(new DateTime());
-        $transaction->setProduct($product);
-        $transaction->setAmount($product->getPrice());
+        $transaction->setSubscriptionId($subscription->getId());
+        $transaction->setAmount($subscription->getPrice());
 
         $this->save($transaction, true);
         return $transaction;

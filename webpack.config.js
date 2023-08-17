@@ -30,6 +30,7 @@ Encore
     .addEntry('quantity', './assets/js/quantity.js')
     .addEntry('category', './assets/js/category.js')
     .addEntry('creditCard', './assets/js/creditCard.js')
+    .addEntry('subscription', './assets/js/subscription.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')

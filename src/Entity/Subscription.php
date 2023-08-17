@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\ProductRepository;
+use App\Repository\SubscriptionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ProductRepository::class)]
-class Product
+#[ORM\Entity(repositoryClass: SubscriptionRepository::class)]
+class Subscription
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -24,16 +24,8 @@ class Product
     #[ORM\Column]
     private ?int $duration = null;
 
-    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Transaction::class)]
-    private Collection $transactions;
-
     #[ORM\Column(length: 50)]
     private ?string $priceInCents = null;
-
-    public function __construct()
-    {
-        $this->transactions = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -72,36 +64,6 @@ class Product
     public function setDuration(int $duration): self
     {
         $this->duration = $duration;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Transaction>
-     */
-    public function getTransactions(): Collection
-    {
-        return $this->transactions;
-    }
-
-    public function addTransaction(Transaction $transaction): self
-    {
-        if (!$this->transactions->contains($transaction)) {
-            $this->transactions->add($transaction);
-            $transaction->setProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTransaction(Transaction $transaction): self
-    {
-        if ($this->transactions->removeElement($transaction)) {
-            // set the owning side to null (unless already changed)
-            if ($transaction->getProduct() === $this) {
-                $transaction->setProduct(null);
-            }
-        }
 
         return $this;
     }

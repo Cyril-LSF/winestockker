@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Subscription;
 
-use App\Entity\Product;
+use App\Entity\Subscription;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
-class ProductType extends AbstractType
+class SubscriptionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -24,7 +24,7 @@ class ProductType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'class' => "form-control",
-                    'placeholder' => "Ex: 7 jours",
+                    'placeholder' => "Nom. Ex: 7 jours",
                 ],
                 'constraints' => [
                     new NotBlank([
@@ -51,7 +51,7 @@ class ProductType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'class' => "form-control",
-                    'placeholder' => "Ex: 2",
+                    'placeholder' => "Prix. Ex: 2",
                 ],
                 'constraints' => [
                     new NotBlank([
@@ -78,8 +78,24 @@ class ProductType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'class' => "form-control",
-                    'placeholder' => "Ex: pour 2€ -> 200",
+                    'placeholder' => "Prix en centime. Ex: pour 2€ -> 200",
                 ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => "Veuillez saisir un prix en centime",
+                    ]),
+                    new Length([
+                        'min' => 1,
+                        'minMessage' => "Le prix en centime doit contenir minimum {{ limit }} caractères",
+                        'max' => 50,
+                        'maxMessage' => "Le prix en centime doit contenir maximum {{ limit }} caractères",
+                    ]),
+                    new Regex([
+                        'pattern' => '/^\d{1,50}$/',
+                        'match' => true,
+                        'message' => "Le prix en centime ne doit contenir que des chiffres, caractères min.1 - max.50",
+                    ]),
+                ]
             ])
             ->add('duration', TextType::class, [
                 'label' => "Durée en jour",
@@ -89,8 +105,18 @@ class ProductType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'class' => "form-control",
-                    'placeholder' => "Ex: 7",
+                    'placeholder' => "Durée. Ex: 7",
                 ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => "Veuillez saisir une durée",
+                    ]),
+                    new Regex([
+                        'pattern' => '/^\d+$/',
+                        'match' => true,
+                        'message' => "La durée ne doit contenir que des chiffres",
+                    ]),
+                ]
             ])
         ;
     }
@@ -98,7 +124,7 @@ class ProductType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Product::class,
+            'data_class' => Subscription::class,
         ]);
     }
 }

@@ -1,0 +1,89 @@
+
+<section>
+	<div class="container py-5 h-100">
+		<div class="row d-flex justify-content-center align-items-center h-100">
+			<div class="col col-lg-8 mb-4 mb-lg-0">
+				<div class="card mb-3">
+					<div class="row g-0">
+						<div class="col-md-4 gradient-custom text-center text-white">
+							<img src={{ asset('images/new-product.png') }} alt="logo nouveau produit" class="img-fluid my-5 w-75"/>
+						</div>
+						<div class="col-md-8">
+							<div class="card-body p-4 h-100 d-flex flex-column justify-content-center">
+								{{ form_start(form) }}
+								<!-- Name -->
+								<div class="d-flex flex-row align-items-center mb-1">
+									<i class="fa-solid fa-signature fa-lg me-3"></i>
+									<div class="form-outline flex-fill mb-0 mt-3">
+										{{ form_widget(form.name) }}
+										{% if form.name.vars.errors is not empty %}
+											{% for errorItem in form.name.vars.errors %}
+												<div class="text-danger">{{ errorItem.message }}</div>
+											{% endfor %}
+										{% endif %}
+										<p class="name-error"></p>
+									</div>
+								</div>
+								<!-- End name -->
+								<!-- Price -->
+								<div class="d-flex flex-row align-items-center mb-1">
+									<i class="fa-solid fa-money-bill-1-wave fa-lg me-3"></i>
+									<div class="form-outline flex-fill mb-0 mt-3">
+										{{ form_widget(form.price) }}
+										{% if form.price.vars.errors is not empty %}
+											{% for errorItem in form.price.vars.errors %}
+												<div class="text-danger">{{ errorItem.message }}</div>
+											{% endfor %}
+										{% endif %}
+										<p class="price-error"></p>
+									</div>
+								</div>
+								<!-- End price -->
+								<!-- PriceInCents -->
+								<div class="d-flex flex-row align-items-center mb-1">
+									<i class="fa-solid fa-coins fa-lg me-3"></i>
+									<div class="form-outline flex-fill mb-0 mt-3">
+										{{ form_widget(form.priceInCents) }}
+										{% if form.priceInCents.vars.errors is not empty %}
+											{% for errorItem in form.priceInCents.vars.errors %}
+												<div class="text-danger">{{ errorItem.message }}</div>
+											{% endfor %}
+										{% endif %}
+										<p class="priceInCents-error"></p>
+									</div>
+								</div>
+								<!-- End priceInCents -->
+								<!-- Duration -->
+								<div class="d-flex flex-row align-items-center mb-1">
+									<i class="fa-regular fa-clock fa-lg me-3"></i>
+									<div class="form-outline flex-fill mb-0 mt-3">
+										{{ form_widget(form.duration) }}
+										{% if form.duration.vars.errors is not empty %}
+											{% for errorItem in form.duration.vars.errors %}
+												<div class="text-danger">{{ errorItem.message }}</div>
+											{% endfor %}
+										{% endif %}
+										<p class="duration-error"></p>
+									</div>
+								</div>
+								<!-- End duration -->
+								<!-- Submit button -->
+								<div class="w-100 d-flex justify-content-center">
+									<button type="submit" value="submit" class="btn btn-purple">
+										{% if update is defined %}
+											Modifier
+										{% else %}
+											Créer
+										{% endif %}
+									</button>
+								</div>
+								<!-- End submit button -->
+								{{ form_end(form) }}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

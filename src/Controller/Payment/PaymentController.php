@@ -2,7 +2,7 @@
 
 namespace App\Controller\Payment;
 
-use App\Entity\Product;
+use App\Entity\Subscription;
 use App\Service\Payment\Stripe;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,9 +20,9 @@ class PaymentController extends AbstractController
     }
 
     #[Route('/payment/payment/{id}', name: 'payment_payment')]
-    public function payment(Product $product)
+    public function payment(Subscription $subscription)
     {
-        return $this->stripe->payment($product, $this->getUser());
+        return $this->stripe->payment($subscription, $this->getUser());
     }
 
     #[Route('/payment/payment_success', name: 'payment_success')]

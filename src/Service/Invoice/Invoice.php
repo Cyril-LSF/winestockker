@@ -3,7 +3,7 @@
 namespace App\Service\Invoice;
 
 use App\Entity\Address;
-use App\Entity\Product;
+use App\Entity\Subscription;
 use \Knp\Snappy\Pdf;
 use App\Entity\User;
 use Twig\Environment;
@@ -21,7 +21,7 @@ class Invoice extends AbstractService {
         $this->twig = $twig;
     }
 
-    public function generate(User $user, Address $userAddress, Transaction $transaction, Product $product): string
+    public function generate(User $user, Address $userAddress, Transaction $transaction, Subscription $subscription): string
     {
         $imageData = file_get_contents('./images/logo_ws.png');
         $logo = base64_encode($imageData);
@@ -35,7 +35,7 @@ class Invoice extends AbstractService {
                     'invoice' => $transaction,
                     'user' => $user,
                     'userAddress' => $userAddress,
-                    'product' => $product
+                    'subscription' => $subscription
                 ]
             ),
             "./invoices/$invoiceName"

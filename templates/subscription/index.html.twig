@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Subscription index{% endblock %}
+
+{% block body %}
+<div class="pagetitle mb-4">
+    <h1 class="text-start">Abonnement</h1>
+</div>
+<section>
+    <div class="text-center container py-2">
+        
+        <div class="row">
+            {% if subscriptions|length > 0 %}
+                {% for subscription in subscriptions %}
+                    {% include 'components/subscription/subscription.html.twig' %}
+                {% endfor %}
+            {% else %}
+                {{ include('components/no_result/no_result.html.twig') }}
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
