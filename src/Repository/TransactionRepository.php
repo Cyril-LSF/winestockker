@@ -44,6 +44,7 @@ class TransactionRepository extends ServiceEntityRepository
 
     public function create(object $paymentIntent, User $user, Subscription $subscription): Transaction
     {
+        date_default_timezone_set('Europe/Paris');
         $transaction = new Transaction();
         $transaction->setUser($user);
         $transaction->setPaymentId($paymentIntent->id);
