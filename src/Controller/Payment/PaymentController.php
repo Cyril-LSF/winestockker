@@ -3,6 +3,7 @@
 namespace App\Controller\Payment;
 
 use App\Entity\Subscription;
+use App\Repository\AddressRepository;
 use App\Service\Payment\Stripe;
 use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -22,8 +23,13 @@ class PaymentController extends AbstractController
 
     #[IsGranted('ROLE_USER')]
     #[Route('/payment/payment/{id}', name: 'payment_payment')]
-    public function payment(Subscription $subscription)
+    public function payment(Subscription $subscription, AddressRepository $addressRepository)
     {
+        if (empty($addressRepository->findBy(['author' => $this->getUser(), 'selected' => true]))) {
+            $this->addFlash('danger', "Vous devez avoir au moins une adresse sélectinnée !");
+            return $this->redirectToRoute('subscription_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         return $this->stripe->payment($subscription, $this->getUser());
     }
 
