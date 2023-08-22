@@ -12,8 +12,7 @@ class BottleToCategory extends AbstractService {
     {
         if (!$bottle->getId()) {
             $this->bottleRepository->save($bottle, true);
-            foreach ($data as $formCategory) {
-                $category = $this->categoryRepository->findOneBy(['id' => $formCategory->getId()]);
+            foreach ($data as $category) {
                 $category->addBottle($bottle);
                 $this->categoryRepository->save($category, true);
             }
@@ -42,8 +41,7 @@ class BottleToCategory extends AbstractService {
 
     public function categoryToBottle(Category $category, $data): void
     {
-        foreach ($data as $formBottle) {
-            $bottle = $this->bottleRepository->findOneBy(['id' => $formBottle->getId()]);
+        foreach ($data as $bottle) {
             $bottle->addCategory($category);
             $this->bottleRepository->save($bottle, true);
         }
@@ -52,10 +50,10 @@ class BottleToCategory extends AbstractService {
 
     private function _addOrRemove(bool $add, array $categories, Bottle $bottle): void
     {
+        $categories = $this->categoryRepository->findBy(['id' => $categories]);
         foreach ($categories as $category) {
-            $newCategory = $this->categoryRepository->findOneBy(['id' => $category]);
-            $add === true ? $newCategory->addBottle($bottle) : $newCategory->removeBottle($bottle);
-            $this->categoryRepository->save($newCategory, true);
+            $add === true ? $category->addBottle($bottle) : $category->removeBottle($bottle);
+            $this->categoryRepository->save($category, true);
         }
     }
 }

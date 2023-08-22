@@ -33,8 +33,8 @@ class BottleToCellar extends AbstractService {
 
     private function _addOrRemove(bool $add, array $bottles, Cellar $cellar): void
     {
-        foreach ($bottles as $bottleId) {
-            $bottle = $this->bottleRepository->findOneBy(['id' => $bottleId]);
+        $bottles = $this->bottleRepository->findBy(['id' => $bottles]);
+        foreach ($bottles as $bottle) {
             $add === true ? $bottle->addCellar($cellar) : $bottle->removeCellar($cellar);
             $this->bottleRepository->save($bottle, true);
             if ($add === true) {
