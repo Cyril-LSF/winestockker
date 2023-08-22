@@ -8,6 +8,7 @@ use App\Entity\Quantity;
 use App\Form\Quantity\QuantityType;
 use App\Service\EditQuantity;
 use App\Repository\QuantityRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -37,6 +38,7 @@ class QuantityController extends AbstractController
         ]);
     }
 
+    #[IsGranted('QUANTITY_EDIT_BIG', 'quantity')]
     #[Route('/edit/big/{quantity}', name: 'quantity_edit_big', methods: ['GET', 'POST'])]
     public function editBig(Quantity $quantity, Request $request): Response
     {

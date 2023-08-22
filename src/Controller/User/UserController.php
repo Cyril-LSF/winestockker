@@ -13,7 +13,6 @@ use App\Repository\AddressRepository;
 use App\Repository\CreditCardRepository;
 use App\Repository\UserRepository;
 use App\Service\Payment\CreditCard as CreditCardService;
-use App\Service\Payment\Stripe;
 use App\Service\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,22 +30,19 @@ class UserController extends AbstractController
     private AddressRepository     $addressRepository;
     private CreditCardRepository  $creditCardRepository;
     private CreditCardService     $creditCardService;
-    private Stripe                $stripe;
 
     public function __construct(
         ParameterBagInterface $params,
         UserRepository        $userRepository,
         AddressRepository     $addressRepository,
         CreditCardRepository  $creditCardRepository,
-        CreditCardService     $creditCardService,
-        Stripe                $stripe
+        CreditCardService     $creditCardService
     ){
         $this->params               = $params;
         $this->userRepository       = $userRepository;
         $this->addressRepository    = $addressRepository;
         $this->creditCardRepository = $creditCardRepository;
         $this->creditCardService    = $creditCardService;
-        $this->stripe               = $stripe;
     }
 
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
@@ -57,7 +53,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[IsGranted("ROLE_USER")]
+    #[IsGranted('USER_VIEW', 'user')]
     #[Route('/{id}', name: 'user_show', methods: ['GET', 'POST'])]
     public function show(User $user, Request $request): Response
     {
@@ -86,7 +82,6 @@ class UserController extends AbstractController
         // Credit card control
         if ($creditCardForm->isSubmitted() && $creditCardForm->isValid()) {
             $this->creditCardService->addCreditCard($creditCard, $this->getUser());
-            //$this->stripe->createCard($this->getUser(), $creditCard);
             $this->addFlash('success', "La carte a été créée !");
         } else if ($creditCardForm->isSubmitted()) {
             $this->addFlash('danger', "Erreur de saisie");
@@ -103,7 +98,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[IsGranted("ROLE_USER")]
+    #[IsGranted('USER_EDIT', 'user')]
     #[Route('/{id}/edit', name: 'user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, UploadedFile $uploadedFile): Response
     {
@@ -129,7 +124,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[IsGranted("ROLE_USER")]
+    #[IsGranted('USER_EDIT', 'user')]
     #[Route('/{id}/edit_password', name: 'user_edit_password', methods: ['GET', 'POST'])]
     public function edit_password(Request $request, User $user, UserPasswordHasherInterface $userPasswordHasherInterface): Response
     {
@@ -150,8 +145,8 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[IsGranted("ROLE_USER")]
-    #[Route('/{id}', name: 'user_delete', methods: ['POST'])]
+    #[IsGranted('USER_DELETE', 'user')]
+    #[Route('/{id}/delete', name: 'user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user): Response
     {
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {

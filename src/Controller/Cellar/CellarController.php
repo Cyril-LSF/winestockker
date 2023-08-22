@@ -11,6 +11,7 @@ use App\Repository\QuantityRepository;
 use App\Service\Bottle\BottleToCellar;
 use App\Service\Search\Search;
 use DateTime;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,6 +37,7 @@ class CellarController extends AbstractController
         $this->quantityRepository = $quantityRepository;
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/', name: 'cellar_index', methods: ['GET'])]
     public function index(): Response
     {
@@ -44,6 +46,7 @@ class CellarController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/new', name: 'cellar_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
     {
@@ -66,6 +69,7 @@ class CellarController extends AbstractController
         ]);
     }
 
+    #[IsGranted('CELLAR_VIEW', 'cellar')]
     #[Route('/{id}', name: 'cellar_show', methods: ['GET', 'POST'])]
     public function show(Cellar $cellar, Request $request): Response
     {
@@ -109,6 +113,7 @@ class CellarController extends AbstractController
         return $this->render('cellar/show.html.twig', $variables);
     }
 
+    #[IsGranted('CELLAR_EDIT', 'cellar')]
     #[Route('/{id}/edit', name: 'cellar_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Cellar $cellar): Response
     {
@@ -129,6 +134,7 @@ class CellarController extends AbstractController
         ]);
     }
 
+    #[IsGranted('CELLAR_DELETE', 'cellar')]
     #[Route('/{id}/delete', name: 'cellar_delete', methods: ['POST'])]
     public function delete(Request $request, Cellar $cellar): Response
     {

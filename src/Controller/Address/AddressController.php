@@ -5,6 +5,7 @@ namespace App\Controller\Address;
 use App\Entity\Address;
 use App\Form\Address\AddressType;
 use App\Repository\AddressRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,42 +22,15 @@ class AddressController extends AbstractController
         $this->addressRepository = $addressRepository;
     }
 
-    #[Route('/', name: 'address_index', methods: ['GET'])]
-    public function index(): Response
-    {
-        return $this->render('address/index.html.twig', [
-            'addresses' => $this->addressRepository->findAll(),
-        ]);
-    }
+    // #[Route('/', name: 'address_index', methods: ['GET'])]
+    // public function index(): Response
+    // {
+    //     return $this->render('address/index.html.twig', [
+    //         'addresses' => $this->addressRepository->findAll(),
+    //     ]);
+    // }
 
-    #[Route('/new', name: 'address_new', methods: ['GET', 'POST'])]
-    public function new(Request $request): Response
-    {
-        $address = new Address();
-        $form = $this->createForm(AddressType::class, $address);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $address->setauthor($this->getUser());
-            $this->addressRepository->save($address, true);
-
-            return $this->redirectToRoute('address_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('address/new.html.twig', [
-            'address' => $address,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'address_show', methods: ['GET'])]
-    public function show(Address $address): Response
-    {
-        return $this->render('address/show.html.twig', [
-            'address' => $address,
-        ]);
-    }
-
+    #[IsGranted('ADDRESS_SELECTED', 'address')]
     #[Route('/{id}/selected', name: 'address_selected', methods: ['POST'])]
     public function selected(Address $address): Response
     {
@@ -77,6 +51,7 @@ class AddressController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ADDRESS_EDIT', 'address')]
     #[Route('/{id}/edit', name: 'address_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Address $address): Response
     {
@@ -96,6 +71,7 @@ class AddressController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ADDRESS_DELETE', 'address')]
     #[Route('/{id}', name: 'address_delete', methods: ['POST'])]
     public function delete(Request $request, Address $address): Response
     {

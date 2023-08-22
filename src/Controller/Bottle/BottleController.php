@@ -8,6 +8,7 @@ use App\Form\Bottle\BottleType;
 use App\Repository\BottleRepository;
 use App\Form\Search\FilterBottleType;
 use App\Service\Bottle\BottleToCategory;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,6 +31,7 @@ class BottleController extends AbstractController
         $this->search           = $search;
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/', name: 'bottle_index', methods: ['GET', 'POST'])]
     public function index(Request $request): Response
     {
@@ -53,6 +55,7 @@ class BottleController extends AbstractController
         return $this->render('bottle/index.html.twig', $variables);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/new', name: 'bottle_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
     {
@@ -76,6 +79,7 @@ class BottleController extends AbstractController
         ]);
     }
 
+    #[IsGranted('BOTTLE_EDIT', 'bottle')]
     #[Route('/{id}/edit', name: 'bottle_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Bottle $bottle): Response
     {
@@ -98,6 +102,7 @@ class BottleController extends AbstractController
         ]);
     }
 
+    #[IsGranted('BOTTLE_DELETE', 'bottle')]
     #[Route('/{id}', name: 'bottle_delete', methods: ['POST'])]
     public function delete(Request $request, Bottle $bottle): Response
     {
