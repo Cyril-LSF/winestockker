@@ -8,6 +8,7 @@ use App\Form\Bottle\BottleType;
 use App\Repository\BottleRepository;
 use App\Form\Search\FilterBottleType;
 use App\Service\Bottle\BottleToCategory;
+use App\Service\Premium\Premium;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,8 +58,13 @@ class BottleController extends AbstractController
 
     #[IsGranted('ROLE_USER')]
     #[Route('/new', name: 'bottle_new', methods: ['GET', 'POST'])]
-    public function new(Request $request): Response
+    public function new(Request $request, Premium $premium): Response
     {
+        if (!$premium->is_premium($this->getUser(), 'bottle')) {
+            $this->addFlash('warning', "Vous devez être membre premium pour réaliser cette action !");
+            return $this->redirectToRoute('subscription_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         $bottle = new Bottle();
         $form = $this->createForm(BottleType::class, $bottle, [
             'user' => $this->getUser(),

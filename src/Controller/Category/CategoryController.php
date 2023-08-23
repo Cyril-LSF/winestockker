@@ -9,6 +9,7 @@ use App\Form\Category\CategoryType;
 use App\Form\Search\FilterBottleType;
 use App\Repository\CategoryRepository;
 use App\Service\Bottle\BottleToCategory;
+use App\Service\Premium\Premium;
 use App\Service\Search\Search;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,8 +45,13 @@ class CategoryController extends AbstractController
 
     #[IsGranted('ROLE_USER')]
     #[Route('/new', name: 'category_new', methods: ['GET', 'POST'])]
-    public function new(Request $request): Response
+    public function new(Request $request, Premium $premium): Response
     {
+        if (!$premium->is_premium($this->getUser(), 'category')) {
+            $this->addFlash('warning', "Vous devez être membre premium pour réaliser cette action !");
+            return $this->redirectToRoute('subscription_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);

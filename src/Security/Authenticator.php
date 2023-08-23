@@ -2,6 +2,9 @@
 
 namespace App\Security;
 
+use App\Entity\User;
+use App\Repository\UserRepository;
+use DateTime;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +24,7 @@ class Authenticator extends AbstractLoginFormAuthenticator
 
     public const LOGIN_ROUTE = 'login';
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    public function __construct(private UrlGeneratorInterface $urlGenerator, private UserRepository $userRepository)
     {
     }
 
@@ -46,13 +49,24 @@ class Authenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        // For example:
+        $this->_premiumControl($token->getUser());
+
         return new RedirectResponse($this->urlGenerator->generate('login'));
-        //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
     protected function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
+    }
+
+    private function _premiumControl(User $user): void
+    {
+        date_default_timezone_set('Europe/Paris');
+        $now = new DateTime();
+        if ($user->isPremium() && $user->getPremiumTo()->format('d/m/Y H:i') < $now->format('d/m/Y H:i')) {
+            $user->setPremium(0);
+            $user->setPremiumTo(null);
+            $this->userRepository->save($user, true);
+        }
     }
 }

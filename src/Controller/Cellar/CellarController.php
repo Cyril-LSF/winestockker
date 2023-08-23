@@ -9,6 +9,7 @@ use App\Form\Search\FilterBottleType;
 use App\Repository\CellarRepository;
 use App\Repository\QuantityRepository;
 use App\Service\Bottle\BottleToCellar;
+use App\Service\Premium\Premium;
 use App\Service\Search\Search;
 use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -48,8 +49,13 @@ class CellarController extends AbstractController
 
     #[IsGranted('ROLE_USER')]
     #[Route('/new', name: 'cellar_new', methods: ['GET', 'POST'])]
-    public function new(Request $request): Response
+    public function new(Request $request, Premium $premium): Response
     {
+        if (!$premium->is_premium($this->getUser(), 'cellar')) {
+            $this->addFlash('warning', "Vous devez être membre premium pour réaliser cette action !");
+            return $this->redirectToRoute('subscription_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         $cellar = new Cellar();
         $form = $this->createForm(CellarType::class, $cellar);
         $form->handleRequest($request);
