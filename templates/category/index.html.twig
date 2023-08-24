@@ -9,8 +9,10 @@
             <h1 class="text-start">Mes catégories</h1>
         </div>
         <div class="row justify-content-center">
+            {% set count = 0 %}
             {% for category in categories %}
                 {% include 'components/card/card_index.html.twig' with {'entity': category, 'type': 'category'} %}
+                {% set count = count + 1 %}
             {% endfor %}
         </div>
     </div>

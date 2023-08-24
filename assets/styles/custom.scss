@@ -60,6 +60,13 @@
 .text-bold {
   font-weight: 700;
 }
+.disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+a.disabled {
+  pointer-events: none;
+}
 /* END GENERIC */
 
 /* CREDIT CARD FORM */

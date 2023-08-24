@@ -18,8 +18,10 @@
         </div>
         <div class="row">
             {% if bottles|length > 0 %}
+                {% set count = 0 %}
                 {% for bottle in bottles %}
                     {% include 'components/bottle/bottle.html.twig' with {'categories': true, 'update': true} %}
+                    {% set count = count + 1 %}
                 {% endfor %}
             {% else %}
                 {{ include('components/no_result/no_result.html.twig') }}

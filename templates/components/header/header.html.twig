@@ -90,13 +90,26 @@
         </a>
         <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
             {% if app.user.cellars is defined %}
+                {% set count = 0 %}
                 {% for cellar in app.user.cellars %}
-                    <li>
-                        <a class="dropdown-item" href={{ path('cellar_show', {'id': cellar.id}) }}>
+                    <li
+                      {% if not app.user.premium and count >= 1 %}
+                        class="disabled"  data-bs-toggle="tooltip" data-bs-placement="top" title="Abonnez-vous pour débloquer cette cave"
+                      {% endif %}
+                    >
+                        <a class="dropdown-item {% if not app.user.premium and count >= 1 %}disabled{% endif %}"
+                          href=
+                            {% if not app.user.premium and count >= 1 %}
+                              ''
+                            {% else %}
+                              {{ path('cellar_show', {'id': cellar.id}) }}
+                            {% endif %}
+                          >
                             <i class="fa-solid fa-box me-2"></i>
                             <span>{{ cellar.name }}</span>
                         </a>
                     </li>
+                    {% set count = count + 1 %}
                 {% endfor %}
             <li>
                 <hr class="dropdown-divider">
@@ -150,13 +163,26 @@
         </a>
         <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
             {% if app.user.categories is defined %}
+                {% set count = 0 %}
                 {% for category in app.user.categories %}
-                    <li>
-                        <a class="dropdown-item" href={{ path('category_show', {'id': category.id}) }}>
+                    <li
+                      {% if not app.user.premium and count >= 1 %}
+                        class="disabled"  data-bs-toggle="tooltip" data-bs-placement="top" title="Abonnez-vous pour débloquer cette catégorie"
+                      {% endif %}
+                    >
+                        <a class="dropdown-item {% if not app.user.premium and count >= 1 %}disabled{% endif %}"
+                          href=
+                            {% if not app.user.premium and count >= 1 %}
+                              ''
+                            {% else %}
+                              {{ path('category_show', {'id': category.id}) }}
+                            {% endif %}
+                          >
                             <i class="fa-solid fa-sitemap fa-lg me-2"></i>
                             {{ category.name }}
                         </a>
                     </li>
+                    {% set count = count + 1 %}
                 {% endfor %}
                 <li class="my-2">
                     <hr class="w-75 m-auto">

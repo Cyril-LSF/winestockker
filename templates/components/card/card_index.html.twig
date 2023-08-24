@@ -1,5 +1,9 @@
 <div class="col-md-8 col-lg-5 col-xl-4 py-3">
-    <div class="card text-black shadow">
+    <div class="card text-black shadow {% if not app.user.premium and count >= 1 %}disabled{% endif %}"
+        {% if not app.user.premium and count >= 1 %}
+            data-bs-toggle="tooltip" data-bs-placement="top" title="Abonnez-vous pour intéragir avec cet élément"
+        {% endif %}
+    >
         <div class="card-body">
             <div class="text-center d-flex justify-content-center align-items-end
                 {% if type == 'cellar' %}
@@ -19,7 +23,13 @@
                 </div>
             </div>
             <div class="w-100 d-flex justify-content-center mt-3">
-                <a href={{ path(type ~ '_show', {'id': entity.id}) }} class="btn btn-purple w-50"><i class="fa-regular fa-eye fa-lg"></i></a>
+                <a href=
+                    {% if not app.user.premium and count >= 1 %}
+                        ''
+                    {% else %}
+                        {{ path(type ~ '_show', {'id': entity.id}) }}
+                    {% endif %}
+                    class="btn btn-purple w-50 {% if not app.user.premium and count >= 1 %}disabled{% endif %}"><i class="fa-regular fa-eye fa-lg"></i></a>
             </div>
         </div>
     </div>
