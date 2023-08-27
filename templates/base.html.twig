@@ -15,7 +15,7 @@
     </head>
     
     <body>
-        {% if app.user %}
+        {# {% if app.user %}
             {{ include('components/header/header.html.twig') }}
         {% endif %}
         {% if app.user %}
@@ -35,6 +35,33 @@
         {% if app.user %}
             </main>
         {% endif %}
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %} #}
+
+        {% if app.user %}
+          {% if is_granted('ROLE_ADMIN') %}
+            {{ include('components/header/header_admin.html.twig') }}
+          {% else %}
+            {{ include('components/header/header.html.twig') }}
+          {% endif %}
+          <main id="main" class="main position-relative">
+              <div class="notification">
+                {% for label, messages in app.flashes %}
+                  {% for message in messages %}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show text-center" role="alert">
+                      {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  {% endfor %}
+                {% endfor %}
+              </div>
+        {% endif %}
+        {% block body %}{% endblock %}
+        {% if app.user %}
+          </main>
+        {% endif %}
+        
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}

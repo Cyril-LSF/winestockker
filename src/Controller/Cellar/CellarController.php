@@ -47,6 +47,16 @@ class CellarController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/admin', name: 'cellar_index_admin', methods: ['GET'])]
+    public function indexAdmin(): Response
+    {
+        return $this->render('cellar/index.html.twig', [
+            'cellars' => $this->cellarRepository->findAll(),
+            'admin'   => true,
+        ]);
+    }
+
     #[IsGranted('ROLE_USER')]
     #[Route('/new', name: 'cellar_new', methods: ['GET', 'POST'])]
     public function new(Request $request, Premium $premium): Response
@@ -123,6 +133,7 @@ class CellarController extends AbstractController
     #[Route('/{id}/edit', name: 'cellar_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Cellar $cellar): Response
     {
+        $admin = $request->get('admin');
         $form = $this->createForm(CellarType::class, $cellar);
         $form->handleRequest($request);
 
@@ -130,7 +141,7 @@ class CellarController extends AbstractController
             $this->cellarRepository->save($cellar, true);
 
             $this->addFlash('success', "La cave a été modifiée !");
-            return $this->redirectToRoute('cellar_show', ['id' => $cellar->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute($admin ? 'cellar_index_admin' : 'cellar_show', ['id' => $cellar->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('cellar/edit.html.twig', [
@@ -144,11 +155,12 @@ class CellarController extends AbstractController
     #[Route('/{id}/delete', name: 'cellar_delete', methods: ['POST'])]
     public function delete(Request $request, Cellar $cellar): Response
     {
+        $admin = $request->get('admin');
         if ($this->isCsrfTokenValid('delete'.$cellar->getId(), $request->request->get('_token'))) {
             $this->cellarRepository->remove($cellar, true);
             $this->addFlash('success', "La cave a été supprimée !");
         }
 
-        return $this->redirectToRoute('cellar_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute($admin ? 'cellar_index_admin' : 'cellar_index', [], Response::HTTP_SEE_OTHER);
     }
 }

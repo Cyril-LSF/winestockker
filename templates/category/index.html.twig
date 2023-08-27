@@ -6,7 +6,13 @@
 <section>
     <div class="container py-2">
         <div class="pagetitle">
-            <h1 class="text-start">Mes catégories</h1>
+            <h1 class="text-start">
+                {% if admin is defined %}
+                    Les catégories
+                {% else %}
+                    Mes catégories
+                {% endif %}
+            </h1>
         </div>
         <div class="row justify-content-center">
             {% set count = 0 %}

@@ -60,11 +60,13 @@ class BottleRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findByFilter(User $user, array $data, Object $entity = null)
+    public function findByFilter(User $user, array $data, Object $entity = null, bool $admin = false)
     {
-        $results = $this->createQueryBuilder('b')
-            ->where('b.author = :author')
-            ->setParameter('author', $user);
+        $results = $this->createQueryBuilder('b');
+            if (!$admin) {
+                $results->where('b.author = :author')
+                    ->setParameter('author', $user);
+            }
         if ($entity) {
             $param = explode('\\', get_class($entity));
             switch (end($param)) {

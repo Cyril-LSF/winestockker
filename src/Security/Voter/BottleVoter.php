@@ -41,6 +41,6 @@ class BottleVoter extends Voter
 
     private function _is_me(mixed $subject, User $user): bool
     {
-        return $subject->getAuthor()->getId() === $user->getId();
+        return $subject->getAuthor()->getId() === $user->getId() ? true : (in_array('ROLE_ADMIN', $user->getRoles()) ? true : false);
     }
 }

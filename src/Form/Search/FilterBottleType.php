@@ -19,6 +19,7 @@ class FilterBottleType extends AbstractType
 {
     private BottleRepository $bottleRepository;
     private User $user;
+    private bool $admin;
 
     public function __construct(BottleRepository $bottleRepository)
     {
@@ -27,6 +28,7 @@ class FilterBottleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->user = $options['user'];
+        $this->admin = $optionq['admin'] ?? false;
         $builder
             ->add('name', TextType::class, [
                 'required' => false,
@@ -108,12 +110,14 @@ class FilterBottleType extends AbstractType
             'data_class' => null,
             'user' => null,
             'category' => null,
+            'admin' => null,
         ]);
     }
 
     public function getChoices(string $method)
     {
-        $bottles = $this->bottleRepository->findBy(['author' => $this->user]);
+        $bottles = $this->admin ? $this->bottleRepository->findAll() : $this->bottleRepository->findBy(['author' => $this->user]);
+        // $bottles = $this->bottleRepository->findBy(['author' => $this->user]);
         $choices = [];
         foreach ($bottles as $bottle) {
             $choices[

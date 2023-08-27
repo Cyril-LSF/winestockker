@@ -43,6 +43,16 @@ class CategoryController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/admin', name: 'category_index_admin', methods: ['GET'])]
+    public function indexAdmin(): Response
+    {
+        return $this->render('category/index.html.twig', [
+            'categories' => $this->categoryRepository->findAll(),
+            'admin'      => true,
+        ]);
+    }
+
     #[IsGranted('ROLE_USER')]
     #[Route('/new', name: 'category_new', methods: ['GET', 'POST'])]
     public function new(Request $request, Premium $premium): Response
@@ -114,6 +124,7 @@ class CategoryController extends AbstractController
     #[Route('/{id}/edit', name: 'category_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Category $category): Response
     {
+        $admin = $request->get('admin');
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
 
@@ -121,7 +132,7 @@ class CategoryController extends AbstractController
             $this->categoryRepository->save($category, true);
 
             $this->addFlash('success', "La catégorie a été modifiée !");
-            return $this->redirectToRoute('category_show', ['id' => $category->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute($admin ? 'category_index_admin' : 'category_show', ['id' => $category->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('category/edit.html.twig', [
@@ -135,11 +146,12 @@ class CategoryController extends AbstractController
     #[Route('/{id}/delete', name: 'category_delete', methods: ['POST'])]
     public function delete(Request $request, Category $category): Response
     {
+        $admin = $request->get('admin');
         if ($this->isCsrfTokenValid('delete'.$category->getId(), $request->request->get('_token'))) {
             $this->categoryRepository->remove($category, true);
             $this->addFlash('success', "La catégorie a été supprimée !");
         }
 
-        return $this->redirectToRoute('category_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute($admin ? 'category_index_admin' : 'category_index', [], Response::HTTP_SEE_OTHER);
     }
 }

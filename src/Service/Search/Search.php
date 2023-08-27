@@ -18,7 +18,7 @@ class Search extends AbstractService {
         ];
     }
 
-    public function filter(User $user, FormInterface $data, Object $entity = null): ?array
+    public function filter(User $user, FormInterface $data, Object $entity = null, bool $admin = false): ?array
     {
         $data = [
             'name' => addslashes(trim($data->getData()['name'])),
@@ -30,7 +30,7 @@ class Search extends AbstractService {
             'price' => trim($data->getData()['price']) != 0 ? addslashes(trim($data->getData()['price'])) : null,
         ];
 
-        return $this->bottleRepository->findByFilter($user, array_filter($data), $entity);
+        return $this->bottleRepository->findByFilter($user, array_filter($data), $entity, $admin);
     }
 
 }

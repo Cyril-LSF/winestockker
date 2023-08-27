@@ -1,5 +1,5 @@
 <div class="col-md-8 col-lg-5 col-xl-4 py-3">
-    <div class="card text-black shadow {% if not app.user.premium and count >= 1 %}disabled{% endif %}"
+    <div class="card text-black shadow {% if not app.user.premium and count >= 1 and admin is not defined %}disabled{% endif %}"
         {% if not app.user.premium and count >= 1 %}
             data-bs-toggle="tooltip" data-bs-placement="top" title="Abonnez-vous pour intéragir avec cet élément"
         {% endif %}
@@ -18,18 +18,30 @@
                 <div class="d-flex justify-content-between text-muted">
                     <span>Créée le</span><span>{{ entity.createdAt | date('d/m/Y') }}</span>
                 </div>
+                {% if admin is defined %}
+                    <div class="d-flex justify-content-between text-muted">
+                        <span>Par</span><span>{{ entity.author.screenname }}</span>
+                    </div>
+                {% endif %}
                 <div class="d-flex justify-content-between text-muted">
                     <span>Nombre de bouteilles</span><span>{{ entity.bottles | length }}</span>
                 </div>
             </div>
             <div class="w-100 d-flex justify-content-center mt-3">
+                {% if admin is defined %}
+                    <a href={{ path(type ~ '_edit', {'id': entity.id, 'admin': true}) }} class="btn btn-link">
+                        <i class="fa-solid fa-pen-to-square fa-2x text-secondary"></i>
+                    </a>
+                    {{ include(type ~ '/_delete_form.html.twig') }}
+                {% else %}
                 <a href=
-                    {% if not app.user.premium and count >= 1 %}
+                    {% if not app.user.premium and count >= 1%}
                         ''
                     {% else %}
                         {{ path(type ~ '_show', {'id': entity.id}) }}
                     {% endif %}
                     class="btn btn-purple w-50 {% if not app.user.premium and count >= 1 %}disabled{% endif %}"><i class="fa-regular fa-eye fa-lg"></i></a>
+                {% endif %}
             </div>
         </div>
     </div>

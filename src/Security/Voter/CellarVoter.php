@@ -9,8 +9,8 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class CellarVoter extends Voter
 {
-    public const EDIT   = 'CELLAR_EDIT';
-    public const VIEW   = 'CELLAR_VIEW';
+    public const EDIT      = 'CELLAR_EDIT';
+    public const VIEW      = 'CELLAR_VIEW';
     public const DELETE    = 'CELLAR_DELETE';
 
     protected function supports(string $attribute, mixed $subject): bool
@@ -43,6 +43,7 @@ class CellarVoter extends Voter
 
     private function _is_me(mixed $subject, User $user): bool
     {
-        return $subject->getAuthor()->getId() === $user->getId();
+        return $subject->getAuthor()->getId() === $user->getId() ? true : (in_array('ROLE_ADMIN', $user->getRoles()) ? true : false);
     }
+
 }

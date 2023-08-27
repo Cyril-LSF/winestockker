@@ -6,7 +6,13 @@
 <section>
     <div class="text-center container py-2">
         <div class="pagetitle mb-4">
-            <h1 class="text-start">Mes bouteilles</h1>
+            <h1 class="text-start">
+                {% if admin is defined %}
+                    Les bouteilles
+                {% else %}
+                    Mes bouteilles
+                {% endif %}
+            </h1>
         </div>
         <div class="row">
             {% include 'components/card/card.html.twig' with {

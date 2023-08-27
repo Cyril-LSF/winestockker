@@ -1,4 +1,4 @@
-  <header id="header" class="header fixed-top d-flex align-items-center">
+  <header id="header" class="header fixed-top d-flex align-items-center" style="background-color: green !important">
 
     <div class="d-flex align-items-center justify-content-between">
       <a href="index.html" class="logo d-flex align-items-center">
@@ -79,7 +79,8 @@
   </header>
 
   <!-- ======= Sidebar ======= -->
-  <aside id="sidebar" class="sidebar">
+  {# <aside id="sidebar" class="sidebar" style="background-color: green !important"> #}
+  <aside id="sidebar" class="sidebar sidebar-admin">
 
     <ul class="sidebar-nav" id="sidebar-nav">
       <!-- Cellars Nav -->
@@ -136,7 +137,7 @@
       <!-- Bottles Nav -->
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-          <i class="fa-solid fa-wine-bottle"></i></i><span>Mes bouteilles</span><i class="fa-solid fa-chevron-down chevron-down ms-auto"></i>
+          <i class="fa-solid fa-wine-bottle"></i><span>Mes bouteilles</span><i class="fa-solid fa-chevron-down chevron-down ms-auto"></i>
         </a>
         <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
             <li>
@@ -205,6 +206,7 @@
 
       <li class="nav-heading">Pages</li>
 
+      <!-- Profile Page Nav -->
       <li class="nav-item">
         <a class="nav-link collapsed" href={{ path('user_show', {'id': app.user.getId()}) }}>
           <i class="fa-regular fa-user"></i>
@@ -213,6 +215,7 @@
       </li>
       <!-- End Profile Page Nav -->
 
+      <!-- Subscription Page Nav -->
       <li class="nav-item">
         <a class="nav-link collapsed" href={{ path('subscription_index') }}>
           <i class="fa-solid fa-bag-shopping"></i>
@@ -221,6 +224,7 @@
       </li>
       <!-- End Subscription Page Nav -->
 
+      <!-- Invoice Page Nav -->
       <li class="nav-item">
         <a class="nav-link collapsed" href={{ path('transaction_index') }}>
           <i class="fa-regular fa-file-lines"></i>
@@ -229,6 +233,7 @@
       </li>
       <!-- End Invoice Page Nav -->
 
+      <!-- F.A.Q Page Nav -->
       <li class="nav-item">
         <a class="nav-link collapsed" href="pages-faq.html">
           <i class="fa-regular fa-circle-question"></i>
@@ -237,6 +242,7 @@
       </li>
       <!-- End F.A.Q Page Nav -->
 
+      <!-- Contact Page Nav -->
       <li class="nav-item">
         <a class="nav-link collapsed" href="pages-contact.html">
           <i class="fa-regular fa-envelope"></i>
@@ -244,6 +250,35 @@
         </a>
       </li>
       <!-- End Contact Page Nav -->
+
+      <li class="nav-heading">Admin</li>
+
+      <!-- Admin Cellar Page Nav -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href={{ path('cellar_index_admin') }}>
+          <i class="fa-solid fa-boxes-stacked"></i>
+          <span>Les caves</span>
+        </a>
+      </li>
+      <!-- End Admin Cellar Page Nav -->
+
+      <!-- Admin Bottle Page Nav -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href={{ path('bottle_index_admin') }}>
+          <i class="fa-solid fa-wine-bottle"></i>
+          <span>Les bouteilles</span>
+        </a>
+      </li>
+      <!-- End Admin Bottle Page Nav -->
+
+      <!-- Admin Catégory Page Nav -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href={{ path('category_index_admin') }}>
+          <i class="fa-solid fa-sitemap"></i>
+          <span>Les catégories</span>
+        </a>
+      </li>
+      <!-- End Admin Catégory Page Nav -->
     </ul>
 
   </aside>
