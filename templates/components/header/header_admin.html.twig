@@ -1,11 +1,11 @@
-  <header id="header" class="header fixed-top d-flex align-items-center" style="background-color: green !important">
+  <header id="header" class="header fixed-top d-flex align-items-center header-admin">
 
     <div class="d-flex align-items-center justify-content-between">
       <a href="index.html" class="logo d-flex align-items-center">
         <img src={{ asset('images/logo_ws.png') }} alt="Logo WineStockker">
-        <span class="d-none d-lg-block">Wine Stockker</span>
+        <span class="d-none d-lg-block text-light">Wine Stockker</span>
       </a>
-      <i class="fa-solid fa-bars toggle-sidebar-btn"></i>
+      <i class="fa-solid fa-bars toggle-sidebar-btn toggle-sidebar-btn-admin"></i>
     </div><!-- End Logo -->
 
     <div class="search-bar">
@@ -19,7 +19,7 @@
       <ul class="d-flex align-items-center">
 
         <li class="nav-item d-block d-lg-none">
-          <a class="nav-link nav-icon search-bar-toggle " href="#">
+          <a class="nav-link nav-icon search-bar-toggle text-light" href="#">
             <i class="fa-solid fa-magnifying-glass"></i>
           </a>
         </li><!-- End Search Icon-->
@@ -32,7 +32,7 @@
             {% else %}
                 <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="Profile" class="rounded-circle">
             {% endif %}
-            <span class="d-none d-md-block dropdown-toggle ps-2">{{ app.user.screenname }}</span>
+            <span class="d-none d-md-block dropdown-toggle ps-2 text-light">{{ app.user.screenname }}</span>
           </a><!-- End Profile Iamge Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
@@ -79,7 +79,6 @@
   </header>
 
   <!-- ======= Sidebar ======= -->
-  {# <aside id="sidebar" class="sidebar" style="background-color: green !important"> #}
   <aside id="sidebar" class="sidebar sidebar-admin">
 
     <ul class="sidebar-nav" id="sidebar-nav">
@@ -88,7 +87,7 @@
         <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
           <i class="fa-solid fa-boxes-stacked"></i><span>Mes caves</span><i class="fa-solid fa-chevron-down chevron-down ms-auto"></i>
         </a>
-        <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
             {% if app.user.cellars is defined %}
                 {% set count = 0 %}
                 {% for cellar in app.user.cellars %}
@@ -97,7 +96,7 @@
                         class="disabled"  data-bs-toggle="tooltip" data-bs-placement="top" title="Abonnez-vous pour débloquer cette cave"
                       {% endif %}
                     >
-                        <a class="dropdown-item {% if not app.user.premium and count >= 1 %}disabled{% endif %}"
+                        <a class="dropdown-item nav-link-admin {% if not app.user.premium and count >= 1 %}disabled{% endif %}"
                           href=
                             {% if not app.user.premium and count >= 1 %}
                               ''
@@ -119,13 +118,13 @@
                 <hr class="w-75 m-auto">
             </li>
             <li>
-                <a class="dropdown-item" href={{ path('cellar_index') }}>
+                <a class="dropdown-item nav-link-admin" href={{ path('cellar_index') }}>
                     <i class="fa-solid fa-eye fa-lg me-2"></i>
                     Toutes mes caves
                 </a>
             </li>
             <li>
-                <a class="dropdown-item" href={{ path('cellar_new') }}>
+                <a class="dropdown-item nav-link-admin" href={{ path('cellar_new') }}>
                     <i class="fa-regular fa-square-plus fa-lg me-3"></i>
                     Créer une cave
                 </a>
@@ -141,13 +140,13 @@
         </a>
         <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
             <li>
-                <a class="dropdown-item" href={{ path('bottle_index') }}>
+                <a class="dropdown-item nav-link-admin" href={{ path('bottle_index') }}>
                     <i class="fa-solid fa-eye fa-lg me-2"></i>
                     Toutes mes bouteilles
                 </a>
             </li>
             <li>
-                <a class="dropdown-item" href={{ path('bottle_new') }}>
+                <a class="dropdown-item nav-link-admin" href={{ path('bottle_new') }}>
                     <i class="fa-regular fa-square-plus fa-lg me-3"></i>
                     Créer une bouteille
                 </a>
@@ -170,7 +169,7 @@
                         class="disabled"  data-bs-toggle="tooltip" data-bs-placement="top" title="Abonnez-vous pour débloquer cette catégorie"
                       {% endif %}
                     >
-                        <a class="dropdown-item {% if not app.user.premium and count >= 1 %}disabled{% endif %}"
+                        <a class="dropdown-item nav-link-admin {% if not app.user.premium and count >= 1 %}disabled{% endif %}"
                           href=
                             {% if not app.user.premium and count >= 1 %}
                               ''
@@ -189,13 +188,13 @@
                 </li>
             {% endif %}
             <li>
-                <a class="dropdown-item" href={{ path('category_index') }}>
+                <a class="dropdown-item nav-link-admin" href={{ path('category_index') }}>
                     <i class="fa-solid fa-eye fa-lg me-2"></i>
                     Toutes mes catégories
                 </a>
             </li>
             <li>
-                <a class="dropdown-item" href={{ path('category_new') }}>
+                <a class="dropdown-item nav-link-admin" href={{ path('category_new') }}>
                     <i class="fa-regular fa-square-plus fa-lg me-3"></i>
                     Créer une catégorie
                 </a>
