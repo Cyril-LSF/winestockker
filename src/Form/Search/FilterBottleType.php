@@ -117,11 +117,10 @@ class FilterBottleType extends AbstractType
     public function getChoices(string $method)
     {
         $bottles = $this->admin ? $this->bottleRepository->findAll() : $this->bottleRepository->findBy(['author' => $this->user]);
-        // $bottles = $this->bottleRepository->findBy(['author' => $this->user]);
         $choices = [];
         foreach ($bottles as $bottle) {
             $choices[
-                $method == 'getOrigin' ? Countries::getName($bottle->$method()) : $bottle->$method()
+                $method == 'getOrigin' && $bottle->$method() ? Countries::getName($bottle->$method()) : $bottle->$method()
             ] = $bottle->$method();
         }
 

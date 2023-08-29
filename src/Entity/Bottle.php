@@ -75,7 +75,7 @@ class Bottle
         return $this->year;
     }
 
-    public function setYear(string $year): self
+    public function setYear(?string $year): self
     {
         $this->year = $year;
 
