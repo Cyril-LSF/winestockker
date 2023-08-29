@@ -5,6 +5,12 @@
             <img src={{ asset('images/bottle-top-2.jpg') }}
             class="w-100" />
         </div>
+        <div class="position-absolute mt-2 ms-2">
+            <button class="btn btn-link" data-bs-toggle="tooltip" data-bs-placement="top"
+            title="Libérez tout le potentiel de votre passion pour le vin. Devenir membre premium débloque l'accès illimité : créez autant de caves, de catégories et de bouteilles que vous le souhaitez, pour une expérience sans limites.">
+                <i class="fa-solid fa-circle-info fa-xl purple"></i>
+            </button>
+        </div>
         {% if isAdmin == true %}
             <div class="w-100 mt-5 d-flex flex-column align-items-end position-absolute">
                 <a href={{ path('subscription_edit', {'id': subscription.id}) }} class="btn btn-link text-secondary"><i class="fa-solid fa-pen-to-square fa-xl"></i></a>

@@ -8,7 +8,13 @@
 </div>
 <section>
     <div class="text-center container py-2">
-        
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="row mb-3">
+                <div class="col d-flex justify-content-start">
+                    <a href={{ path('subscription_new') }} class="btn btn-purple"><i class="fa-solid fa-plus me-2"></i>Ajouter un abonnement</a>
+                </div>
+            </div>
+        {% endif %}
         <div class="row">
             {% if subscriptions|length > 0 %}
                 {% for subscription in subscriptions %}
