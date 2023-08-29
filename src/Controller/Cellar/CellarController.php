@@ -2,21 +2,22 @@
 
 namespace App\Controller\Cellar;
 
+use DateTime;
 use App\Entity\Cellar;
-use App\Form\Cellar\AddBottleType;
+use App\Service\Search\Search;
 use App\Form\Cellar\CellarType;
-use App\Form\Search\FilterBottleType;
+use App\Service\Premium\Premium;
+use App\Form\Cellar\AddBottleType;
 use App\Repository\CellarRepository;
+use App\Form\Search\FilterBottleType;
 use App\Repository\QuantityRepository;
 use App\Service\Bottle\BottleToCellar;
-use App\Service\Premium\Premium;
-use App\Service\Search\Search;
-use DateTime;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/cellar')]
 class CellarController extends AbstractController
@@ -25,25 +26,29 @@ class CellarController extends AbstractController
     private BottleToCellar     $bottleToCellar;
     private Search             $search;
     private QuantityRepository $quantityRepository;
+    private PaginatorInterface $paginator;
 
     public function __construct(
         CellarRepository $cellarRepository,
         BottleToCellar $bottleToCellar,
         Search $search,
-        QuantityRepository $quantityRepository
+        QuantityRepository $quantityRepository,
+        PaginatorInterface $paginator
     ){
         $this->cellarRepository   = $cellarRepository;
         $this->bottleToCellar     = $bottleToCellar;
         $this->search             = $search;
         $this->quantityRepository = $quantityRepository;
+        $this->paginator          = $paginator;
     }
 
     #[IsGranted('ROLE_USER')]
     #[Route('/', name: 'cellar_index', methods: ['GET'])]
-    public function index(): Response
+    public function index(Request $request): Response
     {
         return $this->render('cellar/index.html.twig', [
-            'cellars' => $this->cellarRepository->findBy(['author' => $this->getUser()]),
+            'cellars' => $this->paginator->paginate($this->cellarRepository->findBy(['author' => $this->getUser()]), $request->query->getInt('page', 1), 6),
+            //'cellars' => $this->cellarRepository->findBy(['author' => $this->getUser()]),
         ]);
     }
 
@@ -104,7 +109,8 @@ class CellarController extends AbstractController
 
         $variables = [
             'cellar' => $cellar,
-            'bottles' => $cellar->getBottles(),
+            //'bottles' => $cellar->getBottles(),
+            'bottles' => $this->paginator->paginate($cellar->getBottles(), $request->query->getInt('page', 1), 6),
             'form' => $form->createView(),
             'quantities' => $this->quantityRepository->findBy(['cellar' => $cellar]),
             'filterForm' => $filterForm->createView(),
@@ -115,8 +121,10 @@ class CellarController extends AbstractController
             $this->bottleToCellar->bottleToCellar($cellar, $form->get('bottles')->getData());
 
             $this->addFlash('success', "Les bouteilles de la cave " . $cellar->getName() . " ont été modifiées !");
-            $variables['bottles'] = $cellar->getBottles();
+            $variables['bottles'] = $this->paginator->paginate($cellar->getBottles(), $request->query->getInt('page', 1), 6);
             $variables['quantities'] = $this->quantityRepository->findBy(['cellar' => $cellar]);
+
+            return $this->redirectToRoute('cellar_show', ['id' => $cellar->getId()], Response::HTTP_SEE_OTHER);
         }
 
         // Filter search

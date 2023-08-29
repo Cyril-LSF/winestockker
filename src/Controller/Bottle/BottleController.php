@@ -5,14 +5,15 @@ namespace App\Controller\Bottle;
 use App\Entity\Bottle;
 use App\Service\Search\Search;
 use App\Form\Bottle\BottleType;
+use App\Service\Premium\Premium;
 use App\Repository\BottleRepository;
 use App\Form\Search\FilterBottleType;
 use App\Service\Bottle\BottleToCategory;
-use App\Service\Premium\Premium;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/bottle')]
@@ -21,15 +22,18 @@ class BottleController extends AbstractController
     private BottleRepository $bottleRepository;
     private BottleToCategory $bottleToCategory;
     private Search           $search;
+    private PaginatorInterface $paginator;
 
     public function __construct(
         BottleRepository $bottleRepository,
         BottleToCategory $bottleToCategory,
-        Search           $search
+        Search           $search,
+        PaginatorInterface $paginator
     ){
         $this->bottleRepository = $bottleRepository;
         $this->bottleToCategory = $bottleToCategory;
         $this->search           = $search;
+        $this->paginator        = $paginator;
     }
 
     #[IsGranted('ROLE_USER')]
@@ -44,7 +48,8 @@ class BottleController extends AbstractController
 
         $variables = [
             'filterForm' => $filterForm->createView(),
-            'bottles' => $this->bottleRepository->findBy(['author' => $this->getUser()]),
+            // 'bottles' => $this->bottleRepository->findBy(['author' => $this->getUser()]),
+            'bottles' => $this->paginator->paginate($this->bottleRepository->findBy(['author' => $this->getUser()]), $request->query->getInt('page', 1), 6),
         ];
 
         // Filter search

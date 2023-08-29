@@ -25,6 +25,11 @@
                 {{ include('components/no_result/no_result.html.twig') }}
             {% endif %}
         </div>
+        <div class="row">
+            <div class="col">
+                {{ knp_pagination_render(cellars) }}
+            </div>
+        </div>
     </div>
 </section>
 

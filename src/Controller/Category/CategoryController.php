@@ -4,17 +4,18 @@ namespace App\Controller\Category;
 
 use DateTime;
 use App\Entity\Category;
-use App\Form\Category\AddBottleType;
+use App\Service\Search\Search;
+use App\Service\Premium\Premium;
 use App\Form\Category\CategoryType;
+use App\Form\Category\AddBottleType;
 use App\Form\Search\FilterBottleType;
 use App\Repository\CategoryRepository;
 use App\Service\Bottle\BottleToCategory;
-use App\Service\Premium\Premium;
-use App\Service\Search\Search;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/category')]
@@ -23,23 +24,26 @@ class CategoryController extends AbstractController
     private CategoryRepository $categoryRepository;
     private BottleToCategory   $bottleToCategory;
     private Search             $search;
+    private PaginatorInterface $paginator;
 
     public function __construct(
         CategoryRepository $categoryRepository,
         BottleToCategory   $bottleToCategory,
-        Search             $search
+        Search             $search,
+        PaginatorInterface $paginator
     ){
         $this->categoryRepository = $categoryRepository;
         $this->bottleToCategory   = $bottleToCategory;
         $this->search             = $search;
+        $this->paginator          = $paginator;
     }
 
     #[IsGranted('ROLE_USER')]
     #[Route('/', name: 'category_index', methods: ['GET'])]
-    public function index(): Response
+    public function index(Request $request): Response
     {
         return $this->render('category/index.html.twig', [
-            'categories' => $this->categoryRepository->findBy(['author' => $this->getUser()]),
+            'categories' => $this->paginator->paginate($this->categoryRepository->findBy(['author' => $this->getUser()]), $request->query->getInt('page', 1), 6),
         ]);
     }
 
@@ -98,7 +102,7 @@ class CategoryController extends AbstractController
 
         $variables = [
             'category' => $category,
-            'bottles' => $category->getBottles(),
+            'bottles' => $this->paginator->paginate($category->getBottles(), $request->query->getInt('page', 1), 6),
             'form' => $form->createView(),
             'filterForm' => $filterForm->createView(),
         ];
@@ -107,8 +111,8 @@ class CategoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->bottleToCategory->categoryToBottle($category, $form->get('bottles')->getData());
             
-            $this->addFlash('success', "Les boutteilles de la catégorie " . $category->getName() . " ont été modifiées !");
-            $this->redirectToRoute('category_show', ['id' => $category->getId(), RESPONSE::HTTP_SEE_OTHER]);
+            $this->addFlash('success', "Les bouteilles de la catégorie " . $category->getName() . " ont été modifiées !");
+            return $this->redirectToRoute('category_show', ['id' => $category->getId(), RESPONSE::HTTP_SEE_OTHER]);
         }
 
         // Filter search
