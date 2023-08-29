@@ -102,20 +102,27 @@
                                         <i class="fa-solid fa-sitemap fa-lg me-3"></i>
                                         {{ form_label(form.categories) }}
                                       </div>
-                                      <div class="w-100 form-check form-switch d-flex flex-column align-items-start offset-1">
-                                        {% for category in form.categories %}
-                                            <label class="form-check-label">
-                                              {{ form_widget(category, {'attr': {'class': "form-check-input"}}) }}
-                                              <span>{{ category.vars.label | upper }}</span>
-                                            </label>
-                                        {% endfor %}
-                                        {% if form.categories.vars.errors is not empty %}
-                                          {% for errorItem in form.categories.vars.errors %}
-                                              <div class="text-danger">{{ errorItem.message }}</div>
+                                      {% if form.categories is empty %}
+                                        <div>
+                                          {{ form_widget(form.categories, {'attr': {'class': "d-none"}}) }}
+                                          <p class="text-muted ps-O">Pas de catégorie à sélectionner pour le moment</p>
+                                        </div>
+                                      {% else %}
+                                        <div class="w-100 form-check form-switch d-flex flex-column align-items-start offset-1">
+                                          {% for category in form.categories %}
+                                              <label class="form-check-label">
+                                                {{ form_widget(category, {'attr': {'class': "form-check-input"}}) }}
+                                                <span>{{ category.vars.label | upper }}</span>
+                                              </label>
                                           {% endfor %}
-                                        {% endif %}
-                                        <p class="categories-error"></p>
-                                      </div>
+                                          {% if form.categories.vars.errors is not empty %}
+                                            {% for errorItem in form.categories.vars.errors %}
+                                                <div class="text-danger">{{ errorItem.message }}</div>
+                                            {% endfor %}
+                                          {% endif %}
+                                          <p class="categories-error"></p>
+                                        </div>
+                                      {% endif %}
                                     </div>
                                     <!-- End categories -->
                                     <!-- Submit button -->

@@ -15,11 +15,15 @@
             </h1>
         </div>
         <div class="row justify-content-center">
-            {% set count = 0 %}
-            {% for cellar in cellars %}
-                {% include 'components/card/card_index.html.twig' with {'entity': cellar, 'type': 'cellar'} %}
-                {% set count = count + 1 %}
-            {% endfor %}
+            {% if cellars|length > 0 %}
+                {% set count = 0 %}
+                {% for cellar in cellars %}
+                    {% include 'components/card/card_index.html.twig' with {'entity': cellar, 'type': 'cellar'} %}
+                    {% set count = count + 1 %}
+                {% endfor %}
+            {% else %}
+                {{ include('components/no_result/no_result.html.twig') }}
+            {% endif %}
         </div>
     </div>
 </section>
