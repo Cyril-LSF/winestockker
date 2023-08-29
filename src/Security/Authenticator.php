@@ -62,11 +62,14 @@ class Authenticator extends AbstractLoginFormAuthenticator
     private function _premiumControl(User $user): void
     {
         date_default_timezone_set('Europe/Paris');
-        $now = new DateTime();
-        if ($user->isPremium() && $user->getPremiumTo()->format('d/m/Y H:i') < $now->format('d/m/Y H:i')) {
-            $user->setPremium(0);
-            $user->setPremiumTo(null);
-            $this->userRepository->save($user, true);
+        if ($user->isPremium()) {
+            $now = new DateTime();
+            $premiumTo = new DateTime($user->getPremiumTo()->format('Y/m/d H:i:s'));
+            if ($now->diff($premiumTo)->invert) {
+                $user->setPremium(0);
+                $user->setPremiumTo(null);
+                $this->userRepository->save($user, true);
+            }
         }
     }
 }
