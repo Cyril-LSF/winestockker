@@ -1,14 +1,13 @@
 
 <main>
     <div class="container">
-
+      
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
         <div class="container">
           <div class="row justify-content-center">
-            <div class="col-lg-7 col-md-6 d-flex flex-column align-items-center justify-content-center px-5">
+            <div class="col-lg-7 col-md-8 col-sm-12 d-flex flex-column align-items-center justify-content-center px-2">
 
-              {% if app.user %}
-              {% else %}
+              {% if not app.user %}
                 <div class="d-flex justify-content-center py-3">
                   <a href="index.html" class="logo d-flex align-items-center w-auto">
                     <img src={{ asset('images/logo_ws.png') }} alt="Logo">
@@ -26,7 +25,9 @@
                         Inscription
                       {% endif %}
                     </h5>
-                    <p class="text-center small">Entrer vos informations pour créer votre compte</p>
+                    {% if update is not defined %}
+                      <p class="text-center small">Entrer vos informations pour créer votre compte</p>
+                    {% endif %}
                   </div>
                   {% for flash_error in app.flashes('verify_email_error') %}
                     <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
@@ -149,9 +150,11 @@
                         {% endif %}
                       </button>
                     </div>
-                    <div class="col-12">
-                      <p class="small mb-0">Déjà un compte ? <a href={{ path('login') }} class="link-purple">Se connecter</a></p>
-                    </div>
+                    {% if update is not defined %}
+                      <div class="col-12">
+                        <p class="small mb-0">Déjà un compte ? <a href={{ path('login') }} class="link-purple">Se connecter</a></p>
+                      </div>
+                    {% endif %}
                   {{ form_end(registrationForm) }}
                 </div>
               </div>
