@@ -49,10 +49,11 @@ class CategoryController extends AbstractController
 
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin', name: 'category_index_admin', methods: ['GET'])]
-    public function indexAdmin(): Response
+    public function indexAdmin(Request $request): Response
     {
         return $this->render('category/index.html.twig', [
-            'categories' => $this->categoryRepository->findAll(),
+            // 'categories' => $this->categoryRepository->findAll(),
+            'categories' => $this->paginator->paginate($this->categoryRepository->findAll(), $request->query->getInt('page', 1), 6),
             'admin'      => true,
         ]);
     }
@@ -117,7 +118,7 @@ class CategoryController extends AbstractController
 
         // Filter search
         if ($filterForm->isSubmitted() && $filterForm->isValid()) {
-            $variables['bottles'] = $this->search->filter($this->getUser(), $filterForm, $category);
+            $variables['bottles'] = $this->paginator->paginate($this->search->filter($this->getUser(), $filterForm, $category), $request->query->getInt('page', 1), 6);
             $this->addFlash('success', "Les bouteilles ont été filtrées !");
         }
 

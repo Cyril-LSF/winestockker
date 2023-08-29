@@ -54,10 +54,11 @@ class CellarController extends AbstractController
 
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin', name: 'cellar_index_admin', methods: ['GET'])]
-    public function indexAdmin(): Response
+    public function indexAdmin(Request $request): Response
     {
         return $this->render('cellar/index.html.twig', [
-            'cellars' => $this->cellarRepository->findAll(),
+            // 'cellars' => $this->cellarRepository->findAll(),
+            'cellars' => $this->paginator->paginate($this->cellarRepository->findAll(), $request->query->getInt('page', 1), 6),
             'admin'   => true,
         ]);
     }
@@ -129,7 +130,8 @@ class CellarController extends AbstractController
 
         // Filter search
         if ($filterForm->isSubmitted() && $filterForm->isValid()) {
-            $variables['bottles'] = $this->search->filter($this->getUser(), $filterForm, $cellar);
+            // $variables['bottles'] = $this->search->filter($this->getUser(), $filterForm, $cellar);
+            $variables['bottles'] = $this->paginator->paginate($this->search->filter($this->getUser(), $filterForm, $cellar), $request->query->getInt('page', 1), 6);
             
             $this->addFlash('success', "Les bouteilles ont été filtrées !");
         }

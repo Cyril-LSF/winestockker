@@ -54,7 +54,8 @@ class BottleController extends AbstractController
 
         // Filter search
         if ($filterForm->isSubmitted() && $filterForm->isValid()) {
-            $variables['bottles'] = $this->search->filter($this->getUser(), $filterForm);
+            // $variables['bottles'] = $this->search->filter($this->getUser(), $filterForm);
+            $variables['bottles'] = $this->paginator->paginate($this->search->filter($this->getUser(), $filterForm), $request->query->getInt('page', 1), 6);
             $this->addFlash('success', "Les bouteilles ont été filtrées !");
         }
 
@@ -74,13 +75,15 @@ class BottleController extends AbstractController
 
         $variables = [
             'filterForm' => $filterForm->createView(),
-            'bottles'    => $this->bottleRepository->findAll(),
+            // 'bottles'    => $this->bottleRepository->findAll(),
+            'bottles'    => $this->paginator->paginate($this->bottleRepository->findAll(), $request->query->getInt('page', 1), 6),
             'admin'      => true,
         ];
 
         // Filter search
         if ($filterForm->isSubmitted() && $filterForm->isValid()) {
-            $variables['bottles'] = $this->search->filter($this->getUser(), $filterForm, null, true);
+            // $variables['bottles'] = $this->search->filter($this->getUser(), $filterForm, null, true);
+            $variables['bottles'] = $this->paginator->paginate($this->search->filter($this->getUser(), $filterForm, null, true), $request->query->getInt('page', 1), 6);
             $this->addFlash('success', "Les bouteilles ont été filtrées !");
         }
 

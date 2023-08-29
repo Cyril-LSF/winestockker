@@ -3,11 +3,11 @@
 namespace App\Service\Abstract;
 
 use App\Repository\BottleRepository;
-use App\Repository\CategoryRepository;
 use App\Repository\CellarRepository;
-use App\Repository\CreditCardRepository;
-use App\Repository\DataCryptRepository;
+use App\Repository\CategoryRepository;
 use App\Repository\QuantityRepository;
+use App\Repository\DataCryptRepository;
+use App\Repository\CreditCardRepository;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 abstract class AbstractService {
