@@ -25,17 +25,20 @@ class CategoryController extends AbstractController
     private BottleToCategory   $bottleToCategory;
     private Search             $search;
     private PaginatorInterface $paginator;
+    private Premium            $premium;
 
     public function __construct(
         CategoryRepository $categoryRepository,
         BottleToCategory   $bottleToCategory,
         Search             $search,
-        PaginatorInterface $paginator
+        PaginatorInterface $paginator,
+        Premium            $premium
     ){
         $this->categoryRepository = $categoryRepository;
         $this->bottleToCategory   = $bottleToCategory;
         $this->search             = $search;
         $this->paginator          = $paginator;
+        $this->premium            = $premium;
     }
 
     #[IsGranted('ROLE_USER')]
@@ -43,7 +46,8 @@ class CategoryController extends AbstractController
     public function index(Request $request): Response
     {
         return $this->render('category/index.html.twig', [
-            'categories' => $this->paginator->paginate($this->categoryRepository->findBy(['author' => $this->getUser()]), $request->query->getInt('page', 1), 6),
+            'categories' => $this->paginator->paginate(
+                $this->premium->restriction($this->getUser(), false, [], 'category'),$request->query->getInt('page', 1), 6),
         ]);
     }
 
@@ -52,7 +56,6 @@ class CategoryController extends AbstractController
     public function indexAdmin(Request $request): Response
     {
         return $this->render('category/index.html.twig', [
-            // 'categories' => $this->categoryRepository->findAll(),
             'categories' => $this->paginator->paginate($this->categoryRepository->findAll(), $request->query->getInt('page', 1), 6),
             'admin'      => true,
         ]);
@@ -60,9 +63,9 @@ class CategoryController extends AbstractController
 
     #[IsGranted('ROLE_USER')]
     #[Route('/new', name: 'category_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, Premium $premium): Response
+    public function new(Request $request): Response
     {
-        if (!$premium->is_premium($this->getUser(), 'category')) {
+        if (!$this->premium->is_premium($this->getUser(), 'category')) {
             $this->addFlash('warning', "Vous devez être membre premium pour réaliser cette action !");
             return $this->redirectToRoute('subscription_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -103,7 +106,8 @@ class CategoryController extends AbstractController
 
         $variables = [
             'category' => $category,
-            'bottles' => $this->paginator->paginate($category->getBottles(), $request->query->getInt('page', 1), 6),
+            'bottles' => $this->paginator->paginate(
+                $this->premium->restriction($this->getUser(), false, $category->getBottles()), $request->query->getInt('page', 1), 6),
             'form' => $form->createView(),
             'filterForm' => $filterForm->createView(),
         ];
@@ -117,8 +121,12 @@ class CategoryController extends AbstractController
         }
 
         // Filter search
-        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
-            $variables['bottles'] = $this->paginator->paginate($this->search->filter($this->getUser(), $filterForm, $category), $request->query->getInt('page', 1), 6);
+        if ($request->query->has('filter_bottle')) {
+            $filter = $request->query->all()['filter_bottle'];
+            $variables['bottles'] = $this->paginator->paginate(
+                $this->premium->restriction($this->getUser(), true, $this->search->filter($this->getUser(), $filter, $category)),
+                $request->query->getInt('page', 1), 6
+            );
             $this->addFlash('success', "Les bouteilles ont été filtrées !");
         }
 

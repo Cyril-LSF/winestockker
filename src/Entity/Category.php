@@ -29,6 +29,8 @@ class Category
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
 
+    private ?bool $disabled = false;
+
     public function __construct()
     {
         $this->bottles = new ArrayCollection();
@@ -96,6 +98,17 @@ class Category
     {
         $this->createdAt = $createdAt;
 
+        return $this;
+    }
+
+    public function getDisabled(): ?bool
+    {
+        return $this->disabled;
+    }
+
+    public function setDisabled(?bool $disabled): self
+    {
+        $this->disabled = $disabled;
         return $this;
     }
 

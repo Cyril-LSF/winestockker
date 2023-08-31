@@ -32,6 +32,8 @@ class Cellar
     #[ORM\OneToMany(mappedBy: 'cellar', targetEntity: Quantity::class, orphanRemoval: true)]
     private Collection $quantities;
 
+    private ?bool $disabled = false;
+
     public function __construct()
     {
         $this->bottles = new ArrayCollection();
@@ -133,6 +135,17 @@ class Cellar
             }
         }
 
+        return $this;
+    }
+
+    public function getDisabled(): ?bool
+    {
+        return $this->disabled;
+    }
+
+    public function setDisabled(?bool $disabled): self
+    {
+        $this->disabled = $disabled;
         return $this;
     }
 

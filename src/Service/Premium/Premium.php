@@ -33,4 +33,48 @@ class Premium extends AbstractService {
         return true;
     }
 
+    public function restriction(User $user, bool $search = false, mixed $array = [], string $entity = null): mixed
+    {
+        if (!$user->isPremium()) {
+            switch ($entity) {
+                case 'cellar':
+                case 'category':
+                    $repo = $entity . 'Repository';
+                    $limit = 1;
+                    break;
+                default:
+                    $repo = 'bottleRepository';
+                    $limit = 5;
+                    break;
+            }
+            // GET FREE ELEMENTS IDS
+            $elements = $this->$repo->findBy(['author' => $user], [], $limit);        
+            $freeElementsIds = [];
+            foreach ($elements as $element) {
+                $freeElementsIds[] = $element->getId();
+            }
+            // GET ALL ELEMENTS AND DISABLED THIS IF NOT IN FREE ELEMENTS IDS ARRAY
+            $elements = !$search && empty($array) ? $this->$repo->findBy(['author' => $user]) : $array;
+            foreach ($elements as $element) {
+                if (!in_array($element->getId(), $freeElementsIds)) {
+                    $element->setDisabled(true);
+                }
+            }
+        } else {
+            switch ($entity) {
+                case 'cellar':
+                    $elements = $this->cellarRepository->findBy(['author' => $user]);
+                    break;
+                case 'category':
+                    $elements = $this->categoryRepository->findBy(['author' => $user]);
+                    break;
+                default:
+                $elements = !$search&& empty($array) ? $this->bottleRepository->findBy(['author' => $user]) : $array;
+                    break;
+            }
+        }
+        
+        return $elements;
+    }
+
 }

@@ -46,6 +46,8 @@ class Bottle
     #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'bottles')]
     private Collection $categories;
 
+    private ?bool $disabled = false;
+
     public function __construct()
     {
         $this->cellars = new ArrayCollection();
@@ -225,6 +227,17 @@ class Bottle
             $category->removeBottle($this);
         }
 
+        return $this;
+    }
+
+    public function getDisabled(): ?bool
+    {
+        return $this->disabled;
+    }
+
+    public function setDisabled(?bool $disabled): self
+    {
+        $this->disabled = $disabled;
         return $this;
     }
 

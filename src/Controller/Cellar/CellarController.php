@@ -27,19 +27,22 @@ class CellarController extends AbstractController
     private Search             $search;
     private QuantityRepository $quantityRepository;
     private PaginatorInterface $paginator;
+    private Premium            $premium;
 
     public function __construct(
         CellarRepository $cellarRepository,
         BottleToCellar $bottleToCellar,
         Search $search,
         QuantityRepository $quantityRepository,
-        PaginatorInterface $paginator
+        PaginatorInterface $paginator,
+        Premium            $premium
     ){
         $this->cellarRepository   = $cellarRepository;
         $this->bottleToCellar     = $bottleToCellar;
         $this->search             = $search;
         $this->quantityRepository = $quantityRepository;
         $this->paginator          = $paginator;
+        $this->premium            = $premium;
     }
 
     #[IsGranted('ROLE_USER')]
@@ -47,8 +50,8 @@ class CellarController extends AbstractController
     public function index(Request $request): Response
     {
         return $this->render('cellar/index.html.twig', [
-            'cellars' => $this->paginator->paginate($this->cellarRepository->findBy(['author' => $this->getUser()]), $request->query->getInt('page', 1), 6),
-            //'cellars' => $this->cellarRepository->findBy(['author' => $this->getUser()]),
+            'cellars' => $this->paginator->paginate(
+                $this->premium->restriction($this->getUser(), false, [], 'cellar'), $request->query->getInt('page', 1), 6),
         ]);
     }
 
@@ -57,7 +60,6 @@ class CellarController extends AbstractController
     public function indexAdmin(Request $request): Response
     {
         return $this->render('cellar/index.html.twig', [
-            // 'cellars' => $this->cellarRepository->findAll(),
             'cellars' => $this->paginator->paginate($this->cellarRepository->findAll(), $request->query->getInt('page', 1), 6),
             'admin'   => true,
         ]);
@@ -65,9 +67,9 @@ class CellarController extends AbstractController
 
     #[IsGranted('ROLE_USER')]
     #[Route('/new', name: 'cellar_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, Premium $premium): Response
+    public function new(Request $request): Response
     {
-        if (!$premium->is_premium($this->getUser(), 'cellar')) {
+        if (!$this->premium->is_premium($this->getUser(), 'cellar')) {
             $this->addFlash('warning', "Vous devez être membre premium pour réaliser cette action !");
             return $this->redirectToRoute('subscription_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -110,8 +112,9 @@ class CellarController extends AbstractController
 
         $variables = [
             'cellar' => $cellar,
-            //'bottles' => $cellar->getBottles(),
-            'bottles' => $this->paginator->paginate($cellar->getBottles(), $request->query->getInt('page', 1), 6),
+            'bottles' => $this->paginator->paginate(
+                $this->premium->restriction($this->getUser(), false, $cellar->getBottles()),
+                $request->query->getInt('page', 1), 6),
             'form' => $form->createView(),
             'quantities' => $this->quantityRepository->findBy(['cellar' => $cellar]),
             'filterForm' => $filterForm->createView(),
@@ -122,17 +125,17 @@ class CellarController extends AbstractController
             $this->bottleToCellar->bottleToCellar($cellar, $form->get('bottles')->getData());
 
             $this->addFlash('success', "Les bouteilles de la cave " . $cellar->getName() . " ont été modifiées !");
-            $variables['bottles'] = $this->paginator->paginate($cellar->getBottles(), $request->query->getInt('page', 1), 6);
-            $variables['quantities'] = $this->quantityRepository->findBy(['cellar' => $cellar]);
 
             return $this->redirectToRoute('cellar_show', ['id' => $cellar->getId()], Response::HTTP_SEE_OTHER);
         }
 
         // Filter search
-        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
-            // $variables['bottles'] = $this->search->filter($this->getUser(), $filterForm, $cellar);
-            $variables['bottles'] = $this->paginator->paginate($this->search->filter($this->getUser(), $filterForm, $cellar), $request->query->getInt('page', 1), 6);
-            
+        if ($request->query->has('filter_bottle')) {
+            $filter = $request->query->all()['filter_bottle'];
+            $variables['bottles'] = $this->paginator->paginate(
+                $this->premium->restriction($this->getUser(), true, $this->search->filter($this->getUser(), $filter, $cellar)),
+                $request->query->getInt('page', 1), 6
+            );
             $this->addFlash('success', "Les bouteilles ont été filtrées !");
         }
 

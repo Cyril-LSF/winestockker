@@ -28,7 +28,7 @@ class FilterBottleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->user = $options['user'];
-        $this->admin = $optionq['admin'] ?? false;
+        $this->admin = $options['admin'] ?? false;
         $builder
             ->add('name', TextType::class, [
                 'required' => false,
@@ -123,7 +123,6 @@ class FilterBottleType extends AbstractType
                 $method == 'getOrigin' && $bottle->$method() ? Countries::getName($bottle->$method()) : $bottle->$method()
             ] = $bottle->$method();
         }
-
         return array_filter($choices);
     }
 }

@@ -15,19 +15,22 @@
             </h1>
         </div>
         <div class="row">
+            {% if admin is defined %}
+                {% set path = 'bottle_index_admin' %}
+            {% else %}
+                {% set path = 'bottle_index' %}
+            {% endif %}
             {% include 'components/card/card.html.twig' with {
                 'icon': "fa-solid fa-wine-bottle fa-lg",
-                'path': 'bottle_index',
+                'path': path,
                 'param': null,
             } %}
             {% include 'components/filter_bar/filter_bar.html.twig' with {'filterForm': filterForm} %}
         </div>
         <div class="row">
             {% if bottles|length > 0 %}
-                {% set count = 0 %}
                 {% for bottle in bottles %}
                     {% include 'components/bottle/bottle.html.twig' with {'categories': true, 'update': true} %}
-                    {% set count = count + 1 %}
                 {% endfor %}
             {% else %}
                 {{ include('components/no_result/no_result.html.twig') }}

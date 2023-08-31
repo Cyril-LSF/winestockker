@@ -18,16 +18,16 @@ class Search extends AbstractService {
         ];
     }
 
-    public function filter(User $user, FormInterface $data, Object $entity = null, bool $admin = false): ?array
+    public function filter(User $user, array $data, Object $entity = null, bool $admin = false): ?array
     {
         $data = [
-            'name' => addslashes(trim($data->getData()['name'])),
-            'origin' => addslashes(trim($data->getData()['origin'])),
-            'vine' => addslashes(trim($data->getData()['vine'])),
-            'enbottler' => addslashes(trim($data->getData()['enbottler'])),
-            'categories' => $data->getData()['category'] ?? null ,
-            'year' => addslashes(trim($data->getData()['year'])),
-            'price' => trim($data->getData()['price']) != 0 ? addslashes(trim($data->getData()['price'])) : null,
+            'name' => addslashes(trim($data['name'])) ?? null,
+            'origin' => addslashes(trim($data['origin'])) ?? null,
+            'vine' => addslashes(trim($data['vine'])) ?? null,
+            'enbottler' => addslashes(trim($data['enbottler'])) ?? null,
+            'categories' => $data['category'] ?? null,
+            'year' => addslashes(trim($data['year'])) ?? null,
+            'price' => trim($data['price']) != 0 ? addslashes(trim($data['price'])) : null,
         ];
 
         return $this->bottleRepository->findByFilter($user, array_filter($data), $entity, $admin);

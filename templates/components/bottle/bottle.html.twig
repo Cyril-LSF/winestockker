@@ -1,4 +1,4 @@
-<div class="col-lg-4 col-md-12 py-2">
+{# <div class="col-lg-4 col-md-12 py-2">
     <div class="card shadow position-relative {% if not app.user.premium and count >= 5 and admin is not defined %}disabled{% endif %}"
         {% if not app.user.premium and count >= 5 and admin is not defined %}
             data-bs-toggle="tooltip" data-bs-placement="top" title="Abonnez-vous pour débloquer cette bouteille"
@@ -110,6 +110,144 @@
                                         {{ path('quantity_edit_big', {'quantity': quantity.id}) }}
                                     {% endif %}
                                 class="link-secondary text-center {% if not app.user.premium and count >= 5 %}disabled{% endif %}" tabindex="-1" role="button" aria-disabled="true">Grosse quantité</a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+                {% if admin is defined %}
+                    <hr class="w-100 m-1" style="border: 1px solid grey;">
+                    <div class="d-flex flex-column align-items-center">
+                        <p class="h6 text-muted">Bouteille de</p>
+                        <p class="h6">{{ bottle.author.screenname }}</p>
+                    </div>
+                {% endif %}
+            </div>
+            <fieldset class="purple-fieldset rounded mt-2 text-center">
+                <legend class="h4 purple mt-1">{{ bottle.name | upper }}</legend>
+                {% if bottle.year %}
+                    <p class="h6">{{ bottle.year }}</p>
+                {% else %}
+                    <p class="h6">Année non renseignée</p>
+                {% endif %}
+            </fieldset>
+        </div>
+    </div>
+</div> #}
+
+
+<div class="col-lg-4 col-md-12 py-2">
+    <div class="card shadow position-relative {% if bottle.disabled and admin is not defined %}disabled{% endif %}"
+        {% if bottle.disabled and admin is not defined %}
+            data-bs-toggle="tooltip" data-bs-placement="top" title="Abonnez-vous pour débloquer cette bouteille"
+        {% endif %}
+    >
+        {% if categories is defined %}
+            <div class="w-100 d-flex justify-content-end position-absolute mt-1">
+                {% for category in bottle.categories %}
+                    <span class="badge bg-dark me-1">{{ category.name }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if update is defined %}
+            <div class="w-100 mt-5 d-flex flex-column align-items-end position-absolute">
+                {% if admin is not defined %}
+                    {% set isAdmin = false %}
+                {% else %}
+                    {% set isAdmin = admin %}
+                {% endif %}
+                <a href={{ path('bottle_edit', {'id': bottle.id, 'admin' : isAdmin}) }} class="btn btn-link text-secondary
+                    {% if bottle.disabled and admin is not defined %}
+                        disabled
+                    {% endif %}
+                "><i class="fa-solid fa-pen-to-square fa-xl"></i></a>
+                {{ include('bottle/_delete_form.html.twig') }}
+            </div>
+        {% endif %}
+        <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+            data-mdb-ripple-color="light">
+            <img src={{ asset('images/bottle-top-2.jpg') }}
+            class="w-100" />
+        </div>
+        <div class="card-body w-75 m-auto">
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <div class="d-flex flex-column align-items-center">
+                    <p class="h6 text-muted">Provenance</p>
+                    {% if bottle.origin %}
+                        <p class="h6">{{ bottle.origin|country_name }}</p>
+                    {% else %}
+                        <p class="h6">Non renseigné</p>
+                    {% endif %}
+                </div>
+                <hr class="w-100 m-1" style="border: 1px solid grey;">
+                <div class="d-flex flex-column align-items-center">
+                    <p class="h6 text-muted">Cépage</p>
+                    {% if bottle.vine %}
+                        <a href={{ path('search_vine', {'id': bottle.id}) }} class="link-purple {% if bottle.disabled and admin is not defined %}disabled{% endif %}" data-bs-toggle="tooltip" data-bs-placement="right" title="En savoir plus sur le cépage">
+                            {{ bottle.vine }}
+                        </a>
+                    {% else %}
+                        <p class="h6">Non renseigné</p>
+                    {% endif %}
+                </div>
+                <hr class="w-100 m-1" style="border: 1px solid grey;">
+                <div class="d-flex flex-column align-items-center">
+                    <p class="h6 text-muted">Embouteilleur</p>
+                    {% if bottle.enbottler %}
+                        <p class="h6">{{ bottle.enbottler }}</p>
+                    {% else %}
+                        <p class="h6">Non renseigné</p>
+                    {% endif %}
+                </div>
+                <hr class="w-100 m-1" style="border: 1px solid grey;">
+                <div class="d-flex flex-column align-items-center">
+                    <p class="h6 text-muted">Prix</p>
+                    {% if bottle.price %}
+                        <p class="h6">{{ bottle.price ~ ' €' }}</p>
+                    {% else %}
+                        <p class="h6">Non renseigné</p>
+                    {% endif %}
+                </div>
+                {% if quantities is defined %}
+                    <hr class="w-100 m-1" style="border: 1px solid grey;">
+                    <div class="d-flex flex-column align-items-center">
+                        <p class="h6 text-muted">Quantité</p>
+                        <div class="d-flex flex-column align-items-center">
+                            {% for quantity in quantities %}
+                                {% if quantity.bottle.id == bottle.id %}
+                                <div class="d-flex align-items-center">
+                                    <button type="button"
+                                    {% if not bottle.disabled %}
+                                        data-url={{ path('quantity_edit', {'cellar': cellar.id, 'bottle': bottle.id, 'action': "less"}) }}
+                                    {% endif %}
+                                    class="btn btn-link text-danger edit-quantity"
+                                        {% if bottle.disabled %}
+                                            disabled
+                                        {% endif %}
+                                    ><i class="fa-solid fa-minus fa-lg"></i></button>
+                                    <p class="m-0 quantity">{{ quantity.quantity }}</p>
+                                    <button type="button"
+                                    {% if not bottle.disabled %}
+                                        data-url={{ path('quantity_edit', {'cellar': cellar.id, 'bottle': bottle.id, 'action': "add"}) }}
+                                    {% endif %}
+                                    class="btn btn-link text-success edit-quantity"
+                                        {% if bottle.disabled %}
+                                            disabled
+                                        {% endif %}
+                                    ><i class="fa-solid fa-plus fa-lg"></i></button>
+                                    {% if quantity.quantity < 1 %}
+                                    <div class="w-100 d-flex justify-content-end">
+                                        <span class="badge bg-danger">Rupture</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <a href=
+                                    {% if bottle.disabled %}
+                                        ''
+                                    {% else %}
+                                        {{ path('quantity_edit_big', {'quantity': quantity.id}) }}
+                                    {% endif %}
+                                class="link-secondary text-center {% if bottle.disabled %}disabled{% endif %}" tabindex="-1" role="button" aria-disabled="true">Grosse quantité</a>
                                 {% endif %}
                             {% endfor %}
                         </div>

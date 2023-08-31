@@ -23,17 +23,20 @@ class BottleController extends AbstractController
     private BottleToCategory $bottleToCategory;
     private Search           $search;
     private PaginatorInterface $paginator;
+    private Premium          $premium;
 
     public function __construct(
         BottleRepository $bottleRepository,
         BottleToCategory $bottleToCategory,
         Search           $search,
-        PaginatorInterface $paginator
+        PaginatorInterface $paginator, 
+        Premium          $premium
     ){
         $this->bottleRepository = $bottleRepository;
         $this->bottleToCategory = $bottleToCategory;
         $this->search           = $search;
         $this->paginator        = $paginator;
+        $this->premium          = $premium;
     }
 
     #[IsGranted('ROLE_USER')]
@@ -48,14 +51,16 @@ class BottleController extends AbstractController
 
         $variables = [
             'filterForm' => $filterForm->createView(),
-            // 'bottles' => $this->bottleRepository->findBy(['author' => $this->getUser()]),
-            'bottles' => $this->paginator->paginate($this->bottleRepository->findBy(['author' => $this->getUser()]), $request->query->getInt('page', 1), 6),
+            'bottles' => $this->paginator->paginate($this->premium->restriction($this->getUser()), $request->query->getInt('page', 1), 6),
         ];
 
         // Filter search
-        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
-            // $variables['bottles'] = $this->search->filter($this->getUser(), $filterForm);
-            $variables['bottles'] = $this->paginator->paginate($this->search->filter($this->getUser(), $filterForm), $request->query->getInt('page', 1), 6);
+        if ($request->query->has('filter_bottle')) {
+            $filter = $request->query->all()['filter_bottle'];
+            $variables['bottles'] = $this->paginator->paginate(
+                $this->premium->restriction($this->getUser(), true, $this->search->filter($this->getUser(), $filter)),
+                $request->query->getInt('page', 1), 6
+            );
             $this->addFlash('success', "Les bouteilles ont été filtrées !");
         }
 
@@ -75,15 +80,17 @@ class BottleController extends AbstractController
 
         $variables = [
             'filterForm' => $filterForm->createView(),
-            // 'bottles'    => $this->bottleRepository->findAll(),
             'bottles'    => $this->paginator->paginate($this->bottleRepository->findAll(), $request->query->getInt('page', 1), 6),
             'admin'      => true,
         ];
 
         // Filter search
-        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
-            // $variables['bottles'] = $this->search->filter($this->getUser(), $filterForm, null, true);
-            $variables['bottles'] = $this->paginator->paginate($this->search->filter($this->getUser(), $filterForm, null, true), $request->query->getInt('page', 1), 6);
+        if ($request->query->has('filter_bottle')) {
+            $filter = $request->query->all()['filter_bottle'];
+            $variables['bottles'] = $this->paginator->paginate(
+                $this->premium->restriction($this->getUser(), true, $this->search->filter($this->getUser(), $filter, null, true)),
+                $request->query->getInt('page', 1), 6
+            );
             $this->addFlash('success', "Les bouteilles ont été filtrées !");
         }
 
@@ -92,9 +99,9 @@ class BottleController extends AbstractController
 
     #[IsGranted('ROLE_USER')]
     #[Route('/new', name: 'bottle_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, Premium $premium): Response
+    public function new(Request $request): Response
     {
-        if (!$premium->is_premium($this->getUser(), 'bottle')) {
+        if (!$this->premium->is_premium($this->getUser(), 'bottle')) {
             $this->addFlash('warning', "Vous devez être membre premium pour réaliser cette action !");
             return $this->redirectToRoute('subscription_index', [], Response::HTTP_SEE_OTHER);
         }

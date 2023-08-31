@@ -16,10 +16,8 @@
         </div>
         <div class="row justify-content-center">
             {% if categories|length > 0 %}
-                {% set count = 0 %}
                 {% for category in categories %}
                     {% include 'components/card/card_index.html.twig' with {'entity': category, 'type': 'category'} %}
-                    {% set count = count + 1 %}
                 {% endfor %}
             {% else %}
                 {{ include('components/no_result/no_result.html.twig') }}
