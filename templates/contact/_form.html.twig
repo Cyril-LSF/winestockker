@@ -1,0 +1,123 @@
+{# {{ form_start(form) }}
+    {{ form_row(form) }}
+    <button type="submit">envoyer</button>
+{{ form_end(form) }} #}
+
+{# /* <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-sizing: border-box;
+        }rgin-bottom: 20px;
+        }
+        .header h1 {
+            color: #6F1125;
+        }
+        .field {
+            
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .button {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button button {
+            background-color: #6F1125;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .contact-image{
+            text-align: center;
+        }
+        .contact-image img{
+            border-radius: 6rem;
+            width: 21%;
+            margin-top: -13%;
+            transform: rotate(29deg);
+        }
+    </style> */ #}
+
+    {# <div class="container">
+        <div class="contact-image">
+            <img src={{ asset('images/logo_ws.png') }} alt="contact"/>
+        </div>
+        <form>
+            <div class="field mb-3">
+                <label for="emeteur">De :</label>
+                <input type="text" id="emeteur" name="emeteur" value={{ app.user.email }} disabled>
+            </div>
+            <div class="field mb-3">
+                <label for="destinataire">À :</label>
+                <input type="text" id="destinataire" name="destinataire" value="WINE STOCCKER" disabled>
+            </div>
+            <div class="field mb-3">
+                <label for="objet">Objet :</label>
+                <input type="text" id="objet" name="objet" required>
+            </div>
+            <div class="field mb-3">
+                <label for="contenu">Contenu :</label>
+                <textarea id="contenu" name="contenu" rows="6" required></textarea>
+            </div>
+            <div class="button">
+                <button type="submit" class="btn btn-purple">Envoyer</button>
+            </div>
+        </form>
+    </div> #}
+
+<style>
+
+    </style>
+
+    <div class="container">
+        <h1 class="text-center" style="color: #6F1125;">Envoyer un e-mail</h1>
+        <div class="row">
+            <div class="col-lg-6 col-md-8 col-sm-10 shadow">
+                <form>
+                    <div class="mb-3">
+                        <label for="emeteur" class="form-label">De :</label>
+                        <input type="email" class="form-control" id="emeteur" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="destinataire" class="form-label">À :</label>
+                        <input type="email" class="form-control" id="destinataire" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="objet" class="form-label">Objet :</label>
+                        <input type="text" class="form-control" id="objet" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="contenu" class="form-label">Contenu :</label>
+                        <textarea class="form-control" id="contenu" rows="6" required></textarea>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-purple">Envoyer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
