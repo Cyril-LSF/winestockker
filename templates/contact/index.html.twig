@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ContactController!{% endblock %}
+{% block title %}{{ parent() ~ ' - Nous contacter' }}{% endblock %}
 
 {% block body %}
     {% include 'contact/_form.html.twig' %}

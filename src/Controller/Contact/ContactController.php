@@ -3,13 +3,25 @@
 namespace App\Controller\Contact;
 
 use App\Form\Contact\ContactType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Mime\Address;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ContactController extends AbstractController
 {
+    private ParameterBagInterface $params;
+    private MailerInterface       $mailer;
+
+    public function __construct(ParameterBagInterface $params, MailerInterface $mailer)
+    {
+        $this->params = $params;
+        $this->mailer = $mailer;
+    }
     #[Route('/contact', name: 'contact', methods: ['GET', 'POST'])]
     public function index(Request $request): Response
     {
@@ -18,7 +30,18 @@ class ContactController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            dd($form->getData());
+            $email = (new TemplatedEmail())
+                ->from(new Address($this->getUser()->getEmail(), $this->getUser()->getScreenname()))
+                ->to($this->params->get('app.wine_stoccker_email'))
+                ->subject($form->get('subject')->getData())
+                ->htmlTemplate('contact/email.html.twig')
+                ->context([
+                    'content' => $form->get('content')->getData(),
+                ]);
+            $this->mailer->send($email);
+            $this->addFlash('success', "Votre message a bien été envoyé !");
+
+            return $this->redirectToRoute('user_show', ['id' => $this->getUser()->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('contact/index.html.twig', [

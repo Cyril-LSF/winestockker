@@ -4,8 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    app.uploaded_root: '../public/upload'
-    app.invoice_root: './invoices/'
+    app.uploaded_root: '%env(UPLOADED_ROUTE)%'
+    app.invoice_root: '%env(INVOICE_ROUTE)%'
     app.reset_password: 'http://localhost:1234/reset-password/reset/'
     app.api_wiki: 'https://fr.wikipedia.org/w/api.php'
     app.encrypt_key: '%env(ENCRYPT_KEY)%'
@@ -15,6 +15,7 @@ parameters:
     app.stripe_private_key: '%env(STRIPE_PRIVATE_KEY)%'
     app.base_url: '%env(BASE_URL)%'
     app.stripe_private_webhook: '%env(STRIPE_PRIVATE_WEBHOOK)%'
+    app.wine_stoccker_email: 'wine-stockker@gmail.com'
 services:
     # default configuration for services in *this* file
     _defaults:
