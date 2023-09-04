@@ -46,22 +46,22 @@
             <li>
               <a class="dropdown-item d-flex align-items-center" href={{ path('user_show', {'id': app.user.id}) }}>
                 <i class="fa-regular fa-user"></i>
-                <span>Mon profile</span>
+                <span>Mon profil</span>
               </a>
             </li>
             <li>
               <hr class="dropdown-divider">
             </li>
 
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
+            {# <li>
+              <a class="dropdown-item d-flex align-items-center" href={{ path('faq') }}>
                 <i class="fa-regular fa-circle-question"></i>
                 <span>Besoin d'aide?</span>
               </a>
             </li>
             <li>
               <hr class="dropdown-divider">
-            </li>
+            </li>#}
 
             <li>
               <a class="dropdown-item d-flex align-items-center" href={{ path('logout') }}>
@@ -229,12 +229,12 @@
       </li>
       <!-- End Invoice Page Nav -->
 
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-faq.html">
+      {# <li class="nav-item">
+        <a class="nav-link collapsed" href={{ path('faq') }}>
           <i class="fa-regular fa-circle-question"></i>
           <span>F.A.Q</span>
         </a>
-      </li>
+      </li> #}
       <!-- End F.A.Q Page Nav -->
 
       <li class="nav-item">
