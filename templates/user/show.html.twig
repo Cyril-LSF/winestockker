@@ -146,15 +146,41 @@
           <div class="col-md-6">
             <div class="card mb-4 mb-md-0">
               <div class="card-body">
-                <p><i class="fa-regular fa-credit-card me-3"></i> Mes cartes de paiement</p>
-                {% if creditCards is not empty %}
+                <p><i class="fa-solid fa-file-lines me-3"></i> Télécharger ma dernière facture</p>
+                {% if transaction is not empty %}
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="col mb-4 d-flex flex-column">
+                        <div class="card shadow alert bg-wine">
+                          <div class="w-100">
+                            <div class="d-flex justify-content-between align-items-center text-light">
+                              <i class="fa-solid fa-file-lines fa-2xl"></i>
+                              <div>
+                                {{ ' le ' ~ transaction.createdAt|date('d/m/Y H:i') }}
+                              </div>
+                            </div>
+                            <div class="my-3 text-light text-center">
+                              <span class="text-bold fs-3">{{ transaction.amount ~ ' €' }}</span>
+                            </div>
+                            <div class="w-100">
+                              <a href={{ path('transaction_download', {'id': transaction.id}) }} class="btn btn-light w-100"><i class="fa-solid fa-download purple"></i></a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% else %}
+                  <p>Vous n'avez pas de facture pour le moment.</p>
+                {% endif %}
+                {# {% if creditCards is not empty %}
                   <div class="container-fluid">
                     {% set count = 0 %}
                     {% for creditCard in creditCards %}
                       <div class="row">
                         <div class="col mb-4 d-flex flex-column">
                           <div id={{ 'creditCard_card' ~ count }} class="card_creditCard card shadow alert bg-wine {% if creditCard['selected'] == true %} card_selected {% endif %}"> {# {% if address.selected == true %} alert-success {% endif %}#}
-                            <div class="w-100">
+                            {#<div class="w-100">
                               <div class="d-flex justify-content-between align-items-center text-light">
                                 <i class="fa-regular fa-credit-card fa-2xl"></i>
                                 <div>
@@ -184,11 +210,11 @@
                       {% set count = count + 1 %}
                     {% endfor %}
                   </div>
-                {% endif %}
-                <button type="button" class="btn btn-light w-100"  data-bs-toggle="modal" data-bs-target="#modalPayment">
+                {% endif %} #}
+                {# <button type="button" class="btn btn-light w-100"  data-bs-toggle="modal" data-bs-target="#modalPayment">
                   <i class="fa-solid fa-plus fa-2x"></i>
                 </button>
-                {% include 'credit_card/modal.html.twig' %}
+                {% include 'credit_card/modal.html.twig' %} #}
               </div>
             </div>
           </div>
@@ -203,5 +229,5 @@
 {% block javascripts %}
   {{ parent() }}
   {{ encore_entry_script_tags('address') }}
-  {{ encore_entry_script_tags('creditCard') }}
+  {# {{ encore_entry_script_tags('creditCard') }} #}
 {% endblock %}

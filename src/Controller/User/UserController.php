@@ -11,6 +11,7 @@ use App\Form\Security\EditPasswordType;
 use App\Form\User\RegistrationFormType;
 use App\Repository\AddressRepository;
 use App\Repository\CreditCardRepository;
+use App\Repository\TransactionRepository;
 use App\Repository\UserRepository;
 use App\Service\Payment\CreditCard as CreditCardService;
 use App\Service\UploadedFile;
@@ -55,7 +56,7 @@ class UserController extends AbstractController
 
     #[IsGranted('USER_VIEW', 'user')]
     #[Route('/{id}', name: 'user_show', methods: ['GET', 'POST'])]
-    public function show(User $user, Request $request): Response
+    public function show(User $user, Request $request, TransactionRepository $transactionRepository): Response
     {
         // Adress from
         $address = new Address();
@@ -64,10 +65,10 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         // Credit card form
-        $creditCard = new CreditCard();
-        $creditCardForm = $this->createForm(CreditCardType::class, $creditCard);
+        // $creditCard = new CreditCard();
+        // $creditCardForm = $this->createForm(CreditCardType::class, $creditCard);
 
-        $creditCardForm->handleRequest($request);
+        // $creditCardForm->handleRequest($request);
 
         // Adress form control
         if ($form->isSubmitted() && $form->isValid()) {
@@ -80,21 +81,22 @@ class UserController extends AbstractController
         }
 
         // Credit card control
-        if ($creditCardForm->isSubmitted() && $creditCardForm->isValid()) {
-            $this->creditCardService->addCreditCard($creditCard, $this->getUser());
-            $this->addFlash('success', "La carte a été créée !");
-        } else if ($creditCardForm->isSubmitted()) {
-            $this->addFlash('danger', "Erreur de saisie");
-        }
+        // if ($creditCardForm->isSubmitted() && $creditCardForm->isValid()) {
+        //     $this->creditCardService->addCreditCard($creditCard, $this->getUser());
+        //     $this->addFlash('success', "La carte a été créée !");
+        // } else if ($creditCardForm->isSubmitted()) {
+        //     $this->addFlash('danger', "Erreur de saisie");
+        // }
 
         return $this->render('user/show.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
-            'creditCardForm' => $creditCardForm->createView(),
+            // 'creditCardForm' => $creditCardForm->createView(),
             'addresses' => $this->addressRepository->findBy(['author' => $this->getUser()]),
-            'creditCards' => $this->creditCardService->decryptCreditCards(
-                $this->creditCardRepository->findBy(['author' => $this->getUser()])
-            ),
+            'transaction' => $transactionRepository->findOneBy(['user' => $this->getUser()], ['id' => 'DESC']),
+            // 'creditCards' => $this->creditCardService->decryptCreditCards(
+            //     $this->creditCardRepository->findBy(['author' => $this->getUser()])
+            // ),
         ]);
     }
 
