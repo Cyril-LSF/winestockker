@@ -131,7 +131,7 @@ class RegistrationFormType extends AbstractType
                                     $now = date_create();
                                     $interval = date_diff($data, $now);
                                     if ($interval->y < 18) {
-                                        $context->buildViolation("Vous devait avoir 18 ans minimum pour vous inscrire")
+                                        $context->buildViolation("Vous devez avoir 18 ans minimum pour vous inscrire")
                                         ->addViolation();
                                     }
                                 }

@@ -46,14 +46,6 @@ class UserController extends AbstractController
         $this->creditCardService    = $creditCardService;
     }
 
-    #[Route('/', name: 'app_user_index', methods: ['GET'])]
-    public function index(): Response
-    {
-        return $this->render('user/index.html.twig', [
-            'users' => $this->userRepository->findAll(),
-        ]);
-    }
-
     #[IsGranted('USER_VIEW', 'user')]
     #[Route('/{id}', name: 'user_show', methods: ['GET', 'POST'])]
     public function show(User $user, Request $request, TransactionRepository $transactionRepository): Response
@@ -76,8 +68,11 @@ class UserController extends AbstractController
             $this->addressRepository->save($address, true);
 
             $this->addFlash('success', "L'adresse a été créée !");
+            $response = new Response(null, 201);
+
         } else if ($form->isSubmitted()) {
             $this->addFlash('danger', "Erreur de saisie");
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
         }
 
         // Credit card control
@@ -97,7 +92,7 @@ class UserController extends AbstractController
             // 'creditCards' => $this->creditCardService->decryptCreditCards(
             //     $this->creditCardRepository->findBy(['author' => $this->getUser()])
             // ),
-        ]);
+        ], $response ?? null);
     }
 
     #[IsGranted('USER_EDIT', 'user')]
@@ -116,6 +111,8 @@ class UserController extends AbstractController
             $this->userRepository->save($user, true);
 
             return $this->redirectToRoute('user_show', ['id' => $this->getUser()->getId()], Response::HTTP_SEE_OTHER);
+        } else if ($form->isSubmitted()) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
         }
 
         return $this->render('user/edit.html.twig', [
@@ -123,7 +120,7 @@ class UserController extends AbstractController
             'registrationForm' => $form->createView(),
             'update' => true,
             'fileRoot' => $this->params->get('app.uploaded_root'),
-        ]);
+        ], $response ?? null);
     }
 
     #[IsGranted('USER_EDIT', 'user')]
@@ -139,12 +136,14 @@ class UserController extends AbstractController
             $user->setPassword($userPasswordHasherInterface->hashPassword($user, $form->get('password')->getData()));
             $this->userRepository->save($user, true);
             $this->addFlash('success', "Votre mot de passe a été mis à jour");
-            return $this->redirectToRoute('user_show', ['id' => $this->getUser()->getId(), Response::HTTP_SEE_OTHER]);
+            return $this->redirectToRoute('user_show', ['id' => $this->getUser()->getId()], Response::HTTP_SEE_OTHER);
+        } else if ($form->isSubmitted()) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
         }
         return $this->render('security/edit_password.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
-        ]);
+        ], $response ?? null);
     }
 
     #[IsGranted('USER_DELETE', 'user')]

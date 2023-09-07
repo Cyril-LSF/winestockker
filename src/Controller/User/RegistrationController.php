@@ -66,11 +66,13 @@ class RegistrationController extends AbstractController
                 $authenticator,
                 $request
             );
+        } else if ($form->isSubmitted()) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
         }
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
-        ]);
+        ], $response ?? null);
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]
