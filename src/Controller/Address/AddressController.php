@@ -63,12 +63,14 @@ class AddressController extends AbstractController
 
             $this->addFlash('success', "L'adresse a été modifiée !");
             return $this->redirectToRoute('user_show', ['id' => $address->getauthor()->getId()], Response::HTTP_SEE_OTHER);
+        } else if ($form->isSubmitted()) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
         }
 
         return $this->renderForm('address/edit.html.twig', [
             'address' => $address,
             'form' => $form,
-        ]);
+        ], $response ?? null);
     }
 
     #[IsGranted('ADDRESS_DELETE', 'address')]
