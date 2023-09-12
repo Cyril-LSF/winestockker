@@ -118,12 +118,14 @@ class BottleController extends AbstractController
 
             $this->addFlash('success', "La bouteille a été créée !");
             return $this->redirectToRoute('bottle_index', [], Response::HTTP_SEE_OTHER);
+        } else if ($form->isSubmitted()) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
         }
 
         return $this->renderForm('bottle/new.html.twig', [
             'bottle' => $bottle,
             'form' => $form,
-        ]);
+        ], $response ?? null);
     }
 
     #[IsGranted('BOTTLE_EDIT', 'bottle')]
@@ -134,20 +136,28 @@ class BottleController extends AbstractController
         $form = $this->createForm(BottleType::class, $bottle, [
             'user' => $this->getUser(),
         ]);
-        $form->handleRequest($request);
+        
+        try {
+            $form->handleRequest($request);
+        } catch (\Exception $e) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
+            $this->addFlash('danger', "Veuillez remplir tous les champs obligatoires");
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->bottleToCategory->bottleToCategory($bottle, $form->get('categories')->getData());
 
             $this->addFlash('success', "La bouteille a été modifiée !");
             return $this->redirectToRoute($admin ? 'bottle_index_admin' : 'bottle_index', [], Response::HTTP_SEE_OTHER);
+        } else if ($form->isSubmitted()) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
         }
 
         return $this->renderForm('bottle/edit.html.twig', [
             'bottle' => $bottle,
             'form' => $form,
             'update' => true,
-        ]);
+        ], $response ?? null);
     }
 
     #[IsGranted('BOTTLE_DELETE', 'bottle')]

@@ -139,7 +139,13 @@ class CategoryController extends AbstractController
     {
         $admin = $request->get('admin');
         $form = $this->createForm(CategoryType::class, $category);
-        $form->handleRequest($request);
+        
+        try {
+            $form->handleRequest($request);
+        } catch (\Exception $e) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
+            $this->addFlash('danger', "Veuillez remplir tous les champs obligatoires");
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->categoryRepository->save($category, true);

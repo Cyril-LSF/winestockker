@@ -22,6 +22,8 @@
             <directory>tests/Entity</directory>
             <file>tests/Controller/UserControllerTest.php</file>
             <file>tests/Controller/AddressControllerTest.php</file>
+            <file>tests/Controller/BottleControllerTest.php</file>
+            <file>tests/Controller/CellarControllerTest.php</file>
         </testsuite>
     </testsuites>
 

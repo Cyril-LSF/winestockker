@@ -16,6 +16,7 @@ class UserControllerTest extends WebTestCase
     private $client;
     private UserRepository $userRepository;
     private ParameterBagInterface $params;
+    private string $base_url;
 
     protected function setUp(): void
     {
@@ -24,6 +25,7 @@ class UserControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->params = $this->client->getContainer()->get(ParameterBagInterface::class);
         $this->userRepository = $this->client->getContainer()->get(UserRepository::class);
+        $this->base_url = $this->params->get('app.base_url');
     }
 
     private function _getUser(): ?User
@@ -33,7 +35,7 @@ class UserControllerTest extends WebTestCase
 
     public function testCreateUser(): void
     {
-        $uri = $this->params->get('app.base_url') . '/register';
+        $uri = $this->base_url . '/register';
 
         $crawler = $this->client->request('GET', $uri);
 
@@ -56,7 +58,7 @@ class UserControllerTest extends WebTestCase
 
     public function testCreateUserFailed(): void
     {
-        $uri = $this->params->get('app.base_url') . '/register';
+        $uri = $this->base_url . '/register';
         $crawler = $this->client->request('GET', $uri);
 
         $date = new DateTime();
@@ -90,7 +92,7 @@ class UserControllerTest extends WebTestCase
         $this->assertInstanceOf(User::class, $user);
 
         $this->client->loginUser($user);
-        $uri = $this->params->get('app.base_url') . '/user/' . $user->getId();
+        $uri = $this->base_url . '/user/' . $user->getId();
 
         $this->client->request('GET', $uri);
 
@@ -102,7 +104,7 @@ class UserControllerTest extends WebTestCase
     {
         $user = $this->_getUser();
 
-        $uri = $this->params->get('app.base_url') . '/user/' . $user->getId();
+        $uri = $this->base_url . '/user/' . $user->getId();
 
         $this->client->request('GET', $uri);
 
@@ -114,7 +116,7 @@ class UserControllerTest extends WebTestCase
     {
         $user = $this->_getUser();
         $this->client->loginUser($user);
-        $uri = $this->params->get('app.base_url') . '/user/' . $user->getId() . '/edit';
+        $uri = $this->base_url . '/user/' . $user->getId() . '/edit';
 
         $crawler = $this->client->request('GET', $uri);
 
@@ -133,7 +135,7 @@ class UserControllerTest extends WebTestCase
     public function testEditUserFailed(): void
     {
         $user = $this->_getUser();
-        $uri = $this->params->get('app.base_url') . '/user/' . $user->getId() . '/edit';
+        $uri = $this->base_url . '/user/' . $user->getId() . '/edit';
 
         $this->client->request('GET', $uri);
 
@@ -161,7 +163,7 @@ class UserControllerTest extends WebTestCase
         $user = $this->_getUser();
         $this->client->loginUser($user);
 
-        $uri = $this->params->get('app.base_url') . '/user/' . $user->getId() . '/edit_password';
+        $uri = $this->base_url . '/user/' . $user->getId() . '/edit_password';
         $crawler = $this->client->request('GET', $uri);
 
         $form = $crawler->selectButton('edit-password')->form();
@@ -182,7 +184,7 @@ class UserControllerTest extends WebTestCase
     public function testEditPasswordFailed(): void
     {
         $user = $this->_getUser();
-        $uri = $this->params->get('app.base_url') . '/user/' . $user->getId() . '/edit_password';
+        $uri = $this->base_url . '/user/' . $user->getId() . '/edit_password';
 
         $this->client->request('GET', $uri);
 
@@ -211,7 +213,7 @@ class UserControllerTest extends WebTestCase
         $addressRepository = $this->client->getContainer()->get(AddressRepository::class);
 
         $user = $this->_getUser();
-        $uri = $this->params->get('app.base_url') . '/user/' . $user->getId();
+        $uri = $this->base_url . '/user/' . $user->getId();
 
         $this->client->loginUser($user);
         $crawler = $this->client->request('GET', $uri);
@@ -239,7 +241,7 @@ class UserControllerTest extends WebTestCase
     public function testCreateUserAddressFailed(): void
     {
         $user = $this->_getUser();
-        $uri = $this->params->get('app.base_url') . '/user/' . $user->getId();
+        $uri = $this->base_url . '/user/' . $user->getId();
 
         $this->client->loginUser($user);
         $crawler = $this->client->request('GET', $uri);
@@ -285,7 +287,7 @@ class UserControllerTest extends WebTestCase
         $user = $this->_getUser();
         $this->client->loginUser($user);
 
-        $uri = $this->params->get('app.base_url') . '/user/' . $user->getId();
+        $uri = $this->base_url . '/user/' . $user->getId();
         $crawler = $this->client->request('GET', $uri);
 
         $form = $crawler->selectButton('delete-user')->form();

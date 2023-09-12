@@ -50,7 +50,13 @@ class SubscriptionController extends AbstractController
     public function edit(Request $request, Subscription $subscription, SubscriptionRepository $subscriptionRepository): Response
     {
         $form = $this->createForm(SubscriptionType::class, $subscription);
-        $form->handleRequest($request);
+        
+        try {
+            $form->handleRequest($request);
+        } catch (\Exception $e) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
+            $this->addFlash('danger', "Veuillez remplir tous les champs obligatoires");
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $subscriptionRepository->save($subscription, true);

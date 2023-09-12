@@ -56,7 +56,13 @@ class AddressController extends AbstractController
     public function edit(Request $request, Address $address): Response
     {
         $form = $this->createForm(AddressType::class, $address);
-        $form->handleRequest($request);
+        
+        try {
+            $form->handleRequest($request);
+        } catch (\Exception $e) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
+            $this->addFlash('danger', "Veuillez remplir tous les champs obligatoires");
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->addressRepository->save($address, true);

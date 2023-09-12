@@ -85,12 +85,14 @@ class CellarController extends AbstractController
 
             $this->addFlash('success', "La cave a été créée !");
             return $this->redirectToRoute('cellar_show', ['id' => $cellar->getId()], Response::HTTP_SEE_OTHER);
+        } else if ($form->isSubmitted()) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
         }
 
         return $this->renderForm('cellar/new.html.twig', [
             'cellar' => $cellar,
             'form' => $form,
-        ]);
+        ], $response ?? null);
     }
 
     #[IsGranted('CELLAR_VIEW', 'cellar')]
@@ -148,20 +150,28 @@ class CellarController extends AbstractController
     {
         $admin = $request->get('admin');
         $form = $this->createForm(CellarType::class, $cellar);
-        $form->handleRequest($request);
+
+        try {
+            $form->handleRequest($request);
+        } catch (\Exception $e) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
+            $this->addFlash('danger', "Veuillez remplir tous les champs obligatoires");
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->cellarRepository->save($cellar, true);
 
             $this->addFlash('success', "La cave a été modifiée !");
             return $this->redirectToRoute($admin ? 'cellar_index_admin' : 'cellar_show', ['id' => $cellar->getId()], Response::HTTP_SEE_OTHER);
+        } else if ($form->isSubmitted()) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
         }
 
         return $this->renderForm('cellar/edit.html.twig', [
             'cellar' => $cellar,
             'form' => $form,
             'update' => true,
-        ]);
+        ], $response ?? null);
     }
 
     #[IsGranted('CELLAR_DELETE', 'cellar')]

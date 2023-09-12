@@ -5,5 +5,5 @@
 {% endif %}
 <form method="post" action="{{ path('cellar_delete', {'id': cellar.id, 'admin': isAdmin}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette cave ?');">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ cellar.id) }}">
-    <button class="btn btn-link"><i class="fa-regular fa-trash-can fa-2x text-danger"></i></button>
+    <button class="btn btn-link" name="delete-cellar"><i class="fa-regular fa-trash-can fa-2x text-danger"></i></button>
 </form>

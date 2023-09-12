@@ -100,7 +100,13 @@ class UserController extends AbstractController
     public function edit(Request $request, User $user, UploadedFile $uploadedFile): Response
     {
         $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
+        
+        try {
+            $form->handleRequest($request);
+        } catch (\Exception $e) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
+            $this->addFlash('danger', "Veuillez remplir tous les champs obligatoires");
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setScreenname();
