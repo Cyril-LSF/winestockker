@@ -119,7 +119,7 @@ class CategoryController extends AbstractController
             $this->bottleToCategory->categoryToBottle($category, $form->get('bottles')->getData());
             
             $this->addFlash('success', "Les bouteilles de la catégorie " . $category->getName() . " ont été modifiées !");
-            return $this->redirectToRoute('category_show', ['id' => $category->getId(), RESPONSE::HTTP_SEE_OTHER]);
+            return $this->redirectToRoute('category_show', ['id' => $category->getId()], RESPONSE::HTTP_SEE_OTHER);
         }
 
         // Filter search

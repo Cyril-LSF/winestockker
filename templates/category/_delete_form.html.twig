@@ -5,5 +5,5 @@
 {% endif %}
 <form method="post" action="{{ path('category_delete', {'id': category.id, 'admin': isAdmin}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
-    <button class="btn btn-link"><i class="fa-regular fa-trash-can fa-2x text-danger"></i></button>
+    <button class="btn btn-link" name="delete-category"><i class="fa-regular fa-trash-can fa-2x text-danger"></i></button>
 </form>

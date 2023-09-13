@@ -3,8 +3,9 @@
 namespace App\Tests\Controller;
 
 use App\Entity\User;
-use App\Repository\CategoryRepository;
 use App\Repository\UserRepository;
+use App\Repository\BottleRepository;
+use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -174,5 +175,73 @@ class CategoryControllerTest extends WebTestCase
 
         $this->assertResponseStatusCodeSame(302);
         $this->assertResponseRedirects('/login');
+    }
+
+    public function testAddBottle(): void
+    {
+        $user = $this->_getUser();
+        $category = $this->categoryRepository->findOneBy(['name' => 'test_edit']);
+        $uri = $this->base_url . '/category/' . $category->getId();
+        $bottleRepository = $this->client->getContainer()->get(BottleRepository::class);
+        $bottle = $bottleRepository->findOneBy(['name' => 'test_create_empty']);
+
+        $this->assertEmpty($category->getBottles());
+
+        $this->client->loginUser($user);
+        $crawler = $this->client->request('GET', $uri);
+
+        $form = $crawler->selectButton('add-bottle')->form();
+        $form['add_bottle[bottles]'] = [$bottle->getId()];
+
+        $this->client->submit($form);
+        $category = $this->categoryRepository->findOneBy(['name' => 'test_edit']);
+
+        $this->assertResponseStatusCodeSame(303);
+        $this->assertResponseRedirects('/category/' . $category->getId());
+        $this->assertNotEmpty($category->getBottles());
+    }
+
+    public function testRemoveBottle(): void
+    {
+        $user = $this->_getUser();
+        $category = $this->categoryRepository->findOneBy(['name' => 'test_edit']);
+        $uri = $this->base_url . '/category/' . $category->getId();
+
+        $this->assertNotEmpty($category->getBottles());
+
+        $this->client->loginUser($user);
+        $crawler = $this->client->request('GET', $uri);
+
+        $form = $crawler->selectButton('add-bottle')->form();
+        $formData = $form->getPhpValues();
+        foreach ($formData['add_bottle']['bottles'] as $key => $value) {
+            $formData['add_bottle']['bottles'][$key] = false;
+        }
+
+        $this->client->submit($form, $formData);
+        $category = $this->categoryRepository->findOneBy(['name' => 'test_edit']);
+
+        $this->assertResponseStatusCodeSame(303);
+        $this->assertResponseRedirects('/category/' . $category->getId());
+        $this->assertEmpty($category->getBottles());
+    }
+
+    public function testDeleteCategory(): void
+    {
+        $user = $this->_getUser();
+        $category = $this->categoryRepository->findOneBy(['name' => 'test_edit']);
+        $uri = $this->base_url . '/category/' . $category->getId();
+
+        $this->client->loginUser($user);
+        $crawler = $this->client->request('GET', $uri);
+
+        $form = $crawler->selectButton('delete-category')->form();
+
+        $this->client->submit($form);
+        $category = $this->categoryRepository->findOneBy(['name' => 'test_edit']);
+
+        $this->assertResponseStatusCodeSame(303);
+        $this->assertResponseRedirects('/category/');
+        $this->assertEmpty($category);
     }
 }
