@@ -80,12 +80,14 @@ class CategoryController extends AbstractController
 
             $this->addFlash('success', "La catégorie a été créée !");
             return $this->redirectToRoute('category_show', ['id' => $category->getId()], Response::HTTP_SEE_OTHER);
+        } else if ($form->isSubmitted()) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
         }
 
         return $this->renderForm('category/new.html.twig', [
             'category' => $category,
             'form' => $form,
-        ]);
+        ], $response ?? null);
     }
 
     #[IsGranted('CATEGORY_VIEW', 'category')]
@@ -152,13 +154,15 @@ class CategoryController extends AbstractController
 
             $this->addFlash('success', "La catégorie a été modifiée !");
             return $this->redirectToRoute($admin ? 'category_index_admin' : 'category_show', ['id' => $category->getId()], Response::HTTP_SEE_OTHER);
+        } else if ($form->isSubmitted()) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
         }
 
         return $this->renderForm('category/edit.html.twig', [
             'category' => $category,
             'form' => $form,
             'update' => true,
-        ]);
+        ], $response ?? null);
     }
 
     #[IsGranted('CATEGORY_DELETE', 'category')]

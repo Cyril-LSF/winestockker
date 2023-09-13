@@ -24,6 +24,7 @@
             <file>tests/Controller/AddressControllerTest.php</file>
             <file>tests/Controller/BottleControllerTest.php</file>
             <file>tests/Controller/CellarControllerTest.php</file>
+            <file>tests/Controller/CategoryControllerTest.php</file>
         </testsuite>
     </testsuites>
 
