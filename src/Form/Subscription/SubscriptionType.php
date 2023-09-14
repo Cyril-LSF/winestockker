@@ -4,12 +4,13 @@ namespace App\Form\Subscription;
 
 use App\Entity\Subscription;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 class SubscriptionType extends AbstractType
 {
@@ -97,7 +98,7 @@ class SubscriptionType extends AbstractType
                     ]),
                 ]
             ])
-            ->add('duration', TextType::class, [
+            ->add('duration', NumberType::class, [
                 'label' => "Durée en jour",
                 'label_attr' => [
                     'class' => "form-label",
@@ -107,6 +108,7 @@ class SubscriptionType extends AbstractType
                     'class' => "form-control",
                     'placeholder' => "Durée. Ex: 7",
                 ],
+                'invalid_message' => "La durée ne doit contenir que des chiffres",
                 'constraints' => [
                     new NotBlank([
                         'message' => "Veuillez saisir une durée",

@@ -37,12 +37,14 @@ class SubscriptionController extends AbstractController
             $this->addFlash('success', "L'abonnement à été créé !");
 
             return $this->redirectToRoute('subscription_index', [], Response::HTTP_SEE_OTHER);
+        } else if ($form->isSubmitted()) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
         }
 
         return $this->renderForm('subscription/new.html.twig', [
             'subscription' => $subscription,
             'form' => $form,
-        ]);
+        ], $response ?? null);
     }
 
     #[IsGranted('ROLE_ADMIN')]
@@ -63,13 +65,15 @@ class SubscriptionController extends AbstractController
             $this->addFlash('success', "L'abonnement a été modifié !");
 
             return $this->redirectToRoute('subscription_index', [], Response::HTTP_SEE_OTHER);
+        }else if ($form->isSubmitted()) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
         }
 
         return $this->renderForm('subscription/edit.html.twig', [
             'subscription' => $subscription,
             'form' => $form,
             'update' => true,
-        ]);
+        ], $response ?? null);
     }
 
     #[IsGranted('ROLE_ADMIN')]
