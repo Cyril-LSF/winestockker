@@ -15,6 +15,7 @@ class CellarControllerTest extends WebTestCase
     private CellarRepository $cellarRepository;
     private ParameterBagInterface $params;
     private string $base_url;
+    private UserRepository $userRepository;
 
     protected function setUp(): void
     {
@@ -24,12 +25,12 @@ class CellarControllerTest extends WebTestCase
         $this->cellarRepository = $this->client->getContainer()->get(CellarRepository::class);
         $this->params = $this->client->getContainer()->get(ParameterBagInterface::class);
         $this->base_url = $this->params->get('app.base_url');
+        $this->userRepository = $this->client->getContainer()->get(UserRepository::class);
     }
 
     private function _getUser(): User
     {
-        $userRepository = $this->client->getContainer()->get(UserRepository::class);
-        return $userRepository->findOneBy(['email' => 'john@doe.fr']);
+        return $this->userRepository->findOneBy(['email' => 'john@doe.fr']);
     }
 
     public function testCreateCellar(): void

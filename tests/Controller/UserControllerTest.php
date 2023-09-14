@@ -126,7 +126,7 @@ class UserControllerTest extends WebTestCase
         $form['registration_form[firstname]'] = 'john-edit';
 
         $this->client->submit($form);
-        $user = $this->userRepository->findOneBy(['id' => $user->getId()]);
+        $user = $this->_getUser();
 
         $this->assertResponseStatusCodeSame(303);
         $this->assertTrue($user->getFirstname() === 'john-edit');
@@ -176,7 +176,7 @@ class UserControllerTest extends WebTestCase
         $this->assertResponseStatusCodeSame(303);
         $this->assertResponseRedirects('/user/' . $user->getId());
 
-        $user = $this->userRepository->findOneBy(['id' => $user->getId()]);
+        $user = $this->_getUser();
 
         $this->assertTrue($encoder->isPasswordValid($user, 'Azerty2!'));
     }
@@ -297,7 +297,7 @@ class UserControllerTest extends WebTestCase
         $this->assertResponseStatusCodeSame(303);
         $this->assertResponseRedirects('/login');
 
-        $user = $this->userRepository->findOneBy(['id' => $user->getId()]);
+        $user = $this->_getUser();
 
         $this->assertNull($user);
     }

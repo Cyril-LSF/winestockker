@@ -17,6 +17,8 @@ class AddressControllerTest extends WebTestCase
     private AddressRepository $addressRepository;
     private ParameterBagInterface $params;
     private string $base_url;
+    private UserRepository $userRepository;
+    private UserPasswordHasherInterface $encoder;
 
     protected function setUp(): void
     {
@@ -26,27 +28,31 @@ class AddressControllerTest extends WebTestCase
         $this->params = $this->client->getContainer()->get(ParameterBagInterface::class);
         $this->addressRepository = $this->client->getContainer()->get(AddressRepository::class);
         $this->base_url = $this->params->get('app.base_url');
+        $this->userRepository = $this->client->getContainer()->get(UserRepository::class);
+        $this->encoder = $this->client->getContainer()->get(UserPasswordHasherInterface::class);
     }
 
     private function _getUser(): User
-    {
-        $userRepository = $this->client->getContainer()->get(UserRepository::class);
-        $encoder = $this->client->getContainer()->get(UserPasswordHasherInterface::class);
-        
-        $user = $userRepository->findOneBy(['email' => 'john@doe.fr']);
+    {       
+        $user = $this->userRepository->findOneBy(['email' => 'john@doe.fr']);
         if (empty($user)) {
             $user = new User();
             $user->setFirstname('john');
             $user->setLastname('doe');
             $user->setEmail('john@doe.fr');
             $user->setBirthday(new DateTime('1994-11-30'));
-            $user->setPassword($encoder->hashPassword($user, 'Azerty1!'));
+            $user->setPassword($this->encoder->hashPassword($user, 'Azerty1!'));
             $user->setPremium(1);
             $user->setPremiumTo(new DateTime('2050-01-01'));
 
-            $userRepository->save($user, true);
+            $this->userRepository->save($user, true);
         }
         return $user;
+    }
+
+    private function _getAddress(): ?Address
+    {
+        return $this->addressRepository->findOneBy(['name' => 'test_edit_success']);
     }
 
     public function testAddressEdit(): void
@@ -73,7 +79,7 @@ class AddressControllerTest extends WebTestCase
 
         $this->client->submit($form);
 
-        $address = $this->addressRepository->findOneBy(['name' => 'test_edit_success']);
+        $address = $this->_getAddress();
 
         $this->assertResponseStatusCodeSame(303);
         $this->assertTrue($address->getName() === 'test_edit_success');
@@ -82,7 +88,7 @@ class AddressControllerTest extends WebTestCase
     public function testAddressEditFailed(): void
     {
         $user = $this->_getUser();
-        $address = $this->addressRepository->findOneBy(['name' => 'test_edit_success']);
+        $address = $this->_getAddress();
 
         $this->client->loginUser($user);
         $uri = $this->base_url . '/address/' . $address->getId() . '/edit';
@@ -103,13 +109,13 @@ class AddressControllerTest extends WebTestCase
     public function testAddressSelected(): void
     {
         $user = $this->_getUser();
-        $address = $this->addressRepository->findOneBy(['name' => 'test_edit_success']);
+        $address = $this->_getAddress();
 
         $this->client->loginUser($user);
         $uri = $this->base_url . '/address/' . $address->getId() . '/selected';
         $this->client->request('POST', $uri);
 
-        $address = $this->addressRepository->findOneBy(['name' => 'test_edit_success']);
+        $address = $this->_getAddress();
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertTrue($address->isSelected());
@@ -117,7 +123,7 @@ class AddressControllerTest extends WebTestCase
 
     public function testAddressSelectedFailed(): void
     {
-        $address = $this->addressRepository->findOneBy(['name' => 'test_edit_success']);
+        $address = $this->_getAddress();
 
         $uri = $this->base_url . '/address/' . $address->getId() . '/selected';
         $this->client->request('POST', $uri);
@@ -129,13 +135,13 @@ class AddressControllerTest extends WebTestCase
     public function testAddressUnselected(): void
     {
         $user = $this->_getUser();
-        $address = $this->addressRepository->findOneBy(['name' => 'test_edit_success']);
+        $address = $this->_getAddress();
 
         $this->client->loginUser($user);
         $uri = $this->base_url . '/address/' . $address->getId() . '/selected';
         $this->client->request('POST', $uri);
 
-        $address = $this->addressRepository->findOneBy(['name' => 'test_edit_success']);
+        $address = $this->_getAddress();
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertFalse($address->isSelected());
@@ -144,7 +150,7 @@ class AddressControllerTest extends WebTestCase
     public function testAddressDelete(): void
     {
         $user = $this->_getUser();
-        $address = $this->addressRepository->findOneBy(['name' => 'test_edit_success']);
+        $address = $this->_getAddress();
 
         $this->client->loginUser($user);
         $uri = $this->base_url . '/user/' . $user->getId();
@@ -153,7 +159,7 @@ class AddressControllerTest extends WebTestCase
         $form = $crawler->selectButton('delete-address')->form();
         $this->client->submit($form);
 
-        $address = $this->addressRepository->findOneBy(['name' => 'test_edit_success']);
+        $address = $this->_getAddress();
 
         $this->assertResponseStatusCodeSame(303);
         $this->assertResponseRedirects('/user/' . $user->getId());
