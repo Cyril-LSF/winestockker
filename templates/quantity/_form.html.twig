@@ -1,54 +1,4 @@
 
-{# <div class="min-vh-100" style="background-color: #f2e8cf;">
-  <div class="container h-100 py-5">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col-lg-12 col-xl-11">
-        <div class="card text-black" style="border-radius: 25px;">
-          <div class="card-body p-md-5">
-            <div class="row justify-content-center">
-              <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
-                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Modifier une quantité</p>
-                <div class="d-flex align-items-center mx-1 mx-md-4 mb-4">
-                    <p class="m-0 h4 text-muted"><i class="fa-solid fa-boxes-stacked fa-lg me-3"></i>Cave :</p>
-                    <p class="ms-3 h4 m-0">{{ cellar.name | upper }}</p>
-                </div>
-                <div class="d-flex align-items-center mx-1 mx-md-4 mb-4">
-                    <p class="m-0 h4 text-muted"><i class="fa-solid fa-wine-bottle fa-lg me-3"></i></i>Bouteille :</p>
-                    <p class="ms-3 h4 m-0">{{ bottle.name | upper }}</p>
-                </div>
-                {{ form_start(form, {'attr': {'class': 'mx-1 mx-md-4'}}) }}
-                <!-- Quantity -->
-                  <div class="d-flex flex-row align-items-center">
-                    <i class="fa-solid fa-arrow-up-1-9 fa-lg me-3"></i>
-                    <div class="form-outline flex-fill mb-0">
-                      {{ form_widget(form.quantity) }}
-                    </div>
-                  </div>
-                    {% for errorItem in form.quantity.vars.errors %}
-                        <div class="text-danger">{{ errorItem.message }}</div>
-                    {% endfor %}
-                    <p class="quantity-error mb-4"></p>
-                <!-- End quantity -->
-                  <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-purple btn-lg" value="submit">Modifier</button>
-                  </div>
-
-                {{ form_end(form) }}
-
-              </div>
-              <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
-
-                <img src={{ asset('images/quantity.png') }}
-                  class="img-fluid" alt="Suite de chiffres">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> #}
-
 <section>
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -84,7 +34,7 @@
                                     <!-- End quantity -->
                                     <!-- Submit button -->
                                     <div class="w-100 d-flex justify-content-center">
-                                        <button type="submit" value="submit" class="btn btn-purple">
+                                        <button type="submit" value="submit" class="btn btn-purple" name="edit-quantity">
                                             Valider
                                         </button>
                                     </div>

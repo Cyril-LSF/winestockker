@@ -50,6 +50,8 @@ class QuantityController extends AbstractController
 
             $this->addFlash('success', "La quantité a été modifiée !");
             return $this->redirectToRoute('cellar_show', ['id' => $quantity->getCellar()->getId()], RESPONSE::HTTP_SEE_OTHER);
+        } else if ($form->isSubmitted()) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
         }
 
         return $this->render('quantity/editBig.html.twig', [
@@ -57,6 +59,6 @@ class QuantityController extends AbstractController
             'quantity' => $quantity,
             'cellar' => $quantity->getCellar(),
             'bottle' => $quantity->getBottle(),
-        ]);
+        ], $response ?? null);
     }
 }
