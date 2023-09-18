@@ -22,28 +22,28 @@ class TransactionFixtures extends Fixture implements OrderedFixtureInterface
             [
                 'user' => "john@doe.fr",
                 'subscription' => "abonnement 1",
-                'paymentId' => "1",
+                'paymentId' => "pi_1",
                 'duration' => "7",
                 'amount' => "2",
             ],
             [
                 'user' => "jane@doe.fr",
                 'subscription' => "abonnement 2",
-                'paymentId' => "2",
+                'paymentId' => "pi_2",
                 'duration' => "30",
                 'amount' => "10",
             ],
             [
                 'user' => "bob@doe.fr",
                 'subscription' => "abonnement 3",
-                'paymentId' => "3",
+                'paymentId' => "pi_3",
                 'duration' => "365",
                 'amount' => "110",
             ],
             [
                 'user' => "patrick@doe.fr",
                 'subscription' => "abonnement 4",
-                'paymentId' => "4",
+                'paymentId' => "pi_4",
                 'duration' => "1095",
                 'amount' => "300",
             ]
@@ -56,7 +56,7 @@ class TransactionFixtures extends Fixture implements OrderedFixtureInterface
             $transaction->setPaymentId($item['paymentId']);
             $transaction->setCreatedAt(new DateTime());
             $transaction->setAmount($item['amount']);
-            $transaction->setInvoice($this->params->get('app.invoice_root') . 'factureTest.pdf');
+            $transaction->setInvoice('factureTest.pdf');
 
             $manager->persist($transaction);
         }
