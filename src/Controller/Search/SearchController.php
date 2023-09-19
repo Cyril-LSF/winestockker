@@ -5,6 +5,7 @@ namespace App\Controller\Search;
 use App\Entity\Bottle;
 use App\Service\Search\Search;
 use App\Service\Search\WikiApi;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,6 +22,7 @@ class SearchController extends AbstractController
         $this->wikiApi = $wikiApi;
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/search', name: 'search_search', methods: ['POST'])]
     public function search(Request $request): Response
     {
@@ -33,6 +35,7 @@ class SearchController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/search/{id}/vine', name: 'search_vine', methods: ['GET'])]
     public function searchVine(Bottle $bottle): Response
     {

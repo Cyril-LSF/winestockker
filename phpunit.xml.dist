@@ -29,6 +29,7 @@
             <file>tests/Controller/SubscriptionControllerTest.php</file>
             <file>tests/Controller/PaymentControllerTest.php</file>
             <file>tests/Controller/TransactionControllerTest.php</file>
+            <file>tests/Controller/SearchControllerTest.php</file>
         </testsuite>
     </testsuites>
 
