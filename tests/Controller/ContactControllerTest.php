@@ -33,7 +33,7 @@ class ContactControllerTest extends WebTestCase
         $this->client->loginUser($this->user);
         $crawler = $this->client->request('GET', $uri);
 
-        $form = $crawler->selectButton('contact')->form();
+        $form = $crawler->selectButton('contact-send')->form();
         $form['contact[subject]'] = 'test_contact_subject';
         $form['contact[content]'] = 'test_contact_content';
 
@@ -55,7 +55,7 @@ class ContactControllerTest extends WebTestCase
         $this->client->loginUser($this->user);
         $crawler = $this->client->request('GET', $uri);
 
-        $form = $crawler->selectButton('contact')->form();
+        $form = $crawler->selectButton('contact-send')->form();
         $form['contact[subject]'] = '';
         $form['contact[content]'] = 'test_contact_content';
 
