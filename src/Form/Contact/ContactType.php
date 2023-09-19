@@ -16,7 +16,7 @@ class ContactType  extends AbstractType
     {
         $builder
             ->add('subject', TextType::class, [
-                'label' => "Objet",
+                'label' => "Objet *",
                 'label_attr' => [
                     'class' => "form-label",
                 ],
@@ -35,7 +35,7 @@ class ContactType  extends AbstractType
                 ],
             ])
             ->add('content', TextareaType::class, [
-                'label' => "Message",
+                'label' => "Message *",
                 'label_attr' => [
                     'class' => "form-label",
                 ],

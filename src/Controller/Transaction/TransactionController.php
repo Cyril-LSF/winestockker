@@ -47,7 +47,7 @@ class TransactionController extends AbstractController
     #[Route('/download/{id}', name: 'transaction_download')]
     public function download(Transaction $transaction): BinaryFileResponse
     {
-        $filePath = $this->params->get('app.invoice_root') . $transaction->getInvoice();
+        $filePath = $this->params->get('app.invoice_route') . $transaction->getInvoice();
         return $this->file( $filePath);
     }
 }

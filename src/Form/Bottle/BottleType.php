@@ -22,14 +22,14 @@ class BottleType extends AbstractType
         $user = $options['user'];
         $builder
             ->add('name', TextType::class, [
-                'label' => "Nom",
+                'label' => "Nom *",
                 'label_attr' => [
                     'class' => "form-label",
                 ],
                 'required' => true,
                 'attr' => [
                     'class' => "form-control",
-                    'placeholder' => "Nom",
+                    'placeholder' => "Nom *",
                 ],
                 'constraints' => [
                     new NotBlank([

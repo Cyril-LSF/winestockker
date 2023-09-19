@@ -25,7 +25,7 @@ class SubscriptionType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'class' => "form-control",
-                    'placeholder' => "Nom. Ex: 7 jours",
+                    'placeholder' => "Nom. Ex: 7 jours *",
                 ],
                 'constraints' => [
                     new NotBlank([
@@ -52,7 +52,7 @@ class SubscriptionType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'class' => "form-control",
-                    'placeholder' => "Prix. Ex: 2",
+                    'placeholder' => "Prix. Ex: 2 *",
                 ],
                 'constraints' => [
                     new NotBlank([
@@ -79,7 +79,7 @@ class SubscriptionType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'class' => "form-control",
-                    'placeholder' => "Prix en centime. Ex: pour 2€ -> 200",
+                    'placeholder' => "Prix en centime. Ex: pour 2€ -> 200 *",
                 ],
                 'constraints' => [
                     new NotBlank([
@@ -106,7 +106,7 @@ class SubscriptionType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'class' => "form-control",
-                    'placeholder' => "Durée. Ex: 7",
+                    'placeholder' => "Durée. Ex: 7 *",
                 ],
                 'invalid_message' => "La durée ne doit contenir que des chiffres",
                 'constraints' => [

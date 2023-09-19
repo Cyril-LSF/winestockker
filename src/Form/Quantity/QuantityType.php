@@ -17,7 +17,7 @@ class QuantityType extends AbstractType
     {
         $builder
             ->add('quantity', TextType::class, [
-                'label' => "Quantité",
+                'label' => "Quantité *",
                 'label_attr' => [
                     'class' => "form-label",
                 ],

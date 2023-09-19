@@ -23,7 +23,7 @@ window.addEventListener('load', function(e) {
     
             if(!inputs[i].value.trim()) {
                 e.preventDefault();
-                error = 'veuillez remplir tous les champs';
+                error = 'veuillez saisir une quantité';
                 alert(error);
                 break;
             }

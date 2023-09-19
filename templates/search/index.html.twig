@@ -10,7 +10,7 @@
         </div>
         {% if results['bottles'] is not empty %}
             <div class="row">
-                <h4 class="text-start">Mes bouteilles :</h4>
+                <h4 class="text-start purple">Mes bouteilles :</h4>
                 {% for bottle in results['bottles'] %}
                     {% include 'components/bottle/bottle_search.html.twig' %}
                 {% endfor %}
@@ -18,7 +18,7 @@
         {% endif %}
         {% if results['cellars'] is not empty %}
             <div class="row">
-                <h4 class="text-start">Mes caves :</h4>
+                <h4 class="text-start purple">Mes caves :</h4>
                 {% for cellar in results['cellars'] %}
                     {% include 'components/card/card_index.html.twig' with {'entity': cellar, 'type': 'cellar'} %}
                 {% endfor %}
@@ -26,7 +26,7 @@
         {% endif %}
         {% if results['categories'] is not empty %}
             <div class="row">
-                <h4 class="text-start">Mes catégories :</h4>
+                <h4 class="text-start purple">Mes catégories :</h4>
                 {% for category in results['categories'] %}
                     {% include 'components/card/card_index.html.twig' with {'entity': category, 'type': 'category'} %}
                 {% endfor %}

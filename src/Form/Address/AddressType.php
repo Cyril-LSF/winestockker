@@ -18,7 +18,7 @@ class AddressType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => "Nom de l'adresse",
+                'label' => "Nom de l'adresse *",
                 'label_attr' => [
                     'class' => "form-label text-muted",
                 ],
@@ -40,7 +40,7 @@ class AddressType extends AbstractType
                 ]
             ])
             ->add('streetNumber', TextType::class, [
-                'label' => "N°",
+                'label' => "N° *",
                 'label_attr' => [
                     'class' => "form-label text-muted",
                 ],
@@ -85,7 +85,7 @@ class AddressType extends AbstractType
                 ]
             ])
             ->add('streetType', ChoiceType::class, [
-                'label' => "type",
+                'label' => "type *",
                 'label_attr' => [
                     'class' => "form-label text-muted",
                 ],
@@ -107,7 +107,7 @@ class AddressType extends AbstractType
                 ],
             ])
             ->add('streetName', TextType::class, [
-                'label' => "Nom de rue",
+                'label' => "Nom de rue *",
                 'label_attr' => [
                     'class' => "form-label text-muted",
                 ],
@@ -146,7 +146,7 @@ class AddressType extends AbstractType
                 ],
             ])
             ->add('postalcode', TextType::class, [
-                'label' => "Code postal",
+                'label' => "Code postal *",
                 'label_attr' => [
                     'class' => "form-label text-muted",
                 ],
@@ -173,7 +173,7 @@ class AddressType extends AbstractType
                 ]
             ])
             ->add('city', TextType::class, [
-                'label' => "Ville",
+                'label' => "Ville *",
                 'label_attr' => [
                     'class' => "form-label text-muted",
                 ],

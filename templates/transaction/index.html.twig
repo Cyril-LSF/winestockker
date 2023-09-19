@@ -36,6 +36,7 @@
                                 <div id="{{ transaction.paymentId }}" class="accordion-collapse collapse" aria-labelledby="{{ 'heading_' ~ transaction.paymentId }}" data-bs-parent="#invoice-list">
                                     <div class="accordion-body">
                                         <object data={{ asset('invoices/' ~ transaction.invoice) }} type="application/pdf" width="100%" height="700">
+                                        {# <object data={{ var_asset('invoices/' ~ transaction.invoice) }} type="application/pdf" width="100%" height="700"> #}
                                             <p>La navigation mobile ne permet pas le lecture de PDFs</p>
                                             <a href={{ path('transaction_download', {'id': transaction.id}) }} class="link-purple">Télécharger la facture</a>
                                         </object>

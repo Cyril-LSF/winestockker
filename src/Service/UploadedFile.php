@@ -25,7 +25,7 @@ class UploadedFile {
 
         try {
             $file->move(
-                $this->params->get('app.uploaded_root'),
+                $this->params->get('app.uploaded_route'),
                 $newFilename
             );
         } catch (FileException $e) {

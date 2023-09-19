@@ -9,16 +9,23 @@ use App\Entity\User;
 use Twig\Environment;
 use App\Entity\Transaction;
 use App\Service\Abstract\AbstractService;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-class Invoice extends AbstractService {
+class Invoice {
 
     private $knpSnappyPdf;
     private Environment $twig;
+    private ParameterBagInterface $params;
 
-    public function __construct(\Knp\Snappy\Pdf $knpSnappyPdf, Environment $twig)
+    public function __construct(
+        \Knp\Snappy\Pdf $knpSnappyPdf,
+        Environment $twig,
+        ParameterBagInterface $params
+    )
     {
         $this->knpSnappyPdf = $knpSnappyPdf;
         $this->twig = $twig;
+        $this->params = $params;
     }
 
     public function generate(User $user, Address $userAddress, Transaction $transaction, Subscription $subscription): string
@@ -38,7 +45,7 @@ class Invoice extends AbstractService {
                     'subscription' => $subscription
                 ]
             ),
-            "./invoices/$invoiceName"
+            $this->params->get('app.invoice_route') . $invoiceName
         );
 
         return $invoiceName;

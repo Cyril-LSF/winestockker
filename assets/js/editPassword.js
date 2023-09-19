@@ -26,7 +26,7 @@ window.addEventListener('load', function(e) {
         
                 if(!inputs[i].value.trim() && inputs[i] !== inputs['registration_form[picture]']) {
                     e.preventDefault();
-                    error = 'veuillez remplir tous les champs';
+                    error = 'veuillez remplir tous les champs obligatoires';
                     alert(error);
                     break;
                 }

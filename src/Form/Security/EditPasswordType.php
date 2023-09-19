@@ -22,13 +22,14 @@ class EditPasswordType extends AbstractType
         $builder
             ->add('oldPassword', PasswordType::class, [
                 'mapped' => false,
-                'label' => "Ancien mot de passe",
+                'required' => true,
+                'label' => "Ancien mot de passe *",
                 'label_attr' => [
                     'class' => "form-label",
                 ],
                 'attr' => [
                     'class' => "form-control",
-                    'placeholder' => "Mot de passe",
+                    'placeholder' => "Mot de passe *",
                 ],
                 'constraints' => [
                     new NotBlank([
@@ -56,13 +57,13 @@ class EditPasswordType extends AbstractType
                 'required' => true,
                 'invalid_message' => "Les mots de passe ne sont pas identique",
                 'first_options' => [
-                    'label' => "Mot de passe",
+                    'label' => "Mot de passe *",
                     'label_attr' => [
                         'class' => "form-label",
                     ],
                     'attr' => [
                         'class' => "form-control",
-                        'placeholder' => "Mot de passe",
+                        'placeholder' => "Mot de passe *",
                     ],
                     'constraints' => [
                         new NotBlank([
@@ -76,13 +77,13 @@ class EditPasswordType extends AbstractType
                     ]
                 ],
                 'second_options' => [
-                    'label' => "Confirmation du mot de passe",
+                    'label' => "Confirmation du mot de passe *",
                     'label_attr' => [
                         'class' => "form-label",
                     ],
                     'attr' => [
                         'class' => "form-control",
-                        'placeholder' => "Confirmation du mot de passe",
+                        'placeholder' => "Confirmation du mot de passe *",
                     ],
                 ]
             ])

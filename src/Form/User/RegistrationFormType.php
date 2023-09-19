@@ -31,7 +31,7 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('firstname', TextType::class, [
-                'label' => "Votre prénom",
+                'label' => "Votre prénom *",
                 'attr' => [
                     'placeholder' => "Ex: John",
                     'class' => "form-control",
@@ -58,7 +58,7 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
             ->add('lastname', TextType::class, [
-                'label' => "Votre nom",
+                'label' => "Votre nom *",
                 'attr' => [
                     'placeholder' => "Ex: Doe",
                     'class' => "form-control",
@@ -85,7 +85,7 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
             ->add('email', EmailType::class, [
-                'label' => "Votre email",
+                'label' => "Votre email *",
                 'attr' => [
                     'placeholder' => "Ex: john@doe.fr",
                     'class' => "form-control",
@@ -111,7 +111,7 @@ class RegistrationFormType extends AbstractType
                 if (!$user || null === $user->getId()) {
                     $form
                     ->add('birthday', BirthdayType::class, [
-                        'label' => "Votre date de naissance",
+                        'label' => "Votre date de naissance *",
                         'attr' => [
                             'class' => "form-control",
                             'placeholder' => "Date de naissance",
@@ -143,7 +143,7 @@ class RegistrationFormType extends AbstractType
                         'required' => true,
                         'invalid_message' => "Les mots de passe ne sont pas identique",
                         'first_options' => [
-                            'label' => "Votre mot de passe",
+                            'label' => "Votre mot de passe *",
                             'label_attr' => [
                                 'class' => "form-label",
                             ],
@@ -163,7 +163,7 @@ class RegistrationFormType extends AbstractType
                             ]
                         ],
                         'second_options' => [
-                            'label' => "Confirmation du mot de passe",
+                            'label' => "Confirmation du mot de passe *",
                             'label_attr' => [
                                 'class' => "form-label",
                             ],
@@ -174,7 +174,7 @@ class RegistrationFormType extends AbstractType
                         ]
                     ])
                     ->add('agreeTerms', CheckboxType::class, [
-                        'label' => "J'accepte les conditions d'utilisation",
+                        'label' => "J'accepte les conditions d'utilisation *",
                         'label_attr' => [
                             'class' => "form-check-label",
                         ],

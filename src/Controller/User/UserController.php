@@ -125,7 +125,7 @@ class UserController extends AbstractController
             'user' => $user,
             'registrationForm' => $form->createView(),
             'update' => true,
-            'fileRoot' => $this->params->get('app.uploaded_root'),
+            'fileRoot' => $this->params->get('app.uploaded_route'),
         ], $response ?? null);
     }
 
