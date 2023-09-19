@@ -3,6 +3,7 @@
 namespace App\Controller\Contact;
 
 use App\Form\Contact\ContactType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Mime\Address;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,6 +23,8 @@ class ContactController extends AbstractController
         $this->params = $params;
         $this->mailer = $mailer;
     }
+
+    #[IsGranted('ROLE_USER')]
     #[Route('/contact', name: 'contact', methods: ['GET', 'POST'])]
     public function index(Request $request): Response
     {
@@ -42,10 +45,12 @@ class ContactController extends AbstractController
             $this->addFlash('success', "Votre message a bien été envoyé !");
 
             return $this->redirectToRoute('user_show', ['id' => $this->getUser()->getId()], Response::HTTP_SEE_OTHER);
+        } else if ($form->isSubmitted()) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
         }
 
         return $this->render('contact/index.html.twig', [
             'form' => $form->createView(),
-        ]);
+        ], $response ?? null);
     }
 }
