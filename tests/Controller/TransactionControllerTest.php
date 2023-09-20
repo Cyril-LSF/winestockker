@@ -46,7 +46,7 @@ class TransactionControllerTest extends WebTestCase
             $transaction->setPaymentId('test_transaction');
             $transaction->setCreatedAt(new DateTime());
             $transaction->setAmount('10');
-            $transaction->setInvoice('factureTest.pdf');
+            $transaction->setInvoice('factureTest');
 
             $this->transactionRepository->save($transaction, true);
         }
@@ -75,6 +75,7 @@ class TransactionControllerTest extends WebTestCase
 
     public function testDownloadTransaction(): void
     {
+        $kernel = $this->client->getContainer()->get('kernel');
         $transaction = $this->_getTransaction();
         $uri = $this->base_url . '/transactions/download/' . $transaction->getId();
 
@@ -83,7 +84,7 @@ class TransactionControllerTest extends WebTestCase
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertFileEquals(
-            'public/invoices/factureTest.pdf',
+            $kernel->getProjectDir() . '/var/invoices/' . 'factureTest.pdf',
             $this->client->getResponse()->getFile()
         );
         $this->assertEquals(

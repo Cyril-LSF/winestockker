@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 #[Route('/transactions')]
 class TransactionController extends AbstractController
@@ -45,9 +46,17 @@ class TransactionController extends AbstractController
 
     #[IsGranted('TRANSACTION_DOWNLOAD', 'transaction')]
     #[Route('/download/{id}', name: 'transaction_download')]
-    public function download(Transaction $transaction): BinaryFileResponse
+    public function download(Transaction $transaction, KernelInterface $kernel): BinaryFileResponse
     {
-        $filePath = $this->params->get('app.invoice_route') . $transaction->getInvoice();
+        $filePath = $kernel->getProjectDir() . '/var/invoices/'  . $transaction->getInvoice() . '.pdf';
         return $this->file( $filePath);
+    }
+
+    #[Route('/view/{path}', name:'invoice_show', methods: ['GET'])]
+    public function view(string $path, KernelInterface $kernel)
+    {
+        $response = new Response(file_get_contents($kernel->getProjectDir() . '/var/invoices/' . $path . '.pdf'));
+        $response->headers->set('Content-Type', 'application/pdf');
+        return $response;
     }
 }

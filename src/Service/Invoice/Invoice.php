@@ -33,7 +33,7 @@ class Invoice {
         $imageData = file_get_contents('./images/logo_ws.png');
         $logo = base64_encode($imageData);
 
-        $invoiceName = 'facture_' . $transaction->getPaymentId() . '.pdf';
+        $invoiceName = 'facture_' . $transaction->getPaymentId();
         $this->knpSnappyPdf->generateFromHtml(
             $this->twig->render(
                 'invoice/invoice.html.twig',
@@ -45,7 +45,7 @@ class Invoice {
                     'subscription' => $subscription
                 ]
             ),
-            $this->params->get('app.invoice_route') . $invoiceName
+            $this->params->get('app.invoice_route') . $invoiceName . '.pdf'
         );
 
         return $invoiceName;
