@@ -99,6 +99,12 @@ class CellarController extends AbstractController
     #[Route('/{id}', name: 'cellar_show', methods: ['GET', 'POST'])]
     public function show(Cellar $cellar, Request $request): Response
     {
+        $this->premium->restriction($this->getUser(), false, [], 'cellar');
+        if ($cellar->getDisabled()) {
+            $this->addFlash('danger', "Abonnez vous pour débloquer cette cave");
+            return $this->redirectToRoute('subscription_index');
+        }
+        
         // Add or remove bottles form
         $form = $this->createForm(AddBottleType::class, $cellar, [
             'user' => $this->getUser(),

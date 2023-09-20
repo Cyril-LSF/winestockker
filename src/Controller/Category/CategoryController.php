@@ -94,6 +94,12 @@ class CategoryController extends AbstractController
     #[Route('/{id}', name: 'category_show', methods: ['GET', 'POST'])]
     public function show(Category $category, Request $request): Response
     {
+        $this->premium->restriction($this->getUser(), false, [], 'category');
+        if ($category->getDisabled()) {
+            $this->addFlash('danger', "Abonnez vous pour débloquer cette catégorie");
+            return $this->redirectToRoute('subscription_index');
+        }
+
         // Add or remove bottles form
         $form = $this->createForm(AddBottleType::class, $category, [
             'user' => $this->getUser(),
