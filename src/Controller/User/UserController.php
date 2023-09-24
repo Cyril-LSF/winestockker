@@ -111,7 +111,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setScreenname();
             if ($form->get('picture')->getData()) {
-                $filename = $uploadedFile->upload($form->get('picture')->getData());
+                $filename = $uploadedFile->upload($form->get('picture')->getData(), $this->getUser());
                 $user->setPicture($filename);
             }
             $this->userRepository->save($user, true);
@@ -125,7 +125,6 @@ class UserController extends AbstractController
             'user' => $user,
             'registrationForm' => $form->createView(),
             'update' => true,
-            'fileRoot' => $this->params->get('app.uploaded_route'),
         ], $response ?? null);
     }
 
