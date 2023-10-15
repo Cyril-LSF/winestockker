@@ -28,9 +28,9 @@
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
             {% if app.user.picture is not empty %}
-                <img src={{ asset('upload/' ~ app.user.picture) }} alt="Profile" class="rounded-circle">
+                <img src={{ asset('upload/' ~ app.user.picture) }} alt="Profil" class="rounded-circle">
             {% else %}
-                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="Profile" class="rounded-circle">
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="Profil" class="rounded-circle">
             {% endif %}
             <span class="d-none d-md-block dropdown-toggle ps-2">{{ app.user.screenname }}</span>
           </a><!-- End Profile Iamge Icon -->
@@ -208,7 +208,7 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href={{ path('user_show', {'id': app.user.getId()}) }}>
           <i class="fa-regular fa-user"></i>
-          <span>Profile</span>
+          <span>Profil</span>
         </a>
       </li>
       <!-- End Profile Page Nav -->

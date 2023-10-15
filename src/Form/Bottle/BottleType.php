@@ -93,7 +93,7 @@ class BottleType extends AbstractType
                 'required' => false,
                 'attr' => [
                     'class' => "form-control",
-                    'placeholder' => "Céapage",
+                    'placeholder' => "Cépage",
                 ],
                 'constraints' => [
                     new Length([
